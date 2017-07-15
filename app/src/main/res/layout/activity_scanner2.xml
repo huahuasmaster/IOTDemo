@@ -1,35 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteY="25dp"
+    tools:layout_editor_absoluteX="0dp">
 
-    <include layout="@layout/scanner_toolbar"/>
+    <SurfaceView
+        android:id="@+id/scanner_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <SurfaceView
-            android:id="@+id/scanner_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"/>
 
-        <com.google.zxing.view.ViewfinderView
-            android:id="@+id/viewfinder_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:corner_color="@color/corner_color"
-            app:frame_color="@color/viewfinder_frame"
-            app:label_text="@string/scan_dec"
-            app:label_text_color="@color/colorAccent"
-            app:laser_color="@color/laser_color"
-            app:mask_color="@color/viewfinder_mask"
-            app:result_color="@color/result_view"
-            app:result_point_color="@color/result_point_color"/>
+    <com.google.zxing.view.ViewfinderView
+        android:id="@+id/viewfinder_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:corner_color="@color/corner_color"
+        app:frame_color="@color/viewfinder_frame"
+        app:label_text="@string/scan_dec"
+        app:label_text_color="@color/colorAccent"
+        app:laser_color="@color/laser_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_goneMarginTop="-64dp"
+        app:mask_color="@color/viewfinder_mask"
+        app:result_color="@color/result_view"
+        app:result_point_color="@color/result_point_color"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/number_normal"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/viewfinder_content"
+        android:layout_marginBottom="48dp" />
 
-    </FrameLayout>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/type_number"
+        android:textColor="#FFF"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageView"
+        app:layout_constraintRight_toRightOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.555"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-</LinearLayout>
+    <include
+        android:id="@+id/include"
+        layout="@layout/scanner_toolbar"
+       />
+
+
+</android.support.constraint.ConstraintLayout>

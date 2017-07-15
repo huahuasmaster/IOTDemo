@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/back"
         android:layout_width="0dp"
-        android:layout_height="42dp"
+        android:layout_height="48dp"
         android:background="#FFFFFF"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -25,7 +25,11 @@
     <com.flyco.tablayout.SlidingTabLayout
         android:id="@+id/tabs"
         android:layout_width="0dp"
-        android:layout_height="42dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="64dp"
+        android:layout_marginStart="64dp"
         android:background="#FFFFFF"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -36,11 +40,7 @@
         app:tl_tab_space_equal="true"
         app:tl_textSelectColor="@color/colorPrimary"
         app:tl_textUnselectColor="@color/unclickableText"
-        app:tl_textsize="16dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="64dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp">
+        app:tl_textsize="16dp">
 
     </com.flyco.tablayout.SlidingTabLayout>
 
@@ -49,7 +49,6 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/tabs"

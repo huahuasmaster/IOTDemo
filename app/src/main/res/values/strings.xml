@@ -9,4 +9,5 @@
     <string name="add_service">添加设备</string>
     <string name="device">设备</string>
     <string name="preview">预览</string>
+    <string name="type_number">手动输入序列号</string>
 </resources>
