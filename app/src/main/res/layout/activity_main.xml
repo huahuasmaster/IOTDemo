@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee"
+    >
+
+    <FrameLayout
+        android:id="@+id/fl_change"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+
+    <com.flyco.tablayout.CommonTabLayout
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:id="@+id/bottom"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="1dp"
+        android:background="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tl:tl_iconGravity="LEFT"
+        tl:tl_iconHeight="18dp"
+        tl:tl_iconMargin="5dp"
+        tl:tl_iconWidth="18dp"
+        tl:tl_indicator_bounce_enable="false"
+        tl:tl_indicator_color="#ffffff"
+        tl:tl_indicator_gravity="TOP"
+        tl:tl_textSelectColor="#2C97DE"
+        tl:tl_textUnselectColor="#66000000"
+        tl:tl_textsize="15sp"
+        tl:tl_underline_color="#DDDDDD"
+        tl:tl_underline_gravity="TOP"
+        tl:tl_underline_height="1dp" />
+</android.support.constraint.ConstraintLayout>
