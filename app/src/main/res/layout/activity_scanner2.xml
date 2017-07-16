@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="0dp" />
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/gotoType"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@mipmap/number_normal"
@@ -61,11 +61,11 @@
         android:text="@string/type_number"
         android:textColor="#FFF"
         android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageView"
-        app:layout_constraintRight_toRightOf="@+id/imageView"
+        app:layout_constraintLeft_toLeftOf="@+id/gotoType"
+        app:layout_constraintRight_toRightOf="@+id/gotoType"
         app:layout_constraintHorizontal_bias="0.555"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/gotoType" />
 
     <include
         android:id="@+id/include"

@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import administrator.ui.TypeNumActivity;
+
 
 /**
  * Initial the camera
@@ -59,6 +61,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
     private ImageView back;
+    private ImageView gotoType;
     private boolean hasSurface;
     private Vector<BarcodeFormat> decodeFormats;
     private String characterSet;
@@ -94,6 +97,14 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
 
+        gotoType = (ImageView)findViewById(R.id.gotoType);
+        gotoType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CaptureActivity.this, TypeNumActivity.class);
+                startActivity(intent);
+            }
+        });
         //添加toolbar
 //        addToolbar();
     }
