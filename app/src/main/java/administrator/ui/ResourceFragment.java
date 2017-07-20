@@ -124,6 +124,15 @@ public class ResourceFragment extends Fragment {
                 }
             }
         });
+
+        gotoScan.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(getActivity(),SmartConfigActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
         return v;
     }
 
