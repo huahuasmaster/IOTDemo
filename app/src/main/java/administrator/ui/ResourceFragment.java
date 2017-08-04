@@ -2,15 +2,19 @@ package administrator.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +28,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import administrator.adapters.RoomLabelsAdapter;
 import administrator.asistant.CommonUtil;
 
 /**
-“资源”页面
+ * “资源”页面
  */
 public class ResourceFragment extends Fragment {
 
@@ -35,9 +40,9 @@ public class ResourceFragment extends Fragment {
     private SlidingTabLayout tabLayout;
     private ViewPager viewPager;
     private LayoutInflater inflater;
-    private String[] titles = {"预览","设备"};
+    private String[] titles = {"预览", "设备"};
     private List<String> titleList = new ArrayList<>();
-    private View previewPage,devicePage;
+    private View previewPage, devicePage;
     private List<View> viewList = new ArrayList<>();
     private ImageView gotoScan;
 
@@ -48,10 +53,17 @@ public class ResourceFragment extends Fragment {
 
     //以下是对预览页面的初始化定义
     private TextView previewTitle;
+
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
 
-    private String title;
+    //以下是对侧滑菜单的初始化定义
+    private ImageView head;//头像
+    private ImageView gotoSetting;//设置按钮
+    private Button addSpace;//新增空间按钮
+    private RecyclerView mRecyclerView;//空间列表
+
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,17 +71,9 @@ public class ResourceFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment MineFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static ResourceFragment newInstance(String param1) {
         ResourceFragment fragment = new ResourceFragment();
-        fragment.title = param1;
         return fragment;
     }
 
@@ -77,9 +81,8 @@ public class ResourceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM1);
         }
-        
+
     }
 
     @Override
@@ -87,10 +90,10 @@ public class ResourceFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_resource, null);
 
-        tabLayout = (SlidingTabLayout)v.findViewById(R.id.tabs);
-        viewPager = (ViewPager)v.findViewById(R.id.vp);
-        previewPage = inflater.inflate(R.layout.page_preview,null);
-        devicePage = inflater.inflate(R.layout.page_device,null);
+        tabLayout = (SlidingTabLayout) v.findViewById(R.id.tabs);
+        viewPager = (ViewPager) v.findViewById(R.id.vp);
+        previewPage = inflater.inflate(R.layout.page_preview, null);
+        devicePage = inflater.inflate(R.layout.page_device, null);
 
         //向容器中填装view
         viewList.add(previewPage);
@@ -115,12 +118,12 @@ public class ResourceFragment extends Fragment {
         gotoScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CommonUtil.isCameraCanUse()){
+                if (CommonUtil.isCameraCanUse()) {
 //                    Intent intent = new Intent(getActivity(), ScannerActivity.class);
                     Intent intent = new Intent(getActivity(), CaptureActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
-                }else{
-                    Toast.makeText(getContext(),"请打开此应用的摄像头权限！",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "请打开此应用的摄像头权限！", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -128,33 +131,41 @@ public class ResourceFragment extends Fragment {
         gotoScan.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Intent intent = new Intent(getActivity(),SmartConfigActivity.class);
+                Intent intent = new Intent(getActivity(), SmartConfigActivity.class);
                 startActivity(intent);
                 return false;
             }
         });
+
+        /**
+         * 主页面初始化完毕，接下来进行侧滑菜单的初始化
+         */
+
         return v;
     }
 
-    private void initPreview(){
+    private void initPreview() {
         previewTitle = (TextView) previewPage.findViewById(R.id.name);
         previewTitle.setText(titles[0]);
     }
 
-    private void initDevice(){
+    private void initDevice() {
         deviceTitle = (TextView) devicePage.findViewById(R.id.name);
         deviceTitle.setText(titles[1]);
     }
 
+
     public void changeText(String text) {
         previewTitle.setText(text);
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -166,20 +177,12 @@ public class ResourceFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
     //ViewPager适配器
     class MyPagerAdapter extends PagerAdapter {
         private List<View> mViewList;

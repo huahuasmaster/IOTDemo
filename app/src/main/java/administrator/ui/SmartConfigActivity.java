@@ -145,7 +145,6 @@ public class SmartConfigActivity extends Activity implements View.OnClickListene
         mIsSsidHiddenCB = (CheckBox)findViewById(R.id.esptouch_isSsidHidden);
         mDeletePasswordBtn = (Button)findViewById(R.id.esptouch_delete_pwd);
         mConfirmBtn = (Button)findViewById(R.id.esptouch_confirm);
-
         mShowPasswordCB.setOnCheckedChangeListener(this);
         mDeletePasswordBtn.setOnClickListener(this);
         mConfirmBtn.setOnClickListener(this);

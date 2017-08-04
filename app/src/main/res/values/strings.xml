@@ -32,5 +32,10 @@
     <string name="esp_esptouch_result_over">配置结束，因当前连接的WIFI与配置的WIFI不同，无法收到反馈，请自行检查结果。</string>
     <string name="esp_esptouch_result_cancel">取消配置</string>
     <string name="start_config">开始配置</string>
+    <string name="space_edit">空间管理</string>
+    <string name="my_space">我的空间</string>
+    <string name="defaultSpace">默认空间</string>
+    <string name="leaveHome">离家</string>
+    <string name="add_space">新增空间</string>
     <!--smartConfig end-->
 </resources>
