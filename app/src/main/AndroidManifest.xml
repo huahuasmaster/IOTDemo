@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.qrcodescan"
-    >
-
-
+    package="com.qrcodescan">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- 震动权限 -->
@@ -19,9 +16,11 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
@@ -39,7 +38,9 @@
         <activity android:name="com.google.zxing.activity.CaptureActivity" />
         <activity android:name="administrator.ui.ScannerActivity" />
         <activity android:name="administrator.ui.TypeNumActivity" />
-        <activity android:name="administrator.ui.SmartConfigActivity"/>
+        <activity android:name="administrator.ui.SmartConfigActivity" />
+        <activity android:name="administrator.ui.RoomDetailActivity"
+            android:theme="@style/translucent"></activity>
     </application>
 
 </manifest>

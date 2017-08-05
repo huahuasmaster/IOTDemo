@@ -2,14 +2,11 @@ package administrator.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import administrator.adapters.RoomLabelsAdapter;
-import administrator.asistant.CommonUtil;
+import administrator.base.CommonUtil;
 
 /**
  * “资源”页面
@@ -53,6 +49,7 @@ public class ResourceFragment extends Fragment {
 
     //以下是对预览页面的初始化定义
     private TextView previewTitle;
+    private ImageView roomBg;
 
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
@@ -110,8 +107,8 @@ public class ResourceFragment extends Fragment {
         tabLayout.setViewPager(viewPager);
 
         //对各个视图的内部进行初始化
-        initPreview();
-        initDevice();
+        initPreview(previewPage);
+        initDevice(devicePage);
 
         //对其它view执行初始化
         gotoScan = (ImageView) v.findViewById(R.id.gotoScan);
@@ -123,7 +120,8 @@ public class ResourceFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), CaptureActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
                 } else {
-                    Toast.makeText(getContext(), "请打开此应用的摄像头权限！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "请打开此应用的摄像头权限！"
+                            , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -144,14 +142,23 @@ public class ResourceFragment extends Fragment {
         return v;
     }
 
-    private void initPreview() {
-        previewTitle = (TextView) previewPage.findViewById(R.id.name);
-        previewTitle.setText(titles[0]);
+    /**
+     * 预览页面，所有内部组件的初始化都在此方法内完成
+     */
+    private void initPreview(View v) {
+        //// TODO: 2017/8/5 以下为测试代码 后续应替换
+        View card = v.findViewById(R.id.room_card);
+        roomBg = (ImageView)card.findViewById(R.id.room_bg);
+        roomBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),RoomDetailActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    private void initDevice() {
-        deviceTitle = (TextView) devicePage.findViewById(R.id.name);
-        deviceTitle.setText(titles[1]);
+    private void initDevice(View v) {
     }
 
 

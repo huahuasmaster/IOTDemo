@@ -31,7 +31,7 @@
     <ImageView
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:src="@drawable/ic_settings_white_24dp"
+        android:src="@mipmap/ic_setting2"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         app:layout_constraintRight_toRightOf="parent"

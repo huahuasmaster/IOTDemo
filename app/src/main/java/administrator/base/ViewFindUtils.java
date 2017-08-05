@@ -1,4 +1,4 @@
-package administrator.asistant;
+package administrator.base;
 
 import android.util.SparseArray;
 import android.view.View;

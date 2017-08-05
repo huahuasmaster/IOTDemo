@@ -16,7 +16,7 @@ import java.util.List;
  * 侧滑菜单中空间卡片的房间标签适配器
  */
 
-public class RoomLabelsAdapter extends RecyclerView.Adapter{
+public class RoomLabelAdapter extends RecyclerView.Adapter{
 
     List<String> roomList = new ArrayList<>();
 

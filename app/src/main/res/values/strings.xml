@@ -37,5 +37,8 @@
     <string name="defaultSpace">默认空间</string>
     <string name="leaveHome">离家</string>
     <string name="add_space">新增空间</string>
+    <string name="front">前门</string>
+    <string name="goBack">返回</string>
+    <string name="checkDetail">查看详情</string>
     <!--smartConfig end-->
 </resources>

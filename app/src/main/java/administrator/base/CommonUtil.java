@@ -1,4 +1,4 @@
-package administrator.asistant;
+package administrator.base;
 
 import android.hardware.Camera;
 

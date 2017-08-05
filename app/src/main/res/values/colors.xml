@@ -7,6 +7,9 @@
     <color name="pureWhite">#FFF</color>
     <color name="cardViewBG">#2196f3</color>
     <color name="bgGray">#DFDFDF</color>
+    <color name="bgGray2">#FAFAFA</color>
+    <color name="cyan">#009688</color>
+    <color name="translucent_background">#aa000000</color>
     <!-- QRCode scanner color begin -->
     <color name="viewfinder_mask">#60000000</color>
     <color name="result_view">#B0000000</color>

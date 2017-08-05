@@ -3,7 +3,6 @@ package administrator.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,7 +18,7 @@ import com.qrcodescan.R;
 import java.util.ArrayList;
 import java.util.logging.Handler;
 
-import administrator.asistant.ViewFindUtils;
+import administrator.base.ViewFindUtils;
 import administrator.entity.TabEntity;
 
 
