@@ -39,8 +39,11 @@
         <activity android:name="administrator.ui.ScannerActivity" />
         <activity android:name="administrator.ui.TypeNumActivity" />
         <activity android:name="administrator.ui.SmartConfigActivity" />
-        <activity android:name="administrator.ui.RoomDetailActivity"
-            android:theme="@style/translucent"></activity>
+        <activity
+            android:name="administrator.ui.RoomDetailActivity"
+            android:theme="@style/translucent" />
+        <activity android:name="administrator.ui.DeviceDetailActivity" />
+        <activity android:name="administrator.ui.DeviceSettingActivity"></activity>
     </application>
 
 </manifest>

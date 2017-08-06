@@ -40,5 +40,17 @@
     <string name="front">前门</string>
     <string name="goBack">返回</string>
     <string name="checkDetail">查看详情</string>
+    <string name="mine">我的</string>
+    <string name="space_manage">空间管理</string>
+    <string name="device_manage">设备管理</string>
+    <string name="room_namage">房间管理</string>
+    <string name="warnning_setting">告警阈值设置</string>
+    <string name="msg_setting">消息提醒设置</string>
+    <string name="device_link">设备联动</string>
+    <string name="setting_title_name">名称</string>
+    <string name="setting_title_room_belong">所属房间</string>
+    <string name="SN">序列号</string>
+    <string name="device_set_time">添加时间</string>
+    <string name="hardware_version">固件版本</string>
     <!--smartConfig end-->
 </resources>

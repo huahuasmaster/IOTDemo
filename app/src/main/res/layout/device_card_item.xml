@@ -66,9 +66,12 @@
             android:layout_height="1dp"
             android:alpha="0.14"
             android:background="@android:color/black"
-            tools:layout_editor_absoluteX="0dp"
             android:layout_marginBottom="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/check_detail" />
+            app:layout_constraintBottom_toTopOf="@+id/check_detail_btn"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <Button
             android:id="@+id/go_back"
@@ -85,7 +88,7 @@
             android:layout_marginBottom="4dp" />
 
         <Button
-            android:id="@+id/check_detail"
+            android:id="@+id/check_detail_btn"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

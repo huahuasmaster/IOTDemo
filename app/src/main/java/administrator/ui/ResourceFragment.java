@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -163,7 +164,8 @@ public class ResourceFragment extends Fragment {
 
 
     public void changeText(String text) {
-        previewTitle.setText(text);
+        Toast.makeText(getContext(),"扫描到的信息为"+text,Toast.LENGTH_SHORT)
+                .show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
