@@ -1,0 +1,103 @@
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    app:cardBackgroundColor="@color/cardViewBG"
+    app:cardCornerRadius="3dp"
+    android:layout_width="match_parent"
+    android:background="?android:attr/selectableItemBackground"
+    app:cardElevation="6dp"
+    android:clickable="true"
+    android:layout_height="88dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/pureWhite"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/space_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/default_space"
+            android:textColor="@color/pureWhite"
+            android:textSize="22sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/TaH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/pureWhite"
+            android:textSize="19sp"
+            app:layout_constraintBottom_toBottomOf="@+id/space_name"
+            app:layout_constraintLeft_toRightOf="@+id/space_name"
+            tools:text="30℃|30%" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:alpha="0.7"
+            android:text="@string/leaveHome"
+            android:textColor="@color/pureWhite"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@+id/switch1"
+            app:layout_constraintRight_toRightOf="@+id/switch1"
+            app:layout_constraintTop_toBottomOf="@+id/switch1" />
+
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/rooms"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="4dp"-->
+            <!--android:layout_marginLeft="4dp"-->
+            <!--android:layout_marginRight="4dp"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintHorizontal_bias="0.0"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent" />-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp">
+
+            <include layout="@layout/room_item"/>
+            <include layout="@layout/room_item"/>
+            <include layout="@layout/room_item"/>
+            <include layout="@layout/room_item"/>
+            <include layout="@layout/room_item"/>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

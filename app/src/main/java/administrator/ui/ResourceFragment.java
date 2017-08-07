@@ -6,8 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +22,13 @@ import android.widget.Toast;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.google.zxing.activity.CaptureActivity;
 import com.qrcodescan.R;
+import com.tomer.fadingtextview.FadingTextView;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import administrator.base.CommonUtil;
 
@@ -33,15 +37,20 @@ import administrator.base.CommonUtil;
  */
 public class ResourceFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "title";
     private SlidingTabLayout tabLayout;
     private ViewPager viewPager;
     private LayoutInflater inflater;
+    private View previewPage, devicePage;
+    private ImageView gotoScan;
+    private FadingTextView fadingTextView;
+    private DrawerLayout drawerLayout;
+    private ImageView goSettingSpace;
+
     private String[] titles = {"预览", "设备"};
     private List<String> titleList = new ArrayList<>();
-    private View previewPage, devicePage;
     private List<View> viewList = new ArrayList<>();
-    private ImageView gotoScan;
+
+    private final int INTERVAL_SECOND = 2;
 
     //打开扫描界面请求码
     public static int REQUEST_CODE = 0x01;
@@ -126,7 +135,6 @@ public class ResourceFragment extends Fragment {
                 }
             }
         });
-
         gotoScan.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -136,9 +144,26 @@ public class ResourceFragment extends Fragment {
             }
         });
 
-        /**
-         * 主页面初始化完毕，接下来进行侧滑菜单的初始化
-         */
+        drawerLayout = (DrawerLayout) v.findViewById(R.id.drawer);
+        fadingTextView = (FadingTextView)v.findViewById(R.id.ex_space_text);
+        fadingTextView.setTimeout(INTERVAL_SECOND, TimeUnit.SECONDS);//为轮播文字设置切换时间间隔
+        fadingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        goSettingSpace = (ImageView)v.findViewById(R.id.go_setting_space);
+        goSettingSpace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),SpaceManageActivity.class);
+                startActivity(intent);
+            }
+        });
+         //主页面初始化完毕，接下来进行侧滑菜单的初始化
+
 
         return v;
     }

@@ -28,6 +28,8 @@ dependencies {
     })
     //ZXing
     //butterknife注解框架
+    
+
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.google.zxing:core:3.3.0'
     compile 'com.jakewharton:butterknife:8.2.1'
@@ -40,6 +42,8 @@ dependencies {
     compile 'org.litepal.android:core:1.5.1'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.tomer:fadingtextview:2.0'
+    compile 'com.github.AItsuki:SwipeMenuRecyclerView:1.1.1'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }
