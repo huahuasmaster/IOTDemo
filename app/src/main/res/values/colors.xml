@@ -9,6 +9,7 @@
     <color name="bgGray">#DFDFDF</color>
     <color name="bgGray2">#FAFAFA</color>
     <color name="cyan">#009688</color>
+    <color name="colorSeekBarDefault">#c3c3c3</color>
     <color name="translucent_background">#aa000000</color>
     <!-- QRCode scanner color begin -->
     <color name="viewfinder_mask">#60000000</color>

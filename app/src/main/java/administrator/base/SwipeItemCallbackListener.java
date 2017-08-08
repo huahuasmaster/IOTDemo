@@ -5,6 +5,7 @@ package administrator.base;
  * Created by zhuang_ge on 2017/8/7.
  */
 
-public interface DeleteCallbackListener {
+public interface SwipeItemCallbackListener {
     void onDelete(int position);
+    void onEdit(int position);
 }

@@ -53,5 +53,6 @@
     <string name="SN">序列号</string>
     <string name="device_set_time">添加时间</string>
     <string name="hardware_version">固件版本</string>
+    <string name="delete">删除</string>
 
 </resources>

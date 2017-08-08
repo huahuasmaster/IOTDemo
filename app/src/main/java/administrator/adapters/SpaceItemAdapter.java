@@ -11,7 +11,7 @@ import com.qrcodescan.R;
 
 import java.util.List;
 
-import administrator.base.DeleteCallbackListener;
+import administrator.base.SwipeItemCallbackListener;
 import administrator.entity.Space;
 
 /**
@@ -21,13 +21,13 @@ import administrator.entity.Space;
 public class SpaceItemAdapter extends RecyclerView.Adapter{
 
     private List<Space> spaceList;
-    private DeleteCallbackListener listener;
+    private SwipeItemCallbackListener listener;
 
-    public DeleteCallbackListener getListener() {
+    public SwipeItemCallbackListener getListener() {
         return listener;
     }
 
-    public void setListener(DeleteCallbackListener listener) {
+    public void setListener(SwipeItemCallbackListener listener) {
         this.listener = listener;
     }
 
@@ -54,6 +54,12 @@ public class SpaceItemAdapter extends RecyclerView.Adapter{
                     @Override
                     public void onClick(View view) {
                         listener.onDelete(getAdapterPosition());
+                    }
+                });
+                editName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onEdit(getAdapterPosition());
                     }
                 });
             }

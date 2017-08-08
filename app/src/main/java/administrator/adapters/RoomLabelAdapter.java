@@ -35,7 +35,7 @@ public class RoomLabelAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.room_item,parent,false);
+                .inflate(R.layout.room_label_item,parent,false);
         return new ViewHolder(view);
     }
 

@@ -44,7 +44,8 @@
             android:theme="@style/translucent" />
         <activity android:name="administrator.ui.DeviceDetailActivity" />
         <activity android:name="administrator.ui.DeviceSettingActivity" />
-        <activity android:name="administrator.ui.SpaceManageActivity"></activity>
+        <activity android:name="administrator.ui.SpaceManageActivity" />
+        <activity android:name="administrator.ui.RoomManageActivity"></activity>
     </application>
 
 </manifest>

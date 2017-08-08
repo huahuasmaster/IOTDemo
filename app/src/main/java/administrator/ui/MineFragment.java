@@ -1,12 +1,15 @@
 package administrator.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qrcodescan.R;
@@ -15,15 +18,19 @@ import com.qrcodescan.R;
 /**
  * Created by Administrator on 2017/7/14.
  */
-public class MineFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "title";
-
-    // TODO: Rename and change types of parameters
-    private String title;
+public class MineFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
+
+    private LinearLayout spaceManageLayout;
+    private LinearLayout deviceManageLayout;
+    private LinearLayout roomManageLayout;
+    private LinearLayout thresholdSetLayout;
+    private LinearLayout msgSetLayout;
+    private LinearLayout deviceLinkSetLayout;
+    private ImageView headIcon;
+    private ImageView edit;
+    private ImageView exit;
 
     public MineFragment() {
         // Required empty public constructor
@@ -39,16 +46,13 @@ public class MineFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static MineFragment newInstance(String param1) {
         MineFragment fragment = new MineFragment();
-        fragment.title = param1;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM1);
-        }
+
     }
 
     @Override
@@ -56,10 +60,18 @@ public class MineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mine, null);
 
+        initViews(v);
+
+        spaceManageLayout.setOnClickListener(this);
+        roomManageLayout.setOnClickListener(this);
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private void initViews(View view) {
+        spaceManageLayout = (LinearLayout)view.findViewById(R.id.space_manage_linear);
+        roomManageLayout = (LinearLayout)view.findViewById(R.id.room_manage_linear);
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -81,6 +93,19 @@ public class MineFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.space_manage_linear:
+                Intent intent = new Intent(getActivity(),SpaceManageActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.room_manage_linear:
+                startActivity(new Intent(getActivity(),RoomManageActivity.class));
+                break;
+        }
     }
 
     /**
