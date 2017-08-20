@@ -29,23 +29,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="administrator.ui.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="com.google.zxing.activity.CaptureActivity" />
         <activity android:name="administrator.ui.ScannerActivity" />
         <activity android:name="administrator.ui.TypeNumActivity" />
         <activity android:name="administrator.ui.SmartConfigActivity" />
         <activity
-            android:name="administrator.ui.RoomDetailActivity"
+            android:name="administrator.ui.AreaDetailActivity"
             android:theme="@style/translucent" />
         <activity android:name="administrator.ui.DeviceDetailActivity" />
         <activity android:name="administrator.ui.DeviceSettingActivity" />
         <activity android:name="administrator.ui.SpaceManageActivity" />
-        <activity android:name="administrator.ui.RoomManageActivity"></activity>
+        <activity android:name="administrator.ui.RoomManageActivity" />
+        <activity android:name="administrator.ui.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

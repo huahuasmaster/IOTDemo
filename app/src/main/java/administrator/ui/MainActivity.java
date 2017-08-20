@@ -57,9 +57,10 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
         tabLayout = ViewFindUtils.find(mDecorView,R.id.bottom);
         tabLayout.setTabData(mTabEntities,this,R.id.fl_change,mFragments);
         tabLayout.setIconGravity(Gravity.TOP);
-        tabLayout.setTextsize(10.0F);
-        tabLayout.setIconHeight(20.0F);
-        tabLayout.setIconWidth(20.0F);
+        //设置图标大小与字体大小
+        tabLayout.setTextsize(12.0F);
+        tabLayout.setIconHeight(24.0F);
+        tabLayout.setIconWidth(24.0F);
 
     }
 

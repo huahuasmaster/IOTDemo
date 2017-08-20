@@ -57,8 +57,6 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_message, null);
-        TextView card_title_tv = (TextView) v.findViewById(R.id.name);
-        card_title_tv.setText(title);
         return v;
     }
 

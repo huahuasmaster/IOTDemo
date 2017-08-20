@@ -21,6 +21,14 @@ public class Space {
 
     private short status;//空间的状态：离家、回家……
 
+    public short getStatus() {
+        return status;
+    }
+
+    public void setStatus(short status) {
+        this.status = status;
+    }
+
     public Space() {
     }
 

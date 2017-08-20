@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/device_name"
+            android:id="@+id/device_real_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -28,7 +28,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:alpha="0.87"
-            android:text="前门"
+            tools:text="门检测器"
             android:textColor="@android:color/black"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/circleImageView2"
@@ -37,18 +37,19 @@
             app:layout_constraintVertical_bias="0.20999998" />
 
         <TextView
-            android:id="@+id/room_of_device"
+
+            android:id="@+id/room_and_name_of_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="0dp"
-            android:text="客厅"
-            app:layout_constraintLeft_toLeftOf="@+id/device_name"
-            app:layout_constraintTop_toBottomOf="@+id/device_name" />
+            tools:text="客厅-前门"
+            app:layout_constraintLeft_toLeftOf="@+id/device_real_name"
+            app:layout_constraintTop_toBottomOf="@+id/device_real_name" />
 
         <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/status_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

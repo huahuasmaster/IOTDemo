@@ -10,6 +10,9 @@
     <string name="device">设备</string>
     <string name="preview">预览</string>
     <string name="type_number">手动输入序列号</string>
+    <string name="button_login">登录</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_username">账号</string>
 
     <!--smartConfig begin-->
     <string name="esp_esptouch_title">配置网络</string>
@@ -55,4 +58,8 @@
     <string name="hardware_version">固件版本</string>
     <string name="delete">删除</string>
 
+    <string name="getting_data">获取数据中</string>
+    <string name="plz_wait">请稍等</string>
+    <!--%n$s n表示第一个参数 s->字符串 d->整数 f->浮点数-->
+    <string name="tmp_s_value">%1$s℃</string>
 </resources>

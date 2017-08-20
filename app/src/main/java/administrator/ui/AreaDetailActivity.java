@@ -1,6 +1,5 @@
 package administrator.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -22,13 +22,15 @@ import java.util.List;
 
 import administrator.adapters.DeviceCardAdapter;
 import administrator.base.DeviceCardCallbackListener;
+import administrator.base.http.HttpCallbackListener;
 
-public class RoomDetailActivity extends AppCompatActivity implements View.OnClickListener{
+public class AreaDetailActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ViewPager viewPager;
     private LayoutInflater inflater;
     private Button goCheckBtn;
     private MaterialDialog thresholdSetDialog;
+    private MaterialDialog waitDialog;
 
     public static final int DEAULT_OFFSCEEN_LIMIT = 3;
     private List<View> viewList = new ArrayList<>();
@@ -39,7 +41,7 @@ public class RoomDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room_detail);
+        setContentView(R.layout.activity_area_detail);
 
         viewPager = (ViewPager) findViewById(R.id.device_pager);
         initViews();
@@ -71,13 +73,40 @@ public class RoomDetailActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onCheck(int position) {
                 Intent intent = new Intent(
-                        RoomDetailActivity.this,DeviceDetailActivity.class);
+                        AreaDetailActivity.this,DeviceDetailActivity.class);
                 intent.putExtra("position",position);
                 startActivity(intent);
             }
         };
     }
+    private void initData(){
+        waitDialog = new MaterialDialog.Builder(this)
+                            .title(getResources()
+                                    .getString(R.string.getting_data))
+                            .content(getResources()
+                                    .getString(R.string.plz_wait))
+                            .progress(true,0)
+                            .progressIndeterminateStyle(false)
+                            .build();
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                Toast.makeText(AreaDetailActivity.this,response,Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(AreaDetailActivity.this,"获取数据失败",Toast.LENGTH_SHORT).show();
+            }
+        };
+        waitDialog.show();
+
+
+    }
+    /**
+     * 弹出阈值设置弹窗
+     * @param postion
+     */
     private void showThresholdSetDialog(final int postion) {
 
         thresholdSetDialog = new MaterialDialog.Builder(this)

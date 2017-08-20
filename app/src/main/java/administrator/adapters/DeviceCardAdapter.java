@@ -64,7 +64,7 @@ public class DeviceCardAdapter extends PagerAdapter{
     //在此处进行view的赋值,点击事件等
     @Override public Object instantiateItem(ViewGroup container, final int position) {
         View view = views.get(position);
-        //为两个按钮添加点击事件
+        //为3个按钮添加点击事件
         Button checkDetailBtn = (Button)view.findViewById(R.id.check_detail_btn);
         checkDetailBtn.setOnClickListener(new View.OnClickListener() {
             @Override

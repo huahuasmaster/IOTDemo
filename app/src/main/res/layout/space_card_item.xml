@@ -9,14 +9,15 @@
     android:background="?android:attr/selectableItemBackground"
     app:cardElevation="6dp"
     android:clickable="true"
-    android:layout_height="88dp">
+    android:layout_margin="4dp"
+    android:layout_height="wrap_content">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/type_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -25,7 +26,18 @@
             android:textColor="@color/pureWhite"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <Switch
+            android:id="@+id/default_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/pureWhite"
+            app:layout_constraintTop_toTopOf="@+id/type_switch"
+            android:layout_marginTop="0dp"
+            android:checked="true"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/space_type"
+            app:layout_constraintRight_toLeftOf="@+id/type_switch"
+            android:layout_marginRight="0dp" />
 
         <TextView
             android:id="@+id/space_name"
@@ -33,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@string/default_space"
             android:textColor="@color/pureWhite"
             android:textSize="22sp"
@@ -41,19 +53,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/TaH"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/pureWhite"
-            android:textSize="19sp"
-            app:layout_constraintBottom_toBottomOf="@+id/space_name"
-            app:layout_constraintLeft_toRightOf="@+id/space_name"
-            tools:text="30℃|30%" />
-
-        <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/space_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -64,10 +64,25 @@
             android:text="@string/leaveHome"
             android:textColor="@color/pureWhite"
             android:textSize="14sp"
-            app:layout_constraintLeft_toLeftOf="@+id/switch1"
-            app:layout_constraintRight_toRightOf="@+id/switch1"
-            app:layout_constraintTop_toBottomOf="@+id/switch1" />
+            app:layout_constraintLeft_toLeftOf="@+id/type_switch"
+            app:layout_constraintRight_toRightOf="@+id/type_switch"
+            app:layout_constraintTop_toBottomOf="@+id/type_switch" />
 
+        <TextView
+            android:id="@+id/is_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.7"
+            android:text="默认"
+            android:textColor="@color/pureWhite"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="@+id/default_switch"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="@+id/default_switch"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/default_switch"
+            app:layout_constraintHorizontal_bias="0.5" />
 
         <!--<android.support.v7.widget.RecyclerView-->
             <!--android:id="@+id/rooms"-->
@@ -80,24 +95,39 @@
             <!--app:layout_constraintHorizontal_bias="0.0"-->
             <!--app:layout_constraintLeft_toLeftOf="parent"-->
             <!--app:layout_constraintRight_toRightOf="parent" />-->
-        <LinearLayout
+        <com.nex3z.flowlayout.FlowLayout
+            android:id="@+id/roomLabelFlowLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="8dp"
-            android:orientation="horizontal"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp">
+            app:layout_constraintTop_toBottomOf="@+id/space_type"
+            app:layout_constraintVertical_bias="0.0">
 
-            <include layout="@layout/room_label_item"/>
-            <include layout="@layout/room_label_item"/>
-            <include layout="@layout/room_label_item"/>
-            <include layout="@layout/room_label_item"/>
-            <include layout="@layout/room_label_item"/>
-        </LinearLayout>
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+
+            <!--<include layout="@layout/room_label_item" />-->
+        </com.nex3z.flowlayout.FlowLayout>
+
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

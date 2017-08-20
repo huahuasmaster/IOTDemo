@@ -2,14 +2,18 @@ package administrator.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,31 +24,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flyco.tablayout.SlidingTabLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.activity.CaptureActivity;
 import com.qrcodescan.R;
-import com.tomer.fadingtextview.FadingTextView;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import administrator.adapters.AreaCardAdapter;
+import administrator.adapters.SpaceCardAdapter;
 import administrator.base.CommonUtil;
+import administrator.base.http.HttpCallbackListener;
+import administrator.base.http.HttpUtil;
+import administrator.base.http.UrlHandler;
+import administrator.entity.AreaCurValue;
+import administrator.entity.SpaceWithAreas;
 
 /**
  * “资源”页面
  */
 public class ResourceFragment extends Fragment {
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
     private SlidingTabLayout tabLayout;
     private ViewPager viewPager;
     private LayoutInflater inflater;
     private View previewPage, devicePage;
     private ImageView gotoScan;
-    private FadingTextView fadingTextView;
+    private Button fadingTextView;
     private DrawerLayout drawerLayout;
-    private ImageView goSettingSpace;
+    private String result = "蛇皮";
+    private LinearLayoutManager manager;
+
 
     private String[] titles = {"预览", "设备"};
     private List<String> titleList = new ArrayList<>();
@@ -60,15 +75,20 @@ public class ResourceFragment extends Fragment {
     //以下是对预览页面的初始化定义
     private TextView previewTitle;
     private ImageView roomBg;
+    private RecyclerView areaCardsRV;
+    private List<AreaCurValue> acvList = new ArrayList<>();
+    private AreaCardAdapter areaCardAdapter;
 
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
 
     //以下是对侧滑菜单的初始化定义
     private ImageView head;//头像
-    private ImageView gotoSetting;//设置按钮
-    private Button addSpace;//新增空间按钮
-    private RecyclerView mRecyclerView;//空间列表
+    private FloatingActionButton addSpace;//新增空间按钮
+    private RecyclerView spaceCardsRV;//空间列表
+    private TextView userName;//用户名称
+    private SpaceCardAdapter spaceCardAdapter;
+    private List<SpaceWithAreas> swaList = new ArrayList<>();
 
 
 
@@ -97,6 +117,11 @@ public class ResourceFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_resource, null);
 
+        manager = new LinearLayoutManager(getContext());
+
+        sp = getActivity().getSharedPreferences("space_data",Context.MODE_PRIVATE);
+        editor = sp.edit();
+
         tabLayout = (SlidingTabLayout) v.findViewById(R.id.tabs);
         viewPager = (ViewPager) v.findViewById(R.id.vp);
         previewPage = inflater.inflate(R.layout.page_preview, null);
@@ -119,7 +144,7 @@ public class ResourceFragment extends Fragment {
         //对各个视图的内部进行初始化
         initPreview(previewPage);
         initDevice(devicePage);
-
+        initSideMenu(v);
         //对其它view执行初始化
         gotoScan = (ImageView) v.findViewById(R.id.gotoScan);
         gotoScan.setOnClickListener(new View.OnClickListener() {
@@ -145,8 +170,7 @@ public class ResourceFragment extends Fragment {
         });
 
         drawerLayout = (DrawerLayout) v.findViewById(R.id.drawer);
-        fadingTextView = (FadingTextView)v.findViewById(R.id.ex_space_text);
-        fadingTextView.setTimeout(INTERVAL_SECOND, TimeUnit.SECONDS);//为轮播文字设置切换时间间隔
+        fadingTextView = (Button)v.findViewById(R.id.ex_space_text);
         fadingTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,14 +178,7 @@ public class ResourceFragment extends Fragment {
             }
         });
 
-        goSettingSpace = (ImageView)v.findViewById(R.id.go_setting_space);
-        goSettingSpace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),SpaceManageActivity.class);
-                startActivity(intent);
-            }
-        });
+
          //主页面初始化完毕，接下来进行侧滑菜单的初始化
 
 
@@ -172,21 +189,98 @@ public class ResourceFragment extends Fragment {
      * 预览页面，所有内部组件的初始化都在此方法内完成
      */
     private void initPreview(View v) {
-        //// TODO: 2017/8/5 以下为测试代码 后续应替换
-        View card = v.findViewById(R.id.room_card);
-        roomBg = (ImageView)card.findViewById(R.id.room_bg);
-        roomBg.setOnClickListener(new View.OnClickListener() {
+        areaCardsRV = (RecyclerView) v.findViewById(R.id.area_cards);
+        areaCardAdapter = new AreaCardAdapter();
+        areaCardAdapter.setContext(getContext());
+
+        //获取默认空间id
+        int defaultSpaceId = sp.getInt("default_space_id",-1);
+        //如果本地没有保存默认空间id则进行网络请求获取
+        if(defaultSpaceId == -1) {
+            // TODO: 2017/8/18 替换为网络请求
+            defaultSpaceId = 1;
+            editor.putInt("default_space_id",defaultSpaceId);
+            editor.apply();
+        }
+
+        initAreaCardsBySpaceId(defaultSpaceId);
+    }
+
+    private void initAreaCardsBySpaceId(int spaceId) {
+        final String url = UrlHandler.getAreaWithInnerDevicePreviewUrl(spaceId);
+        HttpCallbackListener listener = new HttpCallbackListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),RoomDetailActivity.class);
-                startActivity(intent);
+            public void onFinish(String response) {
+                acvList = new Gson().fromJson(response,
+                        new TypeToken<List<AreaCurValue>>(){}.getType());
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        areaCardAdapter.setAreaList(acvList);
+                        areaCardsRV.setAdapter(areaCardAdapter);
+                        areaCardsRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                    }
+                });
             }
-        });
+
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(viewPager,"请求房间列表出错",Snackbar.LENGTH_SHORT).show();
+            }
+        };
+
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 
     private void initDevice(View v) {
     }
 
+    private void initSideMenu(View v) {
+        head = (ImageView) v.findViewById(R.id.head_img);
+        spaceCardsRV = (RecyclerView)v.findViewById(R.id.space_card_recycler);
+        addSpace = (FloatingActionButton)v.findViewById(R.id.add_space);
+        userName = (TextView)v.findViewById(R.id.user_name);
+
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                //将json转换为对象
+                try {
+                    swaList = new Gson().fromJson(response,
+                            new TypeToken<List<SpaceWithAreas>>() {
+                            }.getType());
+                } catch (Exception e) {
+                    Snackbar.make(viewPager,"服务器出错",Snackbar.LENGTH_SHORT).show();
+                }
+
+                getActivity().runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        initSpaceCards();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Looper.prepare();
+                Toast.makeText(getContext(),"请求空间数据失败",Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }
+        };
+
+        HttpUtil.sendRequestWithCallback(UrlHandler.getSpaceWithAreasListUrl(),listener);
+    }
+
+    private void initSpaceCards() {
+        spaceCardAdapter = new SpaceCardAdapter();
+        spaceCardAdapter.setSwaList(swaList);
+        spaceCardAdapter.setContext(getContext());
+        spaceCardsRV.setAdapter(spaceCardAdapter);
+        spaceCardsRV.setLayoutManager(manager);
+
+    }
 
     public void changeText(String text) {
         Toast.makeText(getContext(),"扫描到的信息为"+text,Toast.LENGTH_SHORT)

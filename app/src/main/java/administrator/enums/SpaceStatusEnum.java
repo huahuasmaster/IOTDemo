@@ -13,6 +13,8 @@ import administrator.entity.Space;
  */
 
 public enum SpaceStatusEnum {
+    LEAVE_HOME((short) 1,"离家"),
+    AT_HOME((short)0,"在家")
     ;
 
     private short index;

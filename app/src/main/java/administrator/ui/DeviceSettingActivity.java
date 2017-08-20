@@ -14,7 +14,8 @@ import com.qrcodescan.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
+
+import administrator.entity.AreaDto;
 
 /**
  * 设备设置页面
@@ -26,14 +27,15 @@ import java.util.TimerTask;
 // TODO: 2017/8/7 优化自动填充的名称，防止出现重名的现象
 public class DeviceSettingActivity extends AppCompatActivity {
     private ConstraintLayout nameItem;
-    private ConstraintLayout roomItem;
+    private ConstraintLayout areaItem;
     private TextView deviceName;
-    private TextView roomName;
+    private TextView areaNameText;
     private MaterialDialog inputNewNameDialog;//用于输入设备名称的弹窗
     private MaterialDialog inputNewRoomDialog;//用于输入新房间名称的弹窗
-    private MaterialDialog chooseRoomDialog;//用于选择房间的弹窗
+    private MaterialDialog chooseAreaDialog;//用于选择房间的弹窗
     private String newRoomName;
-    private List<String> roomList = new ArrayList<>();
+    private List<AreaDto> areaDtoList;
+    private List<String> areaNameList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,19 +52,19 @@ public class DeviceSettingActivity extends AppCompatActivity {
             }
         });
 
-        roomItem.setOnClickListener(new View.OnClickListener() {
+        areaItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseRoomDialog.show();
+                chooseAreaDialog.show();
             }
         });
     }
 
     private void initViews() {
-        roomItem = (ConstraintLayout) findViewById(R.id.room_item);
+        areaItem = (ConstraintLayout) findViewById(R.id.room_item);
         nameItem = (ConstraintLayout) findViewById(R.id.name_item);
         deviceName = (TextView)findViewById(R.id.device_defined_name);
-        roomName = (TextView)findViewById(R.id.room_belong_to);
+        areaNameText = (TextView)findViewById(R.id.room_belong_to);
 
         inputNewNameDialog = new MaterialDialog
                 .Builder(DeviceSettingActivity.this)
@@ -94,14 +96,14 @@ public class DeviceSettingActivity extends AppCompatActivity {
                     }
                 }).build();
 
-        chooseRoomDialog = new MaterialDialog
+        chooseAreaDialog = new MaterialDialog
                 .Builder(this)
                 .title("选择房间/位置")
-                .items(roomList)
+                .items(areaNameList)
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                        changeRoom(roomList.get(position).toString());
+                        changeRoom(areaNameList.get(position).toString());
                     }
                 })
                 .itemsLongCallback(new MaterialDialog.ListLongCallback() {
@@ -119,7 +121,7 @@ public class DeviceSettingActivity extends AppCompatActivity {
                                 inputNewRoomDialog.show();
                             }
                         });
-                        chooseRoomDialog.dismiss();
+                        chooseAreaDialog.dismiss();
                     }
                 })
                 .neutralText("新增房间")
@@ -127,12 +129,12 @@ public class DeviceSettingActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        roomList.add("书房");
-        roomList.add("厕所");
-        roomList.add("卧室");
-        roomList.add("庭院");
-        roomList.add("客厅");
-        roomList.add("天台");
+        areaNameList.add("书房");
+        areaNameList.add("厕所");
+        areaNameList.add("卧室");
+        areaNameList.add("庭院");
+        areaNameList.add("客厅");
+        areaNameList.add("天台");
     }
 
     private void changeName(String name){
@@ -140,6 +142,6 @@ public class DeviceSettingActivity extends AppCompatActivity {
     }
 
     private void changeRoom(String room) {
-        roomName.setText(room);
+        areaNameText.setText(room);
     }
 }

@@ -19,7 +19,7 @@ import administrator.entity.Room;
  * 房间管理页面，房间列表适配器
  */
 
-public class RoomItemAdapter extends RecyclerView.Adapter {
+public class AreaItemAdapter extends RecyclerView.Adapter {
 
     private List<Room> roomList;
 

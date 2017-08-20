@@ -19,7 +19,7 @@ import com.qrcodescan.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import administrator.adapters.RoomItemAdapter;
+import administrator.adapters.AreaItemAdapter;
 import administrator.base.SwipeItemCallbackListener;
 import administrator.entity.Room;
 import administrator.entity.Space;
@@ -28,7 +28,7 @@ public class RoomManageActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private FloatingActionButton fab;
-    private RoomItemAdapter adapter;
+    private AreaItemAdapter adapter;
     private SwipeItemCallbackListener listener;
     private ImageView goBack;
 
@@ -43,7 +43,7 @@ public class RoomManageActivity extends AppCompatActivity {
 
         initViews();
 
-        adapter = new RoomItemAdapter();
+        adapter = new AreaItemAdapter();
         adapter.setRoomList(roomList);
         adapter.setListener(listener);
         LinearLayoutManager manager = new LinearLayoutManager(this);
