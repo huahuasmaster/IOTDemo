@@ -74,6 +74,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter{
         final AreaCurValue mAcv = areaList.get(position);
         adapter.setContext(context);
         adapter.setDcvList(mAcv.getDeviceCurValueList());
+        adapter.setAreaId(mAcv.getAreaId());
         //填充房间名
         viewHolder.areaName.setText(mAcv.getName());
         //添加点击事件

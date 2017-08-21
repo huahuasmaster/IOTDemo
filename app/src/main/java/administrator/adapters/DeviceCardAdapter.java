@@ -4,15 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.qrcodescan.R;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
 import administrator.base.DeviceCardCallbackListener;
+import administrator.entity.DeviceInArea;
+import administrator.enums.DataTypeEnum;
 import administrator.ui.DeviceDetailActivity;
 
 /**
@@ -23,6 +31,7 @@ import administrator.ui.DeviceDetailActivity;
 public class DeviceCardAdapter extends PagerAdapter{
     private Context context;
     private List<View> views;
+    private List<DeviceInArea> deviceInAreaList;
     private final String TAG = "devicecard";
     private DeviceCardCallbackListener listener;
 
@@ -39,6 +48,14 @@ public class DeviceCardAdapter extends PagerAdapter{
     public DeviceCardAdapter(Context context) {
         this.context = context;
 
+    }
+
+    public List<DeviceInArea> getDeviceInAreaList() {
+        return deviceInAreaList;
+    }
+
+    public void setDeviceInAreaList(List<DeviceInArea> deviceInAreaList) {
+        this.deviceInAreaList = deviceInAreaList;
     }
 
     public void setContext(Context context) {
@@ -64,6 +81,7 @@ public class DeviceCardAdapter extends PagerAdapter{
     //在此处进行view的赋值,点击事件等
     @Override public Object instantiateItem(ViewGroup container, final int position) {
         View view = views.get(position);
+        DeviceInArea deviceInArea = deviceInAreaList.get(position);
         //为3个按钮添加点击事件
         Button checkDetailBtn = (Button)view.findViewById(R.id.check_detail_btn);
         checkDetailBtn.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +108,27 @@ public class DeviceCardAdapter extends PagerAdapter{
                 }
             });
         }
+        //赋值各种名称
+        TextView realNameText = (TextView)view.findViewById(R.id.device_real_name);
+        realNameText.setText(deviceInArea.getDeviceName());
+
+        TextView areaAndOtherName = (TextView)view.findViewById(R.id.room_and_name_of_device);
+        areaAndOtherName.setText(deviceInArea.getAreaName()
+                +"-"+deviceInArea.getOtherName()
+                +"-"+ DataTypeEnum.indexOf(deviceInArea.getType()).getType());
+
+        //赋值swtich
+        Switch status = (Switch)view.findViewById(R.id.status_switch);
+        status.setChecked(deviceInArea.getStatus() == 1);
+
+        RecyclerView rv = (RecyclerView)view.findViewById(R.id.device_data_rv);
+        DataSimpleAdapter adapter = new DataSimpleAdapter();
+        //告知数据类型
+        adapter.setDataType(DataTypeEnum.indexOf(deviceInArea.getType()));
+        adapter.setDataList(deviceInArea.getDeviceDataList());
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+
         container.addView(views.get(position));
 
         return views.get(position);

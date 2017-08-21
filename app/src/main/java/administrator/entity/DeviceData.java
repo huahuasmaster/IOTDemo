@@ -1,12 +1,13 @@
 package administrator.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * Created by Administrator on 2017/8/17.
  * 供用户查看的数据单项
  */
-public class DeviceData {
+public class DeviceData implements Serializable{
 
     private String value;
 

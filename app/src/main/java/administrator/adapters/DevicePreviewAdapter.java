@@ -26,7 +26,17 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
 
     private List<DeviceCurValue> dcvList;
 
+    private int areaId;
+
     private Context context;
+
+    public int getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(int areaId) {
+        this.areaId = areaId;
+    }
 
     public Context getContext() {
         return context;
@@ -110,6 +120,7 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
                 intent.putExtra("device_id",mDcv.getDeviceId());
                 intent.putExtra("data_type",mDcv.getType());
                 intent.putExtra("position",position);
+                intent.putExtra("area_id",areaId);
                 context.startActivity(intent);
             }
         });

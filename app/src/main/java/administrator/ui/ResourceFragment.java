@@ -48,8 +48,11 @@ import administrator.entity.SpaceWithAreas;
  */
 public class ResourceFragment extends Fragment {
 
-    private SharedPreferences sp;
-    private SharedPreferences.Editor editor;
+    private SharedPreferences spaceDataSp;
+    private SharedPreferences.Editor spaceDataSpEditor;
+
+    private SharedPreferences loginDataSp;
+    private SharedPreferences.Editor loginDataSpEditor;
     private SlidingTabLayout tabLayout;
     private ViewPager viewPager;
     private LayoutInflater inflater;
@@ -119,8 +122,11 @@ public class ResourceFragment extends Fragment {
 
         manager = new LinearLayoutManager(getContext());
 
-        sp = getActivity().getSharedPreferences("space_data",Context.MODE_PRIVATE);
-        editor = sp.edit();
+        spaceDataSp = getActivity().getSharedPreferences("space_data",Context.MODE_PRIVATE);
+        spaceDataSpEditor = spaceDataSp.edit();
+
+        loginDataSp = getActivity().getSharedPreferences("login_data",Context.MODE_PRIVATE);
+        loginDataSpEditor = loginDataSp.edit();
 
         tabLayout = (SlidingTabLayout) v.findViewById(R.id.tabs);
         viewPager = (ViewPager) v.findViewById(R.id.vp);
@@ -194,16 +200,12 @@ public class ResourceFragment extends Fragment {
         areaCardAdapter.setContext(getContext());
 
         //获取默认空间id
-        int defaultSpaceId = sp.getInt("default_space_id",-1);
-        //如果本地没有保存默认空间id则进行网络请求获取
-        if(defaultSpaceId == -1) {
-            // TODO: 2017/8/18 替换为网络请求
-            defaultSpaceId = 1;
-            editor.putInt("default_space_id",defaultSpaceId);
-            editor.apply();
+        int defaultSpaceId = spaceDataSp.getInt("default_space_id",-1);
+        //如果本地已储存 则直接请求
+        if(defaultSpaceId != -1) {
+            initAreaCardsBySpaceId(defaultSpaceId);
         }
 
-        initAreaCardsBySpaceId(defaultSpaceId);
     }
 
     private void initAreaCardsBySpaceId(int spaceId) {
@@ -241,6 +243,8 @@ public class ResourceFragment extends Fragment {
         addSpace = (FloatingActionButton)v.findViewById(R.id.add_space);
         userName = (TextView)v.findViewById(R.id.user_name);
 
+        userName.setText(loginDataSp.getString("name","神秘用户"));
+
         HttpCallbackListener listener = new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
@@ -249,6 +253,14 @@ public class ResourceFragment extends Fragment {
                     swaList = new Gson().fromJson(response,
                             new TypeToken<List<SpaceWithAreas>>() {
                             }.getType());
+                    //对比本地的默认空间id 如果有差错（比较少见） 则重新加载
+                    int defaultId;
+                    for(SpaceWithAreas swa : swaList) {
+                        if(swa.getStatus() == 1) {
+                            // TODO: 2017/8/21 完善这里
+//                            defaultId = swa.getSpaceId();
+                        }
+                    }
                 } catch (Exception e) {
                     Snackbar.make(viewPager,"服务器出错",Snackbar.LENGTH_SHORT).show();
                 }

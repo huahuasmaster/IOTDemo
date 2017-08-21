@@ -11,6 +11,8 @@ import java.util.List;
  * 2.点击卡片的“查看详情后进入的页面”，用于展示大量数据，同样只展示一种类型
  */
 public class DeviceInArea implements Serializable{
+
+    private int id;
     //设备名称
     private String deviceName;
     //用户自定义名称
@@ -74,10 +76,19 @@ public class DeviceInArea implements Serializable{
         this.deviceDataList = deviceDataList;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "DeviceInArea{" +
-                "deviceName='" + deviceName + '\'' +
+                "id=" + id +
+                ", deviceName='" + deviceName + '\'' +
                 ", otherName='" + otherName + '\'' +
                 ", areaName='" + areaName + '\'' +
                 ", status=" + status +

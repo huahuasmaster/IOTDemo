@@ -49,7 +49,7 @@ public class DataSimpleAdapter extends RecyclerView.Adapter {
         this.dataList = dataList;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    private static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView doorImg;
         TextView timeText;
         TextView dataText;
@@ -76,18 +76,25 @@ public class DataSimpleAdapter extends RecyclerView.Adapter {
 
         viewHolder.timeText.setText(data.getReceiveTime());
         //如果是门检测器 则以图标显示 否则直接显示数据
-        if(dataType == DataTypeEnum.DOOR_OPEN_CLOSE) {
+        if (dataType == DataTypeEnum.DOOR_OPEN_CLOSE) {
             boolean isOpen = data.getValue().equals("1");
             viewHolder.doorImg
                     .setImageResource(isOpen ?
                             R.drawable.ic_door_open : R.drawable.ic_door_close);
-        }else {
+        } else {
             String dataForShow = data.getValue();
             switch (dataType) {
-                case HUMIDITY:dataForShow = data.getValue();break;
-                case TMP_K:dataForShow = data.getValue()+"K";break;
-                case TMP_CELSIUS:dataForShow = data.getValue()+"℃";break;
-                default:break;
+                case HUMIDITY:
+                    dataForShow = data.getValue();
+                    break;
+                case TMP_K:
+                    dataForShow = data.getValue() + "K";
+                    break;
+                case TMP_CELSIUS:
+                    dataForShow = data.getValue() + "℃";
+                    break;
+                default:
+                    break;
             }
             viewHolder.dataText.setText(dataForShow);
         }
@@ -95,7 +102,11 @@ public class DataSimpleAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        if (dataList == null) {
+            return 0;
+        } else {
+            return dataList.size();
+        }
     }
 
     //根据数据类型选择对应的布局

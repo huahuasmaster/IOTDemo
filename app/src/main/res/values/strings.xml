@@ -55,7 +55,9 @@
     <string name="setting_title_room_belong">所属房间</string>
     <string name="SN">序列号</string>
     <string name="device_set_time">添加时间</string>
-    <string name="hardware_version">固件版本</string>
+    <string name="hardware_version">硬件版本</string>
+    <string name="software_version">软件版本</string>
+
     <string name="delete">删除</string>
 
     <string name="getting_data">获取数据中</string>

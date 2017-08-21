@@ -8,7 +8,7 @@ package administrator.base.http;
 
 public class UrlHandler {
 
-    public static String ip = "192.168.1.101";
+    public static String ip = "192.168.0.108";
 
     public static String port = "8088";
 
@@ -33,6 +33,22 @@ public class UrlHandler {
     public static String getDeviceWithDataUrl(int deviceId,int type,int offset) {
         return getHead()+"device/"+deviceId+"/"+type+"/"+offset;
     }
+
+    //获取设备的详细信息
+    public static String getDeviceDetailDesc(int deviceId) {
+        return getHead()+"device/"+deviceId;
+    }
+
+    //获取设备所处空间的所有安装位置
+    public static String getAreaListByDeviceId(int deviceId) {
+        return getHead()+"area/"+deviceId+"/byDevice";
+    }
+
+    //获取安装位置里所有设备少量数据
+    public static String getDeviceInAreaListByAreaId(int areaId,int offset) {
+        return getHead()+"area/"+areaId+"/"+offset+"/innerDevice";
+    }
+
     /**
      * 获取请求的开头ip与端口
      * @return

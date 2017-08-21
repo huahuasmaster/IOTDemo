@@ -34,7 +34,8 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
     private Switch statusSwitch;
     private ImageView goSettingImg;
     private ImageView goBackImg;
-    private int position;
+    private int deviceId;
+    private int type;
     private TextView title;
     private MaterialDialog waitDialog;//提示等待弹窗
     private DeviceInArea deviceInArea;
@@ -46,6 +47,9 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_detail);
 
+        deviceId = getIntent().getIntExtra("device_id",-1);
+        type = getIntent().getIntExtra("data_type",-1);
+
         findViews();
 
         initData();
@@ -53,7 +57,6 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
 
         goBackImg.setOnClickListener(this);
         goSettingImg.setOnClickListener(this);
-        position = getIntent().getIntExtra("position",-1);
 //        Snackbar.make(rv,position == -1 ? "未知设备" : "这是第"+(position+1)+"个卡片中的设备"
 //                ,Snackbar.LENGTH_SHORT)
 //                .show();
@@ -120,7 +123,7 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
 
         waitDialog.show();
 
-        String url = UrlHandler.getDeviceWithDataUrl(2,1,10);
+        String url = UrlHandler.getDeviceWithDataUrl(deviceId,type,10);
         HttpUtil.sendRequestWithCallback(url,listener);
     }
 
