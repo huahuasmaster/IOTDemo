@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class AreaCurValue {
 
-    private int areaId;
+    private long areaId;
 
     private String name;
 
@@ -18,11 +18,11 @@ public class AreaCurValue {
 
     public AreaCurValue(){}
 
-    public int getAreaId() {
+    public long getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(int areaId) {
+    public void setAreaId(long areaId) {
         this.areaId = areaId;
     }
 

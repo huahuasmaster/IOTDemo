@@ -1,25 +1,18 @@
 package administrator.entity;
 
-import java.io.Serializable;
-
-/**
- * 设备设置页面
- * 设备的真实名字，固件版本等信息
- */
-
-public class DeviceModelDto implements Serializable{
+public class DeviceModelDto {
 
     private String name;
 
     private String remark;
 
-    private int  hardwareVersion;
+    private long  hardwareVersion;
 
-    private int softwareVersion;
+    private long softwareVersion;
 
-    private int type;
+    private short type;
 
-    private int status;
+    private short status;
 
     public DeviceModelDto() {
     }
@@ -40,35 +33,35 @@ public class DeviceModelDto implements Serializable{
         this.remark = remark;
     }
 
-    public int getHardwareVersion() {
+    public long getHardwareVersion() {
         return hardwareVersion;
     }
 
-    public void setHardwareVersion(int hardwareVersion) {
+    public void setHardwareVersion(long hardwareVersion) {
         this.hardwareVersion = hardwareVersion;
     }
 
-    public int getSoftwareVersion() {
+    public long getSoftwareVersion() {
         return softwareVersion;
     }
 
-    public void setSoftwareVersion(int softwareVersion) {
+    public void setSoftwareVersion(long softwareVersion) {
         this.softwareVersion = softwareVersion;
     }
 
-    public int getType() {
+    public short getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(short type) {
         this.type = type;
     }
 
-    public int getStatus() {
+    public short getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(short status) {
         this.status = status;
     }
 

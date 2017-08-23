@@ -96,7 +96,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter{
                 new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
     }
 
-    private void goNextActivity(int areaId) {
+    private void goNextActivity(long areaId) {
         Intent intent = new Intent(context, AreaDetailActivity.class);
         intent.putExtra("area_id",areaId);
         context.startActivity(intent);

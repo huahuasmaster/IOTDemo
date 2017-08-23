@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import administrator.adapters.AreaItemAdapter;
-import administrator.base.SwipeItemCallbackListener;
+import administrator.adapters.listener.SwipeItemCallbackListener;
 import administrator.entity.Room;
 import administrator.entity.Space;
 

@@ -55,6 +55,10 @@ public class AreaLabelAdapter {
         this.mContext = mContext;
     }
 
+    public void clearLabels() {
+        mFlowLayout.removeAllViews();
+    }
+
     public Context getmContext() {
         return mContext;
     }

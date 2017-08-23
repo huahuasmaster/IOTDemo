@@ -1,8 +1,6 @@
 package administrator.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,14 +12,11 @@ import android.widget.TextView;
 
 import com.qrcodescan.R;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-import administrator.base.DeviceCardCallbackListener;
+import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.entity.DeviceInArea;
 import administrator.enums.DataTypeEnum;
-import administrator.ui.DeviceDetailActivity;
 
 /**
  * Created by zhuang_ge on 2017/8/5.

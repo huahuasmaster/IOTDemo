@@ -11,7 +11,7 @@ import com.qrcodescan.R;
 
 import java.util.List;
 
-import administrator.base.SwipeItemCallbackListener;
+import administrator.adapters.listener.SwipeItemCallbackListener;
 import administrator.entity.Space;
 
 /**

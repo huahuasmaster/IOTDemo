@@ -47,7 +47,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="设备设置" />
+                android:text="@string/device_setting" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
@@ -95,7 +95,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
-                    android:text="前门"
+                    tools:text="前门"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -139,7 +139,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
-                    android:text="客厅"
+                    tools:text="客厅"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -176,7 +176,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
 
-                android:text="KNOTEN智能门锁"
+                tools:text="KNOTEN智能门锁"
                 android:alpha="0.87"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
@@ -200,7 +200,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/device_sn"
                 android:textSize="16sp"
-                android:text="328137219"
+                tools:text="328137219"
                 />
         </LinearLayout>
             <LinearLayout
@@ -223,7 +223,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/device_set_time"
                     android:textSize="16sp"
-                    android:text="2017年8月6日19:43:39"
+                    tools:text="2017年8月6日19:43:39"
                     />
             </LinearLayout>
 
@@ -247,7 +247,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/device_hardware_version"
                     android:textSize="16sp"
-                    android:text="1.0.0"
+                    tools:text="1.0.0"
                     />
             </LinearLayout>
 
@@ -271,7 +271,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/device_software_version"
                     android:textSize="16sp"
-                    android:text="1.0.0"
+                    tools:text="1.0.0"
                     />
             </LinearLayout>
         </LinearLayout>

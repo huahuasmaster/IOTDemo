@@ -15,10 +15,13 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.qrcodescan.R;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.util.ArrayList;
 import java.util.logging.Handler;
 
 import administrator.base.ViewFindUtils;
+import administrator.base.mqtt.MqttManager;
 import administrator.entity.TabEntity;
 
 
@@ -62,6 +65,16 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
         tabLayout.setIconHeight(24.0F);
         tabLayout.setIconWidth(24.0F);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //开启mqtt连接
+                MqttManager.getInstance().creatConnect();
+                //订阅主题
+                MqttManager.getInstance().subscribe();
+            }
+        }).start();
+
     }
 
     public void setHandler(Handler handler) {
@@ -83,6 +96,21 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
             ResourceFragment fragment = (ResourceFragment)mFragments.get(0);
             fragment.changeText("二维码内容："+scanResult);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MqttManager.getInstance().disConnect();
+                }catch (MqttException e){
+
+                }
+            }
+        }).start();
     }
 
     @Override

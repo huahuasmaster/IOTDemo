@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import administrator.adapters.DeviceCardAdapter;
-import administrator.base.DeviceCardCallbackListener;
+import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
@@ -37,10 +36,10 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
     private MaterialDialog thresholdSetDialog;
     private MaterialDialog waitDialog;
     private DeviceCardAdapter adapter;
-    private int deviceId;
+    private long deviceId;
     private int type;
     private int targetNth = 0;
-    private int areaId;
+    private long areaId;
 
     public static final int DEAULT_OFFSCEEN_LIMIT = 3;
     private List<View> viewList = new ArrayList<>();
@@ -54,8 +53,8 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_detail);
 
-        areaId = getIntent().getIntExtra("area_id",-1);
-        deviceId = getIntent().getIntExtra("device_id",-1);
+        areaId = getIntent().getLongExtra("area_id",-1L);
+        deviceId = getIntent().getLongExtra("device_id",-1L);
         type = getIntent().getIntExtra("data_type",-1);
 
 

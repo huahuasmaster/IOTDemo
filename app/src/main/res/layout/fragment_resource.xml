@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Button
+                <ImageView
                     android:id="@+id/ex_space_text"
                     style="@style/Widget.AppCompat.Button.Small"
                     android:layout_width="wrap_content"
@@ -50,6 +50,7 @@
                     android:layout_marginRight="0dp"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="#FFF"
+                    android:src="@drawable/ic_exchange_space"
                     android:text="杭州的家"
                     android:padding="8dp"
                     android:textColor="@color/colorPrimary"

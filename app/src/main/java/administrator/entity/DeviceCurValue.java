@@ -6,7 +6,7 @@ package administrator.entity;
  */
 public class DeviceCurValue {
 
-    private int deviceId;
+    private long deviceId;
 
     private int type;
 
@@ -22,11 +22,11 @@ public class DeviceCurValue {
         this.type = type;
     }
 
-    public int getDeviceId() {
+    public long getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(int deviceId) {
+    public void setDeviceId(long deviceId) {
         this.deviceId = deviceId;
     }
 
@@ -42,6 +42,7 @@ public class DeviceCurValue {
     public String toString() {
         return "DeviceCurValue{" +
                 "deviceId=" + deviceId +
+                ", type=" + type +
                 ", curValue='" + curValue + '\'' +
                 '}';
     }

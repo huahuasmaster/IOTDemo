@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this,IpConfigActivity.class);
                 startActivity(intent);
                 return false;
             }
@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                     //记住账号密码
                     editor.putString("account",userDto.getLoginName())
                             .putString("name",userDto.getName())
-                            .putInt("id",userDto.getId())
+                            .putLong("user_id",userDto.getId())
                             .putString("password",password);
                     editor.apply();
 

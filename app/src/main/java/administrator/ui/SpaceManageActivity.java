@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import administrator.adapters.SpaceItemAdapter;
-import administrator.base.SwipeItemCallbackListener;
+import administrator.adapters.listener.SwipeItemCallbackListener;
 import administrator.entity.Space;
 
 public class SpaceManageActivity extends AppCompatActivity {

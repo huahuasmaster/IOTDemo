@@ -1,48 +1,40 @@
 package administrator.entity;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 2017/8/14.
+ * 房间信息
  */
 public class AreaDto{
 
-    private int id;
+    private long id;
 
-    private int spaceId;
+    private long spaceId;
 
     private String name;
 
-    private String creatTime;
+    private String createTime;
 
-    private int creatId;
+    private long creatorId;
 
-    private int status;
+    private short status;
 
     public AreaDto(){}
 
-    public AreaDto(int id, int spaceId, String name, String creatTime, int creatId, int status){
-        this.id = id;
-        this.spaceId = spaceId;
-        this.name = name;
-        this.creatTime = creatTime;
-        this.creatId = creatId;
-        this.status = status;
-    }
-
-
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getSpaceId() {
+    public long getSpaceId() {
         return spaceId;
     }
 
-    public void setSpaceId(int spaceId) {
+    public void setSpaceId(long spaceId) {
         this.spaceId = spaceId;
     }
 
@@ -54,28 +46,30 @@ public class AreaDto{
         this.name = name;
     }
 
-    public String getCreatTime() {
-        return creatTime;
+
+
+    public long getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreatTime(String creatTime) {
-        this.creatTime = creatTime;
+    public void setCreatorId(long creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public int getCreatId() {
-        return creatId;
-    }
-
-    public void setCreatId(int creatId) {
-        this.creatId = creatId;
-    }
-
-    public int getStatus() {
+    public short getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(short status) {
         this.status = status;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     @Override
@@ -84,8 +78,8 @@ public class AreaDto{
                 "id=" + id +
                 ", spaceId=" + spaceId +
                 ", name='" + name + '\'' +
-                ", creatTime='" + creatTime + '\'' +
-                ", creatId=" + creatId +
+                ", createTime='" + createTime + '\'' +
+                ", creatorId=" + creatorId +
                 ", status=" + status +
                 '}';
     }

@@ -45,9 +45,12 @@ dependencies {
     compile 'com.tomer:fadingtextview:2.0'
     compile 'com.github.AItsuki:SwipeMenuRecyclerView:1.1.1'
     compile 'com.github.Jay-Goo:RangeSeekBar:v1.0.7'
-    testCompile 'junit:junit:4.12'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.nex3z:flow-layout:0.1.4'
     compile 'com.google.code.gson:gson:2.7'
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.github.LichFaker:Logger:v1.0.0'
+    testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }

@@ -1,6 +1,7 @@
 package administrator.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -14,7 +15,8 @@ import com.qrcodescan.R;
 
 import java.util.List;
 
-import administrator.entity.Space;
+import administrator.base.DensityUtil;
+import administrator.adapters.listener.SpaceCardCallbackListener;
 import administrator.entity.SpaceWithAreas;
 
 /**
@@ -27,6 +29,16 @@ public class SpaceCardAdapter extends Adapter {
     private List<SpaceWithAreas> swaList;
 
     private Context mContext;
+
+    private SpaceCardCallbackListener listener;
+
+    public SpaceCardCallbackListener getListener() {
+        return listener;
+    }
+
+    public void setListener(SpaceCardCallbackListener listener) {
+        this.listener = listener;
+    }
 
     public Context getContext() {
         return mContext;
@@ -55,16 +67,18 @@ public class SpaceCardAdapter extends Adapter {
         //开关的文字说明
         private TextView type;
         //是否为默认空间
-        private Switch defaultSwitch;
-
+//        private Switch defaultSwitch;
+        //整个背景
+        private CardView back;
         public ViewHolder(View itemView) {
             super(itemView);
 
             spaceName = (TextView) itemView.findViewById(R.id.space_name);
-            roomLabels = (FlowLayout) itemView.findViewById(R.id.roomLabelFlowLayout);
+            roomLabels = (FlowLayout) itemView.findViewById(R.id.room_label_flowLayout);
             typeSwitch = (Switch) itemView.findViewById(R.id.type_switch);
-            defaultSwitch = (Switch) itemView.findViewById(R.id.default_switch);
+//            defaultSwitch = (Switch) itemView.findViewById(R.id.default_switch);
             type = (TextView) itemView.findViewById(R.id.space_type);
+            back = (CardView)itemView.findViewById(R.id.space_card_back);
 
         }
     }
@@ -79,18 +93,65 @@ public class SpaceCardAdapter extends Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
-        SpaceWithAreas mSpace = swaList.get(position);
+        final SpaceWithAreas mSpace = swaList.get(position);
         viewHolder.spaceName.setText(mSpace.getName());
         viewHolder.typeSwitch.setChecked(mSpace.getStatus() == 1);
-        viewHolder.defaultSwitch.setChecked(mSpace.getIsDefault() == 1);
+//        viewHolder.defaultSwitch.setChecked(mSpace.getIsDefault() == 1);
         viewHolder.type.setText(viewHolder.typeSwitch.isChecked() ? "离家模式" : "归家模式");
+
+        RecyclerView.LayoutParams lp =
+                (RecyclerView.LayoutParams) viewHolder.back.getLayoutParams();
+        //高亮（浮起）默认空间卡片
+        if(mSpace.getIsDefault() == (short)1) {
+            viewHolder.back.setCardElevation((float)30.0);
+            viewHolder.back.setCardBackgroundColor(
+                    mContext.getResources().getColor(R.color.colorPrimaryLight));
+            lp.setMargins(
+                    DensityUtil.dip2px(mContext,(float) 4.0),
+                    DensityUtil.dip2px(mContext,(float) 6.0),
+                    DensityUtil.dip2px(mContext,(float) 4.0),
+                    DensityUtil.dip2px(mContext,(float) 6.0));
+            viewHolder.back.setLayoutParams(lp);
+        } else {
+            viewHolder.back.setCardElevation((float)6.0);
+            viewHolder.back.setCardBackgroundColor(
+                    mContext.getResources().getColor(R.color.colorPrimary));
+            lp.setMargins(
+                    DensityUtil.dip2px(mContext,(float) 4.0),
+                    DensityUtil.dip2px(mContext,(float) 4.0),
+                    DensityUtil.dip2px(mContext,(float) 4.0),
+                    DensityUtil.dip2px(mContext,(float) 4.0));
+            viewHolder.back.setLayoutParams(lp);
+        }
+
+        viewHolder.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onChooseSpace(mSpace.getId());
+                //如果被选中的卡片 不是默认空间 则进行更改
+                if(mSpace.getIsDefault() != 1) {
+                    changeDefaultSpaceCard(position);
+                }
+            }
+        });
 
         //生成房间标签流式布局
         AreaLabelAdapter adapter = new AreaLabelAdapter(
                 mSpace.getAreaList(), viewHolder.roomLabels,mContext);
+        adapter.clearLabels();
         adapter.addLabels();
+    }
+    private void changeDefaultSpaceCard(int position) {
+        for(SpaceWithAreas swa : swaList) {
+            if (swa.getIsDefault() == 1) {
+                swa.setIsDefault((short)0);
+                break;
+            }
+        }
+        swaList.get(position).setIsDefault((short)1);
+        notifyDataSetChanged();
     }
 
     @Override

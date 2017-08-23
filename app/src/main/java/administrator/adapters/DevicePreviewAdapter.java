@@ -26,15 +26,15 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
 
     private List<DeviceCurValue> dcvList;
 
-    private int areaId;
+    private long areaId;
 
     private Context context;
 
-    public int getAreaId() {
+    public long getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(int areaId) {
+    public void setAreaId(long areaId) {
         this.areaId = areaId;
     }
 

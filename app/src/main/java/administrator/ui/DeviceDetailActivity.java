@@ -34,7 +34,7 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
     private Switch statusSwitch;
     private ImageView goSettingImg;
     private ImageView goBackImg;
-    private int deviceId;
+    private long deviceId;
     private int type;
     private TextView title;
     private MaterialDialog waitDialog;//提示等待弹窗
@@ -47,7 +47,7 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_detail);
 
-        deviceId = getIntent().getIntExtra("device_id",-1);
+        deviceId = getIntent().getLongExtra("device_id",-1L);
         type = getIntent().getIntExtra("data_type",-1);
 
         findViews();

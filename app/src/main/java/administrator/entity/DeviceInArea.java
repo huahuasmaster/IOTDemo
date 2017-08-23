@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class DeviceInArea implements Serializable{
 
-    private int id;
+    private long id;
     //设备名称
     private String deviceName;
     //用户自定义名称
@@ -20,7 +20,7 @@ public class DeviceInArea implements Serializable{
     //安装位置名称
     private String areaName;
     //所处状态
-    private int status;
+    private short status;
     //数据类型
     private int type;
 
@@ -52,11 +52,11 @@ public class DeviceInArea implements Serializable{
         this.areaName = areaName;
     }
 
-    public int getStatus() {
+    public short getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(short status) {
         this.status = status;
     }
 
@@ -76,11 +76,11 @@ public class DeviceInArea implements Serializable{
         this.deviceDataList = deviceDataList;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

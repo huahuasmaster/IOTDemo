@@ -6,16 +6,17 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2017/8/14.
+ * 空间内房间列表
  */
 public class SpaceWithAreas {
 
-    private String spaceId;
+    private long id;
 
     private String name;
 
-    private int status;
+    private short status;
 
-    private int isDefault;
+    private short isDefault;
 
     private List<AreaDto> areaList;
 
@@ -23,12 +24,12 @@ public class SpaceWithAreas {
         areaList = new ArrayList<>();
     }
 
-    public String getSpaceId() {
-        return spaceId;
+    public long getId() {
+        return id;
     }
 
-    public void setSpaceId(String spaceId) {
-        this.spaceId = spaceId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,19 +40,19 @@ public class SpaceWithAreas {
         this.name = name;
     }
 
-    public int getStatus() {
+    public short getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(short status) {
         this.status = status;
     }
 
-    public int getIsDefault() {
+    public short getIsDefault() {
         return isDefault;
     }
 
-    public void setIsDefault(int isDefault) {
+    public void setIsDefault(short isDefault) {
         this.isDefault = isDefault;
     }
 
@@ -66,7 +67,7 @@ public class SpaceWithAreas {
     @Override
     public String toString() {
         return "SpaceWithAreas{" +
-                "spaceId='" + spaceId + '\'' +
+                "spaceId='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", status=" + status +
                 ", isDefault=" + isDefault +

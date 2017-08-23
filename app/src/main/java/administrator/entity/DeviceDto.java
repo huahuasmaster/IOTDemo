@@ -2,12 +2,10 @@ package administrator.entity;
 
 /**
  * Created by Administrator on 2017/8/16.
- * 设备设置页面
- * 设备的详细信息
  */
 public class DeviceDto {
 
-    private int id;
+    private long id;
 
     private DeviceModelDto deviceModelDto;
 
@@ -17,19 +15,19 @@ public class DeviceDto {
 
     private String createTime;
 
-    private int creatorId;
+    private long creatorId;
 
     private String setupTime;
 
-    private int status;
+    private short status;
 
     public DeviceDto(){}
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -49,11 +47,11 @@ public class DeviceDto {
         this.createTime = createTime;
     }
 
-    public int getCreatorId() {
+    public long getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(int creatorId) {
+    public void setCreatorId(long creatorId) {
         this.creatorId = creatorId;
     }
 
@@ -65,11 +63,11 @@ public class DeviceDto {
         this.setupTime = setupTime;
     }
 
-    public int getStatus() {
+    public short getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(short status) {
         this.status = status;
     }
 

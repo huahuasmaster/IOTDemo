@@ -1,20 +1,17 @@
 package administrator.entity;
 
-import java.io.Serializable;
-
 /**
  * Created by Administrator on 2017/8/16.
- * 用户bean
  */
-public class UserDto implements Serializable{
+public class UserDto {
 
-    private int id;
+    private long id;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -32,7 +29,7 @@ public class UserDto implements Serializable{
 
     private String tel;
 
-    private int type;
+    private short type;
 
     public UserDto(){}
 
@@ -92,11 +89,11 @@ public class UserDto implements Serializable{
         this.tel = tel;
     }
 
-    public int getType() {
+    public short getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(short type) {
         this.type = type;
     }
 

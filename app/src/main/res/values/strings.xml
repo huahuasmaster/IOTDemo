@@ -64,4 +64,5 @@
     <string name="plz_wait">请稍等</string>
     <!--%n$s n表示第一个参数 s->字符串 d->整数 f->浮点数-->
     <string name="tmp_s_value">%1$s℃</string>
+    <string name="device_setting">设备设置</string>
 </resources>
