@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2017/8/14.
- * 空间内房间列表
+ * 空间以及空间内房间列表
  */
 public class SpaceWithAreas {
 
@@ -14,7 +14,11 @@ public class SpaceWithAreas {
 
     private String name;
 
+    //空间状态 停用、正常……
     private short status;
+
+    //空间模式 离家、归家……
+    private  short modelType;
 
     private short isDefault;
 
@@ -64,12 +68,21 @@ public class SpaceWithAreas {
         this.areaList = areaList;
     }
 
+    public short getModelType() {
+        return modelType;
+    }
+
+    public void setModelType(short modelType) {
+        this.modelType = modelType;
+    }
+
     @Override
     public String toString() {
         return "SpaceWithAreas{" +
-                "spaceId='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", status=" + status +
+                ", modelType=" + modelType +
                 ", isDefault=" + isDefault +
                 ", areaList=" + areaList +
                 '}';

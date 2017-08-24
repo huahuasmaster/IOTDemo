@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.qrcodescan.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import administrator.entity.AreaCurValue;
@@ -27,6 +28,15 @@ public class AreaCardAdapter extends RecyclerView.Adapter{
     private List<AreaCurValue> areaList;
 
     private Context context;
+
+    //用于储存卡片内预览值列表的适配器 方便调用、刷新预览数据
+    //对特定布局刷新 而不是整个列表刷新 可以有效减少程序开销
+    private List<DevicePreviewAdapter> previewAdapterList;
+
+    public AreaCardAdapter() {
+        super();
+        previewAdapterList = new ArrayList<>();
+    }
 
     public Context getContext() {
         return context;
@@ -71,6 +81,8 @@ public class AreaCardAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder)holder;
         DevicePreviewAdapter adapter = new DevicePreviewAdapter();
+        previewAdapterList.add(adapter);
+
         final AreaCurValue mAcv = areaList.get(position);
         adapter.setContext(context);
         adapter.setDcvList(mAcv.getDeviceCurValueList());

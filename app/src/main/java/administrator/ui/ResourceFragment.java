@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ import administrator.base.mqtt.MqttManager;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.AreaCurValue;
 import administrator.entity.SpaceWithAreas;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 /**
  * “资源”页面
@@ -281,15 +284,6 @@ public class ResourceFragment extends Fragment {
 
         userName.setText(loginDataSp.getString("name", "神秘用户"));
 
-        head.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new
-                        Intent("administrator.service.WsnDataService");
-                getActivity().sendBroadcast(intent);
-            }
-        });
-
         spaceOnClickListener = new SpaceCardCallbackListener() {
             @Override
             public void onChooseSpace(long spaceId) {
@@ -301,6 +295,35 @@ public class ResourceFragment extends Fragment {
             @Override
             public void onChooseArea(long areaId) {
 
+            }
+
+            @Override
+            public void onClickSwitch(long spaceId, final Switch mSwicth, boolean checked) {
+                //离家->1 归家->0
+                short type = checked ? (short)1 : (short)0;
+
+                RequestBody body = new FormBody.Builder()
+                                    .add("type",String.valueOf(type))
+                                    .build();
+                String url = UrlHandler.postChangeModelTypeBySpaceId(spaceId);
+                HttpCallbackListener listener = new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        //修改成功
+                        if(response.equals("1")) {
+                            Snackbar.make(mSwicth,"修改成功",Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            mSwicth.setChecked(!mSwicth.isChecked());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        //如果出错 switch恢复原来的状态
+                        mSwicth.setChecked(!mSwicth.isChecked());
+                    }
+                };
+                HttpUtil.sendRequestWithCallback(url,body,listener);
             }
         };
 
@@ -366,15 +389,28 @@ public class ResourceFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
+
+    /**
+     * 通过eventbus接受mqtt消息 进行处理
+     * @param msgBean
+     */
     @Subscribe
     public void onEvent(MqttMsgBean msgBean){
         Looper.prepare();
         Toast.makeText(getContext(),
                 "mqtt主题:"+msgBean.getTopic()
-                        +"mqtt信息"+msgBean.getMqttMessage().toString()
+                        +" mqtt信息:"+msgBean.getMqttMessage().toString()
                 , Toast.LENGTH_SHORT)
                 .show();
         Looper.loop();
+        String topic = msgBean.getTopic().split("/")[1];
+        String msg = msgBean.getMqttMessage().toString();
+        //如果mqtt消息主题为data,则动态修改页面内的信息
+        if(topic.equals("data")) {
+            //拆分数据
+            String sn = msg.split("$")[0];
+
+        }
     }
 
     public void changeText(String text) {

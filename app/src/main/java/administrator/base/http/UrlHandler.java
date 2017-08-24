@@ -60,6 +60,12 @@ public class UrlHandler {
     public static String getAreaWithDeviceOfDefaultSpace(long userId) {
         return getHead()+"space/"+userId+"/areaList/preview/default";
     }
+
+    //修改空间的状态 离家/归家
+    public static String postChangeModelTypeBySpaceId(long spaceId) {
+        return getHead()+"space/"+spaceId+"/changeModel";
+    }
+
     /**
      * 获取请求的开头ip与端口
      * @return

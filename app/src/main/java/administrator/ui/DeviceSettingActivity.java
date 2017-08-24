@@ -146,7 +146,7 @@ public class DeviceSettingActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         SNText.setText(deviceDto.getSn());
-                        setTimeText.setText(deviceDto.getCreateTime());
+                        setTimeText.setText(deviceDto.getDeviceRegistDto().getSetTime());
                         hardwareVersionText.setText(""+deviceDto.getDeviceModelDto()
                                 .getHardwareVersion());
                         softwareVersionText.setText(""+deviceDto.getDeviceModelDto()

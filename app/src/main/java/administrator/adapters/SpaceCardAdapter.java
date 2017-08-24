@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -94,12 +95,22 @@ public class SpaceCardAdapter extends Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        ViewHolder viewHolder = (ViewHolder) holder;
+        final ViewHolder viewHolder = (ViewHolder) holder;
         final SpaceWithAreas mSpace = swaList.get(position);
         viewHolder.spaceName.setText(mSpace.getName());
-        viewHolder.typeSwitch.setChecked(mSpace.getStatus() == 1);
+
+        viewHolder.typeSwitch.setChecked(mSpace.getModelType() == 1);
+        viewHolder.typeSwitch.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                viewHolder.type.setText(b ? "离家" : "归家");
+                listener.onClickSwitch(mSpace.getId(),viewHolder.typeSwitch,b);
+            }
+        });
+
 //        viewHolder.defaultSwitch.setChecked(mSpace.getIsDefault() == 1);
-        viewHolder.type.setText(viewHolder.typeSwitch.isChecked() ? "离家模式" : "归家模式");
+        viewHolder.type.setText(viewHolder.typeSwitch.isChecked() ? "离家" : "归家");
 
         RecyclerView.LayoutParams lp =
                 (RecyclerView.LayoutParams) viewHolder.back.getLayoutParams();

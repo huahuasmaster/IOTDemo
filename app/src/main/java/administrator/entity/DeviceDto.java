@@ -1,5 +1,6 @@
 package administrator.entity;
 
+
 /**
  * Created by Administrator on 2017/8/16.
  */
@@ -8,6 +9,8 @@ public class DeviceDto {
     private long id;
 
     private DeviceModelDto deviceModelDto;
+
+    private DeviceRegistDto deviceRegistDto;
 
     private String areaName;
 
@@ -87,11 +90,20 @@ public class DeviceDto {
         this.deviceModelDto = deviceModelDto;
     }
 
+    public DeviceRegistDto getDeviceRegistDto() {
+        return deviceRegistDto;
+    }
+
+    public void setDeviceRegistDto(DeviceRegistDto deviceRegistDto) {
+        this.deviceRegistDto = deviceRegistDto;
+    }
+
     @Override
     public String toString() {
         return "DeviceDto{" +
                 "id=" + id +
                 ", deviceModelDto=" + deviceModelDto +
+                ", deviceRegistDto=" + deviceRegistDto +
                 ", areaName='" + areaName + '\'' +
                 ", sn='" + sn + '\'' +
                 ", createTime='" + createTime + '\'' +

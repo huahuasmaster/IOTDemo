@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText accountEdit;
     private EditText passwordEdit;
     private Button loginBtn;
+    private MaterialDialog waitForLoginDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,22 @@ public class LoginActivity extends AppCompatActivity {
         String prePassword = sp.getString("password","");
         accountEdit.setText(preAccount);
         passwordEdit.setText(prePassword);
+
+        waitForLoginDialog = new MaterialDialog.Builder(this)
+                .title(getResources()
+                        .getString(R.string.be_logging_in))
+                .content(getResources()
+                        .getString(R.string.plz_wait))
+                .progress(true,0)
+                .progressIndeterminateStyle(false)
+                .build();
     }
 
     private void login() {
         final String account = accountEdit.getText().toString();
         final String password = passwordEdit.getText().toString();
+
+        waitForLoginDialog.show();
 
         RequestBody body = new FormBody.Builder()
                             .add("account",account)
@@ -93,8 +105,10 @@ public class LoginActivity extends AppCompatActivity {
                             .putLong("user_id",userDto.getId())
                             .putString("password",password);
                     editor.apply();
-
                     UrlHandler.setUserId(userDto.getId());
+                    if (waitForLoginDialog.isShowing()) {
+                        waitForLoginDialog.dismiss();
+                    }
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
                 }
