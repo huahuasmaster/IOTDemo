@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageView2"
+            android:id="@+id/device_head_ic"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_marginLeft="8dp"
@@ -31,9 +31,9 @@
             tools:text="门检测器"
             android:textColor="@android:color/black"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/circleImageView2"
-            app:layout_constraintLeft_toRightOf="@+id/circleImageView2"
-            app:layout_constraintTop_toTopOf="@+id/circleImageView2"
+            app:layout_constraintBottom_toBottomOf="@+id/device_head_ic"
+            app:layout_constraintLeft_toRightOf="@+id/device_head_ic"
+            app:layout_constraintTop_toTopOf="@+id/device_head_ic"
             app:layout_constraintVertical_bias="0.20999998" />
 
         <TextView
@@ -57,9 +57,9 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/circleImageView2"
+            app:layout_constraintBottom_toBottomOf="@+id/device_head_ic"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/circleImageView2" />
+            app:layout_constraintTop_toTopOf="@+id/device_head_ic" />
 
         <View
             android:id="@+id/view"
@@ -183,7 +183,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/circleImageView2"
+            app:layout_constraintTop_toBottomOf="@+id/device_head_ic"
             app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

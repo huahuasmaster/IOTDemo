@@ -9,6 +9,7 @@ import java.util.List;
  * 一个DeviceInArea类对应一张卡片
  * 一个设备可能对应多张卡片，以数据的类型数量为准
  * 2.点击卡片的“查看详情后进入的页面”，用于展示大量数据，同样只展示一种类型
+ * 3.预览页面 直接显示未绑定安装位置的设备的少量数据
  */
 public class DeviceInArea implements Serializable{
 

@@ -1,0 +1,174 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="272dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
+    >
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/device_head_ic"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="8dp"
+            android:src="@mipmap/door"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/device_real_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:alpha="0.78"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            tools:text="门检测器"
+            app:layout_constraintTop_toTopOf="@+id/device_head_ic"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/device_head_ic"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintVertical_bias="0.2"
+            app:layout_constraintLeft_toRightOf="@+id/device_head_ic"
+            android:layout_marginLeft="8dp" />
+
+        <TextView
+
+            android:id="@+id/name_and_type_of_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            tools:text="客厅-前门"
+            android:layout_marginLeft="4dp"
+            app:layout_constraintLeft_toLeftOf="@+id/device_real_name"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/device_real_name" />
+
+        <Switch
+            android:id="@+id/status_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text=""
+            app:layout_constraintTop_toTopOf="@+id/device_head_ic"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/device_head_ic"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:alpha="0.14"
+            android:background="@android:color/black"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/go_setting_threshold"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
+            android:id="@+id/go_setting_threshold"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:text="阈值设置"
+            android:textColor="@color/cyan"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/dsc"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:text="    近期无异常，今日共12次开合"
+            android:textSize="16sp"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintRight_toLeftOf="@+id/device_data_rv"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" />
+
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/preview"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/dsc"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/circleImageView2" />-->
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/dsc"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/circleImageView2"-->
+        <!--app:layout_constraintVertical_bias="1.0">-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+
+        <!--<include layout="@layout/device_data_item" />-->
+        <!--</LinearLayout>-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/device_data_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name_and_type_of_device"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/check_detail_btn"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkDetail"
+            android:textColor="@color/cyan"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="0dp"
+            app:layout_constraintRight_toRightOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

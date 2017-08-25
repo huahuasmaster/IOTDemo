@@ -35,6 +35,9 @@ public class AreaLabelAdapter {
     public void addLabels() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         for(AreaDto area : areaDtoList) {
+            if (area.getId() == -1) {
+                continue;
+            }
             View v = inflater.inflate(R.layout.room_label_item,null);
 
             CardView labelBack = (CardView)v.findViewById(R.id.label_back);

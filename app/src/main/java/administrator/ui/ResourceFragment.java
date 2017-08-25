@@ -3,7 +3,6 @@ package administrator.ui;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,9 +33,10 @@ import com.google.zxing.activity.CaptureActivity;
 import com.qrcodescan.R;
 
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,15 +44,17 @@ import java.util.List;
 
 import administrator.adapters.AreaCardAdapter;
 import administrator.adapters.SpaceCardAdapter;
+import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.base.CommonUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
 import administrator.adapters.listener.SpaceCardCallbackListener;
-import administrator.base.mqtt.MqttManager;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.AreaCurValue;
+import administrator.entity.DeviceInArea;
 import administrator.entity.SpaceWithAreas;
+import administrator.view.MyRecyclerView;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
@@ -91,10 +93,12 @@ public class ResourceFragment extends Fragment {
     //以下是对预览页面的初始化定义
     private TextView previewTitle;
     private ImageView roomBg;
-    private RecyclerView areaCardsRV;
+    private MyRecyclerView areaCardsRV;
     private List<AreaCurValue> acvList = new ArrayList<>();
+    private List<DeviceInArea> diaList = new ArrayList<>();
     private AreaCardAdapter areaCardAdapter;
     private MaterialDialog waitDialog;
+    private DeviceCardCallbackListener deviceCardListener;
 
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
@@ -207,7 +211,7 @@ public class ResourceFragment extends Fragment {
      * 预览页面，所有内部组件的初始化都在此方法内完成
      */
     private void initPreview(View v) {
-        areaCardsRV = (RecyclerView) v.findViewById(R.id.area_cards);
+        areaCardsRV = (MyRecyclerView) v.findViewById(R.id.area_cards);
         areaCardAdapter = new AreaCardAdapter();
         areaCardAdapter.setContext(getContext());
 
@@ -220,6 +224,26 @@ public class ResourceFragment extends Fragment {
                 .progressIndeterminateStyle(false)
                 .build();
 
+        deviceCardListener = new DeviceCardCallbackListener() {
+            @Override
+            public void onBack() {
+
+            }
+
+            @Override
+            public void onThreshold(int position) {
+
+            }
+
+            @Override
+            public void onCheck(int position) {
+                Intent intent = new Intent(
+                        getContext(),DeviceDetailActivity.class);
+                intent.putExtra("device_id",diaList.get(position).getId());
+                intent.putExtra("data_type",diaList.get(position).getType());
+                startActivity(intent);
+            }
+        };
         //获取默认空间信息
         initAreaCardsBySpaceId(-1L);
 
@@ -238,20 +262,34 @@ public class ResourceFragment extends Fragment {
         HttpCallbackListener listener = new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                acvList = new Gson().fromJson(response,
-                        new TypeToken<List<AreaCurValue>>() {
-                        }.getType());
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        areaCardAdapter.setAreaList(acvList);
-                        areaCardsRV.setAdapter(areaCardAdapter);
-                        areaCardsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-                        if(waitDialog.isShowing()) {
-                            waitDialog.dismiss();
-                        }
+                //获取完整json 手动解析
+                try {
+                    JSONObject json = new JSONObject(response);
+                    if(json.getBoolean("success")) {
+                        acvList = new Gson().fromJson(json.getString("mainData"),
+                                new TypeToken<List<AreaCurValue>>() {}.getType());
+
+                        diaList = new Gson().fromJson(json.getString("minorData"),
+                                new TypeToken<List<DeviceInArea>>(){}.getType());
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                areaCardAdapter.setAreaList(acvList);
+                                areaCardAdapter.setDiaList(diaList);
+                                areaCardAdapter.setListener(deviceCardListener);
+                                areaCardsRV.setAdapter(areaCardAdapter);
+                                areaCardsRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                                if (waitDialog.isShowing()) {
+                                    waitDialog.dismiss();
+                                }
+                            }
+                        });
                     }
-                });
+
+                } catch (JSONException e) {
+
+                }
             }
 
             @Override
@@ -260,7 +298,7 @@ public class ResourceFragment extends Fragment {
             }
         };
         waitDialog.show();
-        HttpUtil.sendRequestWithCallback(url, listener);
+        HttpUtil.sendRequestWithCallback(url, listener,true);
     }
 
     /**
