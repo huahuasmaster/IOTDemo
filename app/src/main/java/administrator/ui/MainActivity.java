@@ -22,6 +22,7 @@ import java.util.logging.Handler;
 
 import administrator.base.ViewFindUtils;
 import administrator.base.mqtt.MqttManager;
+import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.TabEntity;
 
 
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
                 MqttManager.getInstance().creatConnect();
                 //订阅主题
                 MqttManager.getInstance().subscribe();
+                //循环队列
+                MqttManager.getInstance().startQueue();
             }
         }).start();
 

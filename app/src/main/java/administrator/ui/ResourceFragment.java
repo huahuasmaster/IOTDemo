@@ -30,30 +30,40 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.activity.CaptureActivity;
+import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import administrator.adapters.AreaCardAdapter;
+import administrator.adapters.DevicePreviewAdapter;
 import administrator.adapters.SpaceCardAdapter;
 import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.base.CommonUtil;
+import administrator.base.DeviceCodeUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
 import administrator.adapters.listener.SpaceCardCallbackListener;
+import administrator.base.mqtt.MqttManager;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.AreaCurValue;
+import administrator.entity.DeviceCurValue;
 import administrator.entity.DeviceInArea;
 import administrator.entity.SpaceWithAreas;
+import administrator.enums.DataTypeEnum;
 import administrator.view.MyRecyclerView;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -203,6 +213,17 @@ public class ResourceFragment extends Fragment {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+        spaceSelector.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(getContext(),
+                        "mqtt连接状态:"+MqttManager.getInstance().isConnecting(),
+                        Toast.LENGTH_SHORT).show();
+                MqttManager.getInstance().publish(MqttManager.getDeviceDataTopic(),0,
+                        new String("Hello world").getBytes());
+                return false;
+            }
+        });
 
         return v;
     }
@@ -220,7 +241,7 @@ public class ResourceFragment extends Fragment {
                         .getString(R.string.getting_data))
                 .content(getResources()
                         .getString(R.string.plz_wait))
-                .progress(true,0)
+                .progress(true, 0)
                 .progressIndeterminateStyle(false)
                 .build();
 
@@ -238,9 +259,9 @@ public class ResourceFragment extends Fragment {
             @Override
             public void onCheck(int position) {
                 Intent intent = new Intent(
-                        getContext(),DeviceDetailActivity.class);
-                intent.putExtra("device_id",diaList.get(position).getId());
-                intent.putExtra("data_type",diaList.get(position).getType());
+                        getContext(), DeviceDetailActivity.class);
+                intent.putExtra("device_id", diaList.get(position).getId());
+                intent.putExtra("data_type", diaList.get(position).getType());
                 startActivity(intent);
             }
         };
@@ -265,12 +286,14 @@ public class ResourceFragment extends Fragment {
                 //获取完整json 手动解析
                 try {
                     JSONObject json = new JSONObject(response);
-                    if(json.getBoolean("success")) {
+                    if (json.getBoolean("success")) {
                         acvList = new Gson().fromJson(json.getString("mainData"),
-                                new TypeToken<List<AreaCurValue>>() {}.getType());
+                                new TypeToken<List<AreaCurValue>>() {
+                                }.getType());
 
                         diaList = new Gson().fromJson(json.getString("minorData"),
-                                new TypeToken<List<DeviceInArea>>(){}.getType());
+                                new TypeToken<List<DeviceInArea>>() {
+                                }.getType());
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -298,7 +321,7 @@ public class ResourceFragment extends Fragment {
             }
         };
         waitDialog.show();
-        HttpUtil.sendRequestWithCallback(url, listener,true);
+        HttpUtil.sendRequestWithCallback(url, listener, true);
     }
 
     /**
@@ -338,18 +361,18 @@ public class ResourceFragment extends Fragment {
             @Override
             public void onClickSwitch(long spaceId, final Switch mSwicth, boolean checked) {
                 //离家->1 归家->0
-                short type = checked ? (short)1 : (short)0;
+                short type = checked ? (short) 1 : (short) 0;
 
                 RequestBody body = new FormBody.Builder()
-                                    .add("type",String.valueOf(type))
-                                    .build();
+                        .add("type", String.valueOf(type))
+                        .build();
                 String url = UrlHandler.postChangeModelTypeBySpaceId(spaceId);
                 HttpCallbackListener listener = new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
                         //修改成功
-                        if(response.equals("1")) {
-                            Snackbar.make(mSwicth,"修改成功",Snackbar.LENGTH_SHORT).show();
+                        if (response.equals("1")) {
+                            Snackbar.make(mSwicth, "修改成功", Snackbar.LENGTH_SHORT).show();
                         } else {
                             mSwicth.setChecked(!mSwicth.isChecked());
                         }
@@ -361,7 +384,7 @@ public class ResourceFragment extends Fragment {
                         mSwicth.setChecked(!mSwicth.isChecked());
                     }
                 };
-                HttpUtil.sendRequestWithCallback(url,body,listener);
+                HttpUtil.sendRequestWithCallback(url, body, listener);
             }
         };
 
@@ -430,25 +453,67 @@ public class ResourceFragment extends Fragment {
 
     /**
      * 通过eventbus接受mqtt消息 进行处理
+     *
      * @param msgBean
      */
-    @Subscribe
-    public void onEvent(MqttMsgBean msgBean){
+    @Subscribe(priority = 99)
+    public void onEvent(MqttMsgBean msgBean) {
         Looper.prepare();
-        Toast.makeText(getContext(),
-                "mqtt主题:"+msgBean.getTopic()
-                        +" mqtt信息:"+msgBean.getMqttMessage().toString()
-                , Toast.LENGTH_SHORT)
-                .show();
-        Looper.loop();
-        String topic = msgBean.getTopic().split("/")[1];
+//        Toast.makeText(getContext(),
+//                "资源页面->mqtt主题:" + msgBean.getMainTopic()
+//                        + " mqtt信息:" + msgBean.getMqttMessage().toString()
+//                , Toast.LENGTH_SHORT)
+//                .show();
+        Logger.e("资源页面->mqtt主题:" + msgBean.getMainTopic()
+                        + " mqtt信息:" + msgBean.getMqttMessage().toString());
+        String mainTopic = msgBean.getMainTopic();
         String msg = msgBean.getMqttMessage().toString();
         //如果mqtt消息主题为data,则动态修改页面内的信息
-        if(topic.equals("data")) {
-            //拆分数据
-            String sn = msg.split("$")[0];
-
+        if (mainTopic.equals(MqttMsgBean.DATA)) {
+            Map<String, String> dataMap = msgBean.getDataMap();
+            Set<String> keySet = dataMap.keySet();
+            for(String key : keySet) {
+                String code = DeviceCodeUtil.getCode(key);
+                updatePreviewByMqtt(key,code,dataMap.get(key));
+            }
         }
+
+        Looper.loop();
+    }
+
+    /**
+     * 对譬如“sn1$23#60%”这样一条数据
+     * 1)找到对应的preview适配器
+     * 2)根据code拆分原始数据 修改原适配器里的数据
+     * 3)刷新原适配器
+     *
+     * @param sn
+     * @param code
+     * @param value
+     */
+    private void updatePreviewByMqtt(String sn, String code, String value) {
+        final DevicePreviewAdapter adapter = areaCardAdapter.findPreviewAdapterBySn(sn);
+        String[] codes = code.split("#");
+        String[] values = value.split("#");
+        for (int i = 0; i < codes.length && i < values.length; i++) {
+            for(DeviceCurValue dcv : adapter.getDcvList()) {
+                //匹配数据，匹配成功则修改
+                try {
+                    if (dcv.getSn().equals(sn)
+                            && dcv.getType() == DataTypeEnum.findByCode(codes[i]).getIndex()) {
+                        dcv.setCurValue(values[i]);
+                    }
+                } catch (NullPointerException e) {
+                }
+            }
+        }
+        //在修改完所有数据后 刷新适配器
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void changeText(String text) {

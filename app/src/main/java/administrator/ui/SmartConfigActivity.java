@@ -13,7 +13,9 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -32,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 import java.util.ArrayList;
@@ -73,6 +76,7 @@ public class SmartConfigActivity extends Activity implements View.OnClickListene
     private String ssidForSend;
     private String passwordForSend;
 
+    private boolean bounded;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver()
     {
@@ -138,7 +142,7 @@ public class SmartConfigActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.smart_config_activity);
         mShared = getSharedPreferences(SSID_PASSWORD, Context.MODE_PRIVATE);
-
+        bounded = getIntent().getBooleanExtra("bounded",false);
         mConfigureSP = (Spinner)findViewById(R.id.esptouch_configure_wifi);
         mPasswordET = (EditText)findViewById(R.id.esptouch_pwd);
         mShowPasswordCB = (CheckBox)findViewById(R.id.esptouch_show_pwd);
@@ -167,6 +171,10 @@ public class SmartConfigActivity extends Activity implements View.OnClickListene
         title.setText(R.string.esp_esptouch_title);
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mReceiver, filter);
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            Settings.Secure.putInt(getContentResolver(),Settings.Secure.LOCATION_MODE, 1);
+//        }
+
     }
 
 
@@ -250,6 +258,9 @@ public class SmartConfigActivity extends Activity implements View.OnClickListene
             if (result.isSuc())
             {
                 toastMsg = R.string.esp_esptouch_result_suc;
+                Toast.makeText(mActivity, toastMsg, Toast.LENGTH_LONG).show();
+                setResult(RESULT_OK);
+                finish();
             }
             else if (result.isCancelled())
             {

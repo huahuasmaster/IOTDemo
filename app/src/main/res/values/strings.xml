@@ -1,3 +1,4 @@
+
 <resources>
     <string name="app_name">IotDemo</string>
     <string name="encode_qrcode">生成二维码</string>
@@ -66,4 +67,19 @@
     <!--%n$s n表示第一个参数 s->字符串 d->整数 f->浮点数-->
     <string name="tmp_s_value">%1$s℃</string>
     <string name="device_setting">设备设置</string>
+    <string name="swipe_down_to_finish">下滑关闭</string>
+    <string name="new_ip">新IP</string>
+    <string name="confirm">确定</string>
+    <string name="sn_on_device_body">设备机上的9位序列号</string>
+    <string name="next_step">下一步</string>
+    <string name="check_online_status">正在检测上线状态请稍等</string>
+    <string name="online_already">上线成功</string>
+    <string name="online_successed">上线成功</string>
+    <string name="unknown_device">未知设备</string>
+    <string name="bound_this_gate">将为您自动绑定到网关：</string>
+    <string name="SC_again">网关无法连接网络，请重新进行SmartConfig</string>
+    <string name="first_SC">网关第一次运行，请进行SmartConfig</string>
+    <string name="will_bound_this_gate">将为您自动绑定至网关</string>
+    <string name="bounding_gate">正绑定至网关：</string>
+    <string name="bound_gate_successfully">成功绑定至网关：</string>
 </resources>

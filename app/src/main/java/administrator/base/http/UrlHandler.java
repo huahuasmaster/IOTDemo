@@ -46,6 +46,11 @@ public class UrlHandler {
         return getHead()+"device/"+deviceId;
     }
 
+    //根据获取设备信息
+    public static String getDeviceDetailDescBySn(String sn) {
+        return getHead()+"device/"+sn+"/bySn";
+    }
+
     //获取设备所处空间的所有安装位置
     public static String getAreaListByDeviceId(long deviceId) {
         return getHead()+"area/"+deviceId+"/byDevice";
@@ -61,10 +66,21 @@ public class UrlHandler {
         return getHead()+"space/"+userId+"/areaList/preview/default";
     }
 
+    //获取当前空间下的网关
+    public static String getCurrentGate() {
+        return getHead()+"space/"+getUserId()+"/getDefaultWsn";
+    }
+
     //修改空间的状态 离家/归家
     public static String postChangeModelTypeBySpaceId(long spaceId) {
         return getHead()+"space/"+spaceId+"/changeModel";
     }
+
+    //获取设备code 设备sn键值对
+    public static String getSnCodeMap() {
+        return getHead()+"device/"+getUserId()+"/SnCodeMap";
+    }
+
 
     /**
      * 获取请求的开头ip与端口

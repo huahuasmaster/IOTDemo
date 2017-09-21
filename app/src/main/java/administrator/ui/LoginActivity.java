@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.qrcodescan.R;
 
+import administrator.base.DeviceCodeUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
@@ -55,6 +56,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        accountEdit.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,GateOnlineActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
+
     }
 
     private void initViews() {
@@ -68,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         String prePassword = sp.getString("password","");
         accountEdit.setText(preAccount);
         passwordEdit.setText(prePassword);
+
 
         waitForLoginDialog = new MaterialDialog.Builder(this)
                 .title(getResources()
@@ -105,10 +116,8 @@ public class LoginActivity extends AppCompatActivity {
                             .putLong("user_id",userDto.getId())
                             .putString("password",password);
                     editor.apply();
+                    DeviceCodeUtil.getMapOnline();//获取code-sn映射
                     UrlHandler.setUserId(userDto.getId());
-                    if (waitForLoginDialog.isShowing()) {
-                        waitForLoginDialog.dismiss();
-                    }
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
                 }

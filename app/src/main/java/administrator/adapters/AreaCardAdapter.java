@@ -19,6 +19,7 @@ import java.util.List;
 
 import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.entity.AreaCurValue;
+import administrator.entity.DeviceCurValue;
 import administrator.entity.DeviceInArea;
 import administrator.enums.DataTypeEnum;
 import administrator.ui.AreaDetailActivity;
@@ -47,8 +48,10 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     private Context context;
 
-    //用于储存卡片内预览值列表的适配器 方便调用、刷新预览数据
-    //对特定布局刷新 而不是整个列表刷新 可以有效减少程序开销
+    /**
+     * 用于储存卡片内预览值列表的适配器 方便调用、刷新预览数据
+     * 对特定布局刷新 而不是整个列表刷新 可以有效减少程序开销
+     */
     private List<DevicePreviewAdapter> previewAdapterList;
 
     public AreaCardAdapter() {
@@ -96,6 +99,18 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
         this.previewAdapterList = previewAdapterList;
     }
 
+    //根据sn返回对应的preview适配器
+    public DevicePreviewAdapter findPreviewAdapterBySn(String sn) {
+        for(DevicePreviewAdapter adapter : previewAdapterList) {
+            List<DeviceCurValue> list = adapter.getDcvList();
+            for(DeviceCurValue dcv : list) {
+                if(dcv.getSn().equals(sn)) {
+                    return adapter;
+                }
+            }
+        }
+        return null;
+    }
     //房间卡片的viewholder
     class AreaCardViewHolder extends RecyclerView.ViewHolder {
         //房间背景图片

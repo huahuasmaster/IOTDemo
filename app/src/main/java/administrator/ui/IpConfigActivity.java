@@ -39,5 +39,16 @@ public class IpConfigActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        checkBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                UrlHandler.setIp("121.40.140.223");
+                Toast.makeText(IpConfigActivity.this,"新ip:"+UrlHandler.getIp(),Toast.LENGTH_SHORT)
+                        .show();
+                finish();
+                return false;
+            }
+        });
     }
 }

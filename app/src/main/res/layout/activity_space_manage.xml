@@ -50,7 +50,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="空间管理" />
+                android:text="@string/space_manage" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

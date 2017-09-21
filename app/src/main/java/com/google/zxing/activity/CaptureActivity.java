@@ -6,11 +6,13 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
 import android.provider.MediaStore;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -41,6 +44,14 @@ import com.google.zxing.decoding.RGBLuminanceSource;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.google.zxing.view.ViewfinderView;
 import com.qrcodescan.R;
+
+import administrator.base.http.HttpCallbackListener;
+import administrator.base.http.HttpUtil;
+import administrator.base.http.UrlHandler;
+import administrator.entity.DeviceDto;
+import administrator.enums.DeviceTypeEnum;
+import administrator.ui.DeviceOnlineActivity;
+import administrator.ui.GateOnlineActivity;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -73,9 +84,11 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
     private ProgressDialog mProgress;
     private String photo_path;
     private Bitmap scanBitmap;
+    private DeviceDto deviceDto;
     //	private Button cancelScanButton;
     public static final int RESULT_CODE_QR_SCAN = 0xA1;
     public static final String INTENT_EXTRA_KEY_QR_SCAN = "qr_scan_result";
+
     /**
      * Called when the activity is first created.
      */
@@ -97,7 +110,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
 
-        gotoType = (ImageView)findViewById(R.id.gotoType);
+        gotoType = (ImageView) findViewById(R.id.gotoType);
         gotoType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +157,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
-        if (requestCode==RESULT_OK) {
+        if (requestCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_SCAN_GALLERY:
                     //获取选中图片的路径
@@ -170,7 +183,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
 //                                handler.sendMessage(m);
                                 Intent resultIntent = new Intent();
                                 Bundle bundle = new Bundle();
-                                bundle.putString(INTENT_EXTRA_KEY_QR_SCAN ,result.getText());
+                                bundle.putString(INTENT_EXTRA_KEY_QR_SCAN, result.getText());
 //                                Logger.d("saomiao",result.getText());
 //                                bundle.putParcelable("bitmap",result.get);
                                 resultIntent.putExtras(bundle);
@@ -192,11 +205,12 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
 
     /**
      * 扫描二维码图片的方法
+     *
      * @param path
      * @return
      */
     public Result scanningImage(String path) {
-        if(TextUtils.isEmpty(path)){
+        if (TextUtils.isEmpty(path)) {
             return null;
         }
         Hashtable<DecodeHintType, String> hints = new Hashtable<>();
@@ -288,17 +302,69 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         if (TextUtils.isEmpty(resultString)) {
             Toast.makeText(CaptureActivity.this, "Scan failed!", Toast.LENGTH_SHORT).show();
         } else {
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putString(INTENT_EXTRA_KEY_QR_SCAN, resultString);
-            System.out.println("sssssssssssssssss scan 0 = " + resultString);
+//            Intent resultIntent = new Intent();
+//            Bundle bundle = new Bundle();
+//            bundle.putString(INTENT_EXTRA_KEY_QR_SCAN, resultString);
+//            System.out.println("sssssssssssssssss scan 0 = " + resultString);
             // 不能使用Intent传递大于40kb的bitmap，可以使用一个单例对象存储这个bitmap
 //            bundle.putParcelable("bitmap", barcode);
 //            Logger.d("saomiao",resultString);
-            resultIntent.putExtras(bundle);
-            this.setResult(RESULT_CODE_QR_SCAN, resultIntent);
+//            resultIntent.putExtras(bundle);
+//            this.setResult(RESULT_CODE_QR_SCAN, resultIntent);
+            checkSn(resultString);
+
         }
-        CaptureActivity.this.finish();
+//        CaptureActivity.this.finish();
+    }
+
+    private void checkSn(final String sn) {
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                if (response != null && !response.equals("")) {
+                    DeviceDto deviceDto = new Gson().fromJson(response, DeviceDto.class);
+                    Looper.prepare();
+//                    Toast.makeText(CaptureActivity.this,""+deviceDto.getDeviceModelDto().getType(),Toast.LENGTH_SHORT)
+//                            .show();
+                    if (deviceDto.getSn().equals(sn)) {
+                        //判断设备类型 跳转至不同页面
+                        DeviceTypeEnum deviceTypeEnum = DeviceTypeEnum.stateOf(
+                                deviceDto.getDeviceModelDto().getType());
+                        if (deviceTypeEnum != null) {
+                            Intent intent = new Intent();
+                            switch (deviceTypeEnum) {
+                                case GATEWAY:
+                                    intent.setClass(CaptureActivity.this,
+                                            GateOnlineActivity.class);
+                                    break;
+                                case NODE:
+                                    intent.setClass(CaptureActivity.this,
+                                            DeviceOnlineActivity.class);
+                                    break;
+                            }
+                            intent.putExtra("device_sn", sn);
+                            intent.putExtra("device_dto", deviceDto);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(CaptureActivity.this, R.string.unknown_device,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    Looper.loop();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Looper.prepare();
+                Toast.makeText(CaptureActivity.this, "出错，请检查网络", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }
+        };
+
+        String url = UrlHandler.getDeviceDetailDescBySn(sn);
+
+        HttpUtil.sendRequestWithCallback(url, listener);
     }
 
     private void initCamera(SurfaceHolder surfaceHolder) {

@@ -1,6 +1,8 @@
 package administrator.entity;
 
-public class DeviceModelDto {
+import java.io.Serializable;
+
+public class DeviceModelDto implements Serializable{
 
     private String name;
 

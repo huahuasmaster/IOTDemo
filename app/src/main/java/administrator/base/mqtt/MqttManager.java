@@ -2,6 +2,7 @@ package administrator.base.mqtt;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.lichfaker.log.Logger;
 
@@ -11,6 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
+import org.greenrobot.eventbus.EventBus;
 
 import administrator.application.ContextApplication;
 import administrator.base.http.UrlHandler;
@@ -24,13 +26,19 @@ import administrator.base.http.UrlHandler;
  * @Email lichfaker@gmail.com
  */
 public class MqttManager {
+
+
+
     //用于存取数据
     private static SharedPreferences sp;
 
     private static SharedPreferences.Editor editor;
 
     //mqtt服务器端口
-    public static String port = "1883";
+    private static String port = "1883";
+
+    //appId
+    private static String appId = "1";
 
     // 单例
     private static MqttManager mInstance = null;
@@ -57,6 +65,35 @@ public class MqttManager {
         return mInstance;
     }
 
+    public  void startQueue() {
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+
+                while(true){
+                    if(!SubPubQueue.getMsgQueue().isEmpty()){
+                        try {
+                            final MqttMsgBean topicMessage = SubPubQueue.getMsgQueue().take();
+                                Logger.e("广播消息:" + topicMessage.getMqttMessage().toString());
+                                //广播消息
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        EventBus.getDefault().post(topicMessage);
+                                    }
+                                }).start();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+        };
+        Logger.e("队列开始启动");
+        thread.start();
+    }
     /**
      * 释放单例, 及其所引用的资源
      */
@@ -82,15 +119,15 @@ public class MqttManager {
     /**
      * 获取特定mqtt主题-设备数据
      */
-    private static String getDeviceDataTopic() {
-        return ""+sp.getLong("user_id",-1L)+"/data";
+    public static String getDeviceDataTopic() {
+        return "/lpwa/app/"+appId+"/data/"+sp.getLong("user_id",-1L);
     }
 
     /**
      * 获取特定mqtt主题-设备信息
      */
-    private static String getDeviceInfoTopic() {
-        return ""+sp.getLong("user_id",-1L)+"/info";
+    public static String getDeviceInfoTopic() {
+        return "/lpwa/app/"+appId+"/info/"+sp.getLong("user_id",-1L);
     }
 
     /**
@@ -98,8 +135,10 @@ public class MqttManager {
      */
     public boolean creatConnect(){
         return creatConnect(getUrl(),
-                sp.getString("account",""),
-                sp.getString("password",""),
+                /*sp.getString("account",""),*/
+                /*sp.getString("password",""),*/
+                null,
+                null,
                 String.valueOf(sp.getLong("user_id",-1L)));
     }
     /**
@@ -152,9 +191,10 @@ public class MqttManager {
         if (client != null) {
             try {
                 client.connect(conOpt);
-                Logger.d("Connected to " + client.getServerURI() + " with client ID " + client.getClientId());
+                Logger.e("Connected to " + client.getServerURI() + " with client ID " + client.getClientId());
                 flag = true;
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return flag;
@@ -184,6 +224,7 @@ public class MqttManager {
             // it has been delivered to the server meeting the specified
             // quality of service.
             try {
+                Logger.e("topic = "+topicName+"- msg = "+message);
                 client.publish(topicName, message);
                 flag = true;
             } catch (MqttException e) {
@@ -200,8 +241,9 @@ public class MqttManager {
      * 目前为根据用户id注册对应的data、info主题
      */
     public boolean subscribe() {
-        return subscribe(getDeviceDataTopic(),2)
-                && subscribe(getDeviceInfoTopic(),2);
+        Logger.e(getDeviceDataTopic()+"-------"+getDeviceInfoTopic());
+        return subscribe(getDeviceDataTopic(),0)
+                && subscribe(getDeviceInfoTopic(),0);
     }
 
     /**
@@ -246,5 +288,22 @@ public class MqttManager {
         if (client != null && client.isConnected()) {
             client.disconnect();
         }
+    }
+
+    /**
+     * 重新连接
+     */
+    public void reConnect() throws MqttException {
+        disConnect();
+        creatConnect();
+    }
+
+    /**
+     * 是否连接
+     */
+    public boolean isConnecting() {
+        if(client != null) {
+            return client.isConnected();
+        } return false;
     }
 }

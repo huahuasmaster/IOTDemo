@@ -1,11 +1,12 @@
 package administrator.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2017/8/22.
  */
-public class DeviceRegistDto {
+public class DeviceRegistDto implements Serializable{
 
     private long id;
 

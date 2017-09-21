@@ -12,6 +12,8 @@ public class DeviceCurValue {
 
     private String curValue;
 
+    private String sn;
+
     public DeviceCurValue(){}
 
     public int getType() {
@@ -38,12 +40,21 @@ public class DeviceCurValue {
         this.curValue = curValue;
     }
 
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     @Override
     public String toString() {
         return "DeviceCurValue{" +
                 "deviceId=" + deviceId +
                 ", type=" + type +
                 ", curValue='" + curValue + '\'' +
+                ", Sn='" + sn + '\'' +
                 '}';
     }
 }
