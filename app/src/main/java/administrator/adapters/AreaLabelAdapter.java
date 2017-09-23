@@ -14,7 +14,6 @@ import com.qrcodescan.R;
 import java.util.List;
 
 import administrator.entity.AreaDto;
-import administrator.entity.Room;
 
 /**
  * Created by zhuang_ge on 2017/8/4.

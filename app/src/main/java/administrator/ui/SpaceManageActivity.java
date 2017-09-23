@@ -2,6 +2,7 @@ package administrator.ui;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,22 +11,28 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import administrator.adapters.SpaceItemAdapter;
 import administrator.adapters.listener.SwipeItemCallbackListener;
-import administrator.entity.Space;
+import administrator.base.http.HttpCallbackListener;
+import administrator.base.http.HttpUtil;
+import administrator.base.http.UrlHandler;
+import administrator.entity.SpaceDto;
 
 public class SpaceManageActivity extends AppCompatActivity {
     private RecyclerView smr;
-    private List<Space> spaceList = new ArrayList<>();
+    private List<SpaceDto> spaceList = new ArrayList<>();
     private SpaceItemAdapter adapter;
     private SwipeItemCallbackListener listener;
     private ImageView goBack;
@@ -36,7 +43,7 @@ public class SpaceManageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_space_manage);
 
-        initData();
+
 
         initViews();
 
@@ -64,12 +71,34 @@ public class SpaceManageActivity extends AppCompatActivity {
                 showAddDialog();
             }
         });
+
+        initData();
+
     }
 
     private void initData() {
-        for (int i = 0; i < 20; i++) {
-            spaceList.add(new Space(i, "空间" + i, "lalala", 1, new Date()));
-        }
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                List<SpaceDto> newList = new Gson().fromJson(response,
+                        new TypeToken<List<SpaceDto>>(){}.getType());
+                adapter.setSpaceList(newList);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        };
+
+        String url = UrlHandler.getAllSpace();
+
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 
     private void initViews() {
@@ -93,13 +122,13 @@ public class SpaceManageActivity extends AppCompatActivity {
 
     private void showEditDialog(final int position) {
         new MaterialDialog.Builder(this)
-                .title("新名称")
-                .content("请输入空间的新名称")
+                .title(R.string.new_name)
+                .content(R.string.plz_type_in_new_space_name)
                 .inputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PERSON_NAME
                         | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(2, 10)
-                .input("新名称", "", false, new MaterialDialog.InputCallback() {
+                .input(getString(R.string.new_name), "", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         editSpace(position, input.toString());
@@ -109,26 +138,27 @@ public class SpaceManageActivity extends AppCompatActivity {
 
     private void showAddDialog() {
         new MaterialDialog.Builder(this)
-                .title("新空间名称")
+                .title(R.string.new_space_name)
                 .inputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PERSON_NAME
                         | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(2, 16)
-                .positiveText("确定")
-                .input("请输入新名称", "我的空间", false, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.confirm)
+                .input(getString(R.string.plz_type_in_new_space_name), getString(R.string.default_space),
+                        false, new MaterialDialog.InputCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        addSpace(input.toString());
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {addSpace(input.toString());
                     }
-                }).show();
+                })
+                .show();
     }
 
     private void showDeleteDialog(final int position) {
         new MaterialDialog.Builder(this)
-                .title("确认删除?")
-                .content("删除空间后，您将无法查看此空间的所有信息")
-                .positiveText("确认")
-                .negativeText("取消")
+                .title(R.string.sure_to_delete)
+                .content(R.string.sure_to_delete_content)
+                .positiveText(R.string.confirm)
+                .negativeText(R.string.cancle)
                 .onAny(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -147,14 +177,59 @@ public class SpaceManageActivity extends AppCompatActivity {
      * @param newName
      */
     private void editSpace(int position, String newName) {
-        adapter.getSpaceList().get(position)
-                .setName(newName);
-        adapter.notifyDataSetChanged();
+        long spaceId = adapter.getSpaceList().get(position).getId();
+        String url = UrlHandler.editSpace(spaceId,newName);
+        Logger.i("url = "+url);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab, R.string.edit_successfully,Snackbar.LENGTH_SHORT).show();
+                        initData();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab, R.string.failed_work,Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 
     private void addSpace(String newName) {
-        adapter.getSpaceList().add(0, new Space(1, newName, "lalal", 1, new Date()));
-        adapter.notifyDataSetChanged();
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab, R.string.add_successfully,Snackbar.LENGTH_SHORT).show();
+                        initData();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab, R.string.failed_work,Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+        String url = UrlHandler.addSpace(newName);
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 
     /**
@@ -163,8 +238,33 @@ public class SpaceManageActivity extends AppCompatActivity {
      * @param position
      */
     private void deleteSpace(int position) {
-        adapter.getSpaceList().remove(position);
-        adapter.notifyDataSetChanged();
+        long spaceId = adapter.getSpaceList().get(position).getId();
+        Logger.i("spaceId = "+spaceId);
+        String url = UrlHandler.deleteSpace(spaceId);
+        Logger.i("url = "+url);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(smr,R.string.delete_successfully,Snackbar.LENGTH_SHORT).show();
+                        initData();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(smr,R.string.failed_work,Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 
 }

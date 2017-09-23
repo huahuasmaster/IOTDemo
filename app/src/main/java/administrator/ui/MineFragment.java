@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.qrcodescan.R;
 
@@ -103,7 +102,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.room_manage_linear:
-                startActivity(new Intent(getActivity(),RoomManageActivity.class));
+                startActivity(new Intent(getActivity(),AreaManageActivity.class));
                 break;
         }
     }

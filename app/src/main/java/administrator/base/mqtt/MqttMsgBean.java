@@ -19,6 +19,7 @@ public class MqttMsgBean {
     public static final String DATA = "data";
     public static final String INFO = "info";
     public static final String ALERT = "alert";
+    public static final String GRANT = "grant";
     public static final String WILD_CARD = "+";//通配符
     public static final String GATE_ONLINE = "GI0001";
     public static final String DEVICE_ONLINE = "NI0001";

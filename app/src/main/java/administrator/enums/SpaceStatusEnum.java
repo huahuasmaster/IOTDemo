@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import administrator.entity.Space;
-
 /**
  * 空间状态：1->离家   2->回家
  * Created by zhuang_ge on 2017/8/4.

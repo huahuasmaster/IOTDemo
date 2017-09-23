@@ -14,6 +14,8 @@ import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qrcodescan.R;
 
 import java.util.ArrayList;
@@ -21,10 +23,12 @@ import java.util.List;
 
 import administrator.adapters.AreaItemAdapter;
 import administrator.adapters.listener.SwipeItemCallbackListener;
-import administrator.entity.Room;
-import administrator.entity.Space;
+import administrator.base.http.HttpCallbackListener;
+import administrator.base.http.HttpUtil;
+import administrator.base.http.UrlHandler;
+import administrator.entity.AreaDto;
 
-public class RoomManageActivity extends AppCompatActivity {
+public class AreaManageActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private FloatingActionButton fab;
@@ -32,19 +36,18 @@ public class RoomManageActivity extends AppCompatActivity {
     private SwipeItemCallbackListener listener;
     private ImageView goBack;
 
-    private List<Room> roomList = new ArrayList<>();
+    private List<AreaDto> areaList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_manage);
 
-        initData();
 
         initViews();
 
         adapter = new AreaItemAdapter();
-        adapter.setRoomList(roomList);
+        adapter.setRoomList(areaList);
         adapter.setListener(listener);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         DividerItemDecoration decoration = new DividerItemDecoration(
@@ -66,6 +69,9 @@ public class RoomManageActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        initData();
+
     }
 
     private void initViews() {
@@ -87,10 +93,8 @@ public class RoomManageActivity extends AppCompatActivity {
     }
 
     private void addRoom(String s) {
-        Room room = new Room(1,s,new Space());
-        adapter.getRoomList().add(0,room);
         adapter.notifyDataSetChanged();
-        Snackbar.make(fab,"新增房间："+s,Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(fab,getString(R.string.new_area)+s,Snackbar.LENGTH_SHORT).show();
     }
 
     private void editRoom(int position,String newName) {
@@ -100,13 +104,13 @@ public class RoomManageActivity extends AppCompatActivity {
     }
     private void showEditDialog(final int position) {
         new MaterialDialog.Builder(this)
-                .title("新名称")
-                .content("请输入房间的新名称")
+                .title(R.string.new_name)
+                .content(R.string.plz_type_in_new_are_name)
                 .inputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PERSON_NAME
                         | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(2,10)
-                .input("新名称", "", false, new MaterialDialog.InputCallback() {
+                .input(getString(R.string.new_name), "", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         editRoom(position,input.toString());
@@ -116,13 +120,14 @@ public class RoomManageActivity extends AppCompatActivity {
 
     private void showAddDialog() {
         new MaterialDialog.Builder(this)
-                .title("新房间名称")
+                .title(R.string.new_area_name)
                 .inputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PERSON_NAME
                         | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(2,16)
-                .positiveText("确定")
-                .input("请输入新名称", "我的房间", false, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.confirm)
+                .input(getString(R.string.plz_type_in_new_are_name),
+                        getString(R.string.default_area), false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         addRoom(input.toString());
@@ -132,10 +137,10 @@ public class RoomManageActivity extends AppCompatActivity {
 
     private void showDeleteDialog(final int position) {
         new MaterialDialog.Builder(this)
-                .title("确认删除?")
-                .content("删除房间后，设备仍能正常工作")
-                .positiveText("确认")
-                .negativeText("取消")
+                .title(R.string.sure_to_delete)
+                .content(R.string.device_still_work)
+                .positiveText(R.string.confirm)
+                .negativeText(R.string.cancle)
                 .onAny(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -149,11 +154,29 @@ public class RoomManageActivity extends AppCompatActivity {
     private void deleteRoom(int position) {
         adapter.getRoomList().remove(position);
         adapter.notifyDataSetChanged();
-        Snackbar.make(fab,"删除成功",Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(fab, R.string.delete_successfully,Snackbar.LENGTH_SHORT).show();
     }
     private void initData() {
-        for(int i = 0;i < 20;i++) {
-            roomList.add(new Room(i,"房间"+i,new Space()));
-        }
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                final List<AreaDto> areaDtos = new Gson().fromJson(response,
+                        new TypeToken<List<AreaDto>>(){}.getType());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setRoomList(areaDtos);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
+        String url = UrlHandler.getAreaOfDefaultSpace();
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 }

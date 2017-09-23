@@ -66,9 +66,34 @@ public class UrlHandler {
         return getHead()+"space/"+userId+"/areaList/preview/default";
     }
 
+    //获取默认空间下的房间列表
+    public static String getAreaOfDefaultSpace() {
+        return getHead()+"area/"+getUserId()+"/allArea/defaultSpace";
+    }
+
     //获取当前空间下的网关
     public static String getCurrentGate() {
         return getHead()+"space/"+getUserId()+"/getDefaultWsn";
+    }
+
+    //获取用户的所有空间列表
+    public static String getAllSpace() {
+        return getHead()+"space/"+getUserId()+"/allSpace";
+    }
+
+    //增加空间
+    public static String addSpace(String spaceName) {
+        return getHead()+"space/"+getUserId()+"/"+spaceName+"/addSpace";
+    }
+
+    //删除空间
+    public static String deleteSpace(long spaceId) {
+        return getHead()+"space/"+spaceId+"/deleteSpace";
+    }
+
+    //编辑空间（名称）
+    public static String editSpace(long spaceId,String newName) {
+        return getHead()+"space/"+spaceId+"/"+newName+"/editSpace";
     }
 
     //修改空间的状态 离家/归家
@@ -91,7 +116,7 @@ public class UrlHandler {
     }
     //获取服务器ip
     public static String getIp() {
-        return loginSp.getString("ip","192.168.0.101");
+        return loginSp.getString("ip","121.40.140.223");
     }
     //设置服务器ip
     public static void setIp(String ip) {

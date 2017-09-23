@@ -82,4 +82,21 @@
     <string name="will_bound_this_gate">将为您自动绑定至网关</string>
     <string name="bounding_gate">正绑定至网关：</string>
     <string name="bound_gate_successfully">成功绑定至网关：</string>
+    <string name="choose_gate">选择网关</string>
+    <string name="go_setting">前去设置</string>
+    <string name="cancle">取消</string>
+    <string name="new_name">新名称</string>
+    <string name="plz_type_in_new_space_name">请输入空间的新名称</string>
+    <string name="new_space_name">新空间名称</string>
+    <string name="sure_to_delete">确认删除?</string>
+    <string name="sure_to_delete_content">删除空间后，您将无法查看此空间的所有信息</string>
+    <string name="delete_successfully">删除成功</string>
+    <string name="new_area">新增安装位置：</string>
+    <string name="plz_type_in_new_are_name">请输入房间的新名称</string>
+    <string name="new_area_name">新安装位置名称</string>
+    <string name="default_area">我的房间</string>
+    <string name="device_still_work">删除房间后，设备仍能正常工作</string>
+    <string name="add_successfully">新增成功!</string>
+    <string name="failed_work">操作失败</string>
+    <string name="edit_successfully">修改成功</string>
 </resources>

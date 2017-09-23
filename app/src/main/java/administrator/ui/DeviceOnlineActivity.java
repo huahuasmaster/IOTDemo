@@ -1,5 +1,6 @@
 package administrator.ui;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -71,10 +73,11 @@ public class DeviceOnlineActivity extends AppCompatActivity {
     private final int TIME_OUT_MSG = 0x11;
     private final int COUNT_DOWN_MSG = 0x12;
     private final int DEVICE_ONLINE_MSG = 0x13;
+    private final int GET_GATES_MSG = 0x14;
 
     private DeviceDto deviceDto;
     private String sn;
-    private final int totalTime = 120;
+    private final int totalTime = 1000;
     private List<DeviceDto> mGates;
     private String[] gateNames;
     private boolean registed;
@@ -83,17 +86,7 @@ public class DeviceOnlineActivity extends AppCompatActivity {
 
     private Timer timer = new Timer();
     private int remainTime = totalTime;
-    private TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            if(remainTime > -1) {
-                remainTime -- ;
-                Message message = new Message();
-                message.what = COUNT_DOWN_MSG;
-                handler.sendMessage(message);
-            }
-        }
-    };
+    private TimerTask task;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
@@ -122,6 +115,23 @@ public class DeviceOnlineActivity extends AppCompatActivity {
                         timer.cancel();
                     }
                     break;
+                case GET_GATES_MSG:
+                    chooseGateDialog = new MaterialDialog.Builder(DeviceOnlineActivity.this)
+                            .title(R.string.choose_gate)
+                            .items(gateNames)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                                    changeGate(gateNames[position]);
+                                }
+                            })
+                            .positiveText(R.string.cancle)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            }).build();
             }
             return false;
         }
@@ -145,13 +155,27 @@ public class DeviceOnlineActivity extends AppCompatActivity {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWaitText(true);
-                MqttManager.getInstance().publish("/lpwa/lora/grant/"
-                        +chooseGateBtn.getText().toString(),
-                        0,("0$"+deviceDto.getSn()).getBytes());
-                Logger.e("正在监听mqtt消息");
-                MqttManager.getInstance().subscribe("/lpwa/lora/grant/"
-                        +chooseGateBtn.getText().toString(),0);
+                if(bounded) {
+                    Intent intent = new Intent(DeviceOnlineActivity.this,
+                            DeviceSettingActivity.class);
+                    startActivity(intent);
+                } else {
+                    showWaitText(true);
+                    MqttManager.getInstance().publish("/lpwa/lora/grant/"
+                                    + chooseGateBtn.getText().toString(),
+                            0, ("0$" + deviceDto.getSn()).getBytes());
+                    Logger.e("正在监听mqtt消息");
+                    MqttManager.getInstance().subscribe("/lpwa/lora/grant/"
+                            + chooseGateBtn.getText().toString(), 0);
+                }
+            }
+        });
+        chooseGateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(chooseGateDialog != null) {
+                    chooseGateDialog.show();
+                }
             }
         });
         showWaitText(false);
@@ -189,10 +213,20 @@ public class DeviceOnlineActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-                showExitDialog();
+//                showExitDialog();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chooseGateBtn.setText("GATE000001");
+                    }
+                });
             }
         };
         HttpUtil.sendRequestWithCallback(url,listener);
+    }
+
+    private void changeGate(String gateName) {
+        chooseGateBtn.setText(gateName);
     }
 
     private void showExitDialog() {
@@ -226,11 +260,29 @@ public class DeviceOnlineActivity extends AppCompatActivity {
     private void showWaitText(boolean show) {
         //倒计时将开始
         if(show) {
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    if(remainTime > -1) {
+                        remainTime -- ;
+                        Message message = new Message();
+                        message.what = COUNT_DOWN_MSG;
+                        handler.sendMessage(message);
+                    }
+                }
+            };
             remainTime = totalTime;
             timer = new Timer();
             timer.schedule(task,1000,1000);
         } else {
-            timer.cancel();
+            if(task != null) {
+                task.cancel();
+                task = null;
+            }
+            if(timer != null) {
+                timer.cancel();
+                timer = null;
+            }
         }
         //当处于等待状态下时，以下控件将显示
         progressBar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
@@ -249,14 +301,35 @@ public class DeviceOnlineActivity extends AppCompatActivity {
         boundTxt.setText(R.string.bound_gate_successfully);
         checkImg.setVisibility(View.VISIBLE);
         confirmBtn.setEnabled(true);
+        confirmBtn.setText(R.string.go_setting);
     }
 
+    private void sendDeviceOnlineMsg(String deviceSn) {
+
+    }
     @Subscribe(priority = 100)
     public void onGateOnlineEvent(MqttMsgBean msgBean) {
         Looper.prepare();
-        Logger.e("gateOnlineAct收到消息 主题："+msgBean.getMainTopic()
+        Logger.e("DeviceOnlineAct收到消息 主题："+msgBean.getMainTopic()
                 +" 内容："+msgBean.getMqttMessage().toString());
+        Toast.makeText(this,"gateOnlineAct收到消息 主题："+msgBean.getMainTopic()
+                +" 内容："+msgBean.getMqttMessage().toString(),Toast.LENGTH_SHORT).show();
+        if(msgBean.getMainTopic().equals(MqttMsgBean.INFO)) {
+            Set<String> keySet = msgBean.getDataMap().keySet();
+            for(String sn : keySet) {
+                if(sn.equals(deviceDto.getSn()) &&
+                        msgBean.getDataMap().get(sn).equals(MqttMsgBean.DEVICE_ONLINE)) {
+                    bounded = true;
+                    showSuccessText();
+                }
+            }
+        }
         Looper.loop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

@@ -40,7 +40,7 @@
         <activity android:name="administrator.ui.DeviceDetailActivity" />
         <activity android:name="administrator.ui.DeviceSettingActivity" />
         <activity android:name="administrator.ui.SpaceManageActivity" />
-        <activity android:name="administrator.ui.RoomManageActivity" />
+        <activity android:name="administrator.ui.AreaManageActivity" />
         <activity android:name="administrator.ui.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

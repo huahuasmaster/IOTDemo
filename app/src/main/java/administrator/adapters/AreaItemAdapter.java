@@ -12,7 +12,7 @@ import com.qrcodescan.R;
 import java.util.List;
 
 import administrator.adapters.listener.SwipeItemCallbackListener;
-import administrator.entity.Room;
+import administrator.entity.AreaDto;
 
 /**
  * Created by zhuang_ge on 2017/8/8.
@@ -21,15 +21,15 @@ import administrator.entity.Room;
 
 public class AreaItemAdapter extends RecyclerView.Adapter {
 
-    private List<Room> roomList;
+    private List<AreaDto> roomList;
 
     private SwipeItemCallbackListener listener;
 
-    public List<Room> getRoomList() {
+    public List<AreaDto> getRoomList() {
         return roomList;
     }
 
-    public void setRoomList(List<Room> roomList) {
+    public void setRoomList(List<AreaDto> roomList) {
         this.roomList = roomList;
     }
 

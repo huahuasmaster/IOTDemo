@@ -12,7 +12,7 @@ import com.qrcodescan.R;
 import java.util.List;
 
 import administrator.adapters.listener.SwipeItemCallbackListener;
-import administrator.entity.Space;
+import administrator.entity.SpaceDto;
 
 /**
  * Created by zhuang_ge on 2017/8/7.
@@ -20,7 +20,7 @@ import administrator.entity.Space;
 
 public class SpaceItemAdapter extends RecyclerView.Adapter{
 
-    private List<Space> spaceList;
+    private List<SpaceDto> spaceList;
     private SwipeItemCallbackListener listener;
 
     public SwipeItemCallbackListener getListener() {
@@ -31,11 +31,11 @@ public class SpaceItemAdapter extends RecyclerView.Adapter{
         this.listener = listener;
     }
 
-    public List<Space> getSpaceList() {
+    public List<SpaceDto> getSpaceList() {
         return spaceList;
     }
 
-    public void setSpaceList(List<Space> spaceList) {
+    public void setSpaceList(List<SpaceDto> spaceList) {
         this.spaceList = spaceList;
     }
 
