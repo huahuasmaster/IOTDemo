@@ -92,20 +92,58 @@ public class AreaManageActivity extends AppCompatActivity {
         };
     }
 
-    private void addRoom(String s) {
-        adapter.notifyDataSetChanged();
-        Snackbar.make(fab,getString(R.string.new_area)+s,Snackbar.LENGTH_SHORT).show();
+    private void addArea(final String s) {
+        String url = UrlHandler.addArea(s);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab,getString(R.string.new_area)+s,Snackbar.LENGTH_SHORT)
+                                .show();
+                        initData();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(fab, R.string.failed_work,Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
 
-    private void editRoom(int position,String newName) {
-        adapter.getRoomList().get(position).setName(newName);
-        adapter.notifyDataSetChanged();
+    private void editArea(int position, String newName) {
+        long areaId = adapter.getRoomList().get(position).getId();
+        String url = UrlHandler.editArea(areaId,newName);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab, R.string.edit_successfully,Snackbar.LENGTH_SHORT)
+                                .show();
+                        initData();
+                    }
+                });
+            }
 
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(fab, R.string.failed_work,Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
     private void showEditDialog(final int position) {
         new MaterialDialog.Builder(this)
                 .title(R.string.new_name)
-                .content(R.string.plz_type_in_new_are_name)
+                .content(R.string.plz_type_in_new_area_name)
                 .inputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_PERSON_NAME
                         | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
@@ -113,7 +151,7 @@ public class AreaManageActivity extends AppCompatActivity {
                 .input(getString(R.string.new_name), "", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        editRoom(position,input.toString());
+                        editArea(position,input.toString());
                     }
                 }).show();
     }
@@ -126,11 +164,11 @@ public class AreaManageActivity extends AppCompatActivity {
                         | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(2,16)
                 .positiveText(R.string.confirm)
-                .input(getString(R.string.plz_type_in_new_are_name),
+                .input(getString(R.string.plz_type_in_new_area_name),
                         getString(R.string.default_area), false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        addRoom(input.toString());
+                        addArea(input.toString());
                     }
                 }).show();
     }
@@ -145,16 +183,35 @@ public class AreaManageActivity extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if(which == DialogAction.POSITIVE) {
-                            deleteRoom(position);
+                            deleteArea(position);
                         }
                     }
                 }).show();
     }
 
-    private void deleteRoom(int position) {
-        adapter.getRoomList().remove(position);
-        adapter.notifyDataSetChanged();
-        Snackbar.make(fab, R.string.delete_successfully,Snackbar.LENGTH_SHORT).show();
+    private void deleteArea(int position) {
+        long areaId = adapter.getRoomList().get(position).getId();
+        String url = UrlHandler.deleteArea(areaId);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(fab, R.string.delete_successfully,Snackbar.LENGTH_SHORT)
+                                .show();
+                        initData();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(fab, R.string.failed_work,Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
     private void initData() {
         HttpCallbackListener listener = new HttpCallbackListener() {

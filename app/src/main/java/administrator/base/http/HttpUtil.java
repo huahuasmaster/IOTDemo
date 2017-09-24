@@ -2,9 +2,11 @@ package administrator.base.http;
 
 import android.app.Application;
 import android.content.Intent;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.lichfaker.log.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,9 +58,7 @@ public class HttpUtil {
                                 listener.onFinish(jsonObject.getString("data"));
                             } else {
                                 //如果是服务器处理好的错误 则直接显示
-                                Toast.makeText(ContextApplication.getContext(),
-                                        jsonObject.getString("error"),
-                                        Toast.LENGTH_SHORT).show();
+                                Logger.e(jsonObject.getString("data"));
                             }
                         }
                     }

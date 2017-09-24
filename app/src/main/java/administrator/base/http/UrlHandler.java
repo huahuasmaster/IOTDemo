@@ -46,6 +46,11 @@ public class UrlHandler {
         return getHead()+"device/"+deviceId;
     }
 
+    //修改设备的自定义名称
+    public static String editDeviceName(long deviceId,String name) {
+        return getHead()+"device/"+deviceId+"/"+name+"/editName";
+    }
+
     //根据获取设备信息
     public static String getDeviceDetailDescBySn(String sn) {
         return getHead()+"device/"+sn+"/bySn";
@@ -61,6 +66,20 @@ public class UrlHandler {
         return getHead()+"area/"+areaId+"/"+offset+"/innerDevice";
     }
 
+    //告知服务器设备上线
+    public static String deviceOnline(String sn) {
+        return getHead()+"device/"+getUserId()+"/"+sn+"/online";
+    }
+
+    //修改设备绑定的安装位置
+    public static String changeDeviceOfArea(long deviceId,long areaId) {
+        return getHead()+"device/"+deviceId+"/"+areaId+"/changeArea";
+    }
+
+    //新增安装位置同时绑定
+    public static String addAreaAndBoundIt(long deviceId,String name) {
+        return getHead()+"device/"+deviceId+"/"+name+"/boundDevice";
+    }
     //获取默认空间下的房间以及内里设备信息
     public static String getAreaWithDeviceOfDefaultSpace(long userId) {
         return getHead()+"space/"+userId+"/areaList/preview/default";
@@ -68,7 +87,22 @@ public class UrlHandler {
 
     //获取默认空间下的房间列表
     public static String getAreaOfDefaultSpace() {
-        return getHead()+"area/"+getUserId()+"/allArea/defaultSpace";
+        return getHead()+"area/"+getUserId()+"/allAreaWithDefault";
+    }
+
+    //删除房间
+    public static String deleteArea(long areaId) {
+        return getHead()+"area/"+areaId+"/deleteArea";
+    }
+
+    //新增房间
+    public static String addArea(String name) {
+        return getHead()+"area/"+getUserId()+"/"+name+"/addArea";
+    }
+
+    //编辑房间（名称）
+    public static String editArea(long areaId,String newName) {
+        return getHead()+"area/"+areaId+"/"+newName+"/editArea";
     }
 
     //获取当前空间下的网关
@@ -112,7 +146,7 @@ public class UrlHandler {
      * @return
      */
     public static String getHead() {
-        return "http://"+getIp()+":"+port+"/";
+        return "http://"+getIp()+":"+port+"/app/";
     }
     //获取服务器ip
     public static String getIp() {

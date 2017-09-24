@@ -38,6 +38,8 @@ import administrator.base.http.UrlHandler;
 import administrator.base.mqtt.MqttManager;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.DeviceDto;
+import administrator.entity.DeviceInArea;
+import administrator.enums.DataTypeEnum;
 
 /**
  * 终端上线页面
@@ -158,6 +160,8 @@ public class DeviceOnlineActivity extends AppCompatActivity {
                 if(bounded) {
                     Intent intent = new Intent(DeviceOnlineActivity.this,
                             DeviceSettingActivity.class);
+                    intent.putExtra("from_online_act",true);
+                    intent.putExtra("device_id",deviceDto.getId());
                     startActivity(intent);
                 } else {
                     showWaitText(true);
@@ -165,7 +169,7 @@ public class DeviceOnlineActivity extends AppCompatActivity {
                                     + chooseGateBtn.getText().toString(),
                             0, ("0$" + deviceDto.getSn()).getBytes());
                     Logger.e("正在监听mqtt消息");
-                    MqttManager.getInstance().subscribe("/lpwa/lora/grant/"
+                    MqttManager.getInstance().subscribe("/lpwa/lora/info/"
                             + chooseGateBtn.getText().toString(), 0);
                 }
             }
@@ -185,7 +189,9 @@ public class DeviceOnlineActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void checkGateOnline() {
@@ -245,9 +251,9 @@ public class DeviceOnlineActivity extends AppCompatActivity {
         checkImg = (ImageView) findViewById(R.id.check);
 
         exitDialog = new MaterialDialog.Builder(this)
-                        .title("无法上线")
+                        .title(R.string.cant_online)
                         .autoDismiss(false)
-                        .content("当前空间内没有可以使用的网关，请先绑定网关")
+                        .content(R.string.plz_bound_gate_before)
                         .positiveText(getString(R.string.confirm))
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -305,7 +311,20 @@ public class DeviceOnlineActivity extends AppCompatActivity {
     }
 
     private void sendDeviceOnlineMsg(String deviceSn) {
+        Logger.i("向服务器发送消息中");
+        String url = UrlHandler.deviceOnline(deviceSn);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                Snackbar.make(confirmBtn,"操作成功",Snackbar.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(confirmBtn,R.string.failed_work,Snackbar.LENGTH_SHORT).show();
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url,listener);
     }
     @Subscribe(priority = 100)
     public void onGateOnlineEvent(MqttMsgBean msgBean) {
@@ -315,12 +334,23 @@ public class DeviceOnlineActivity extends AppCompatActivity {
         Toast.makeText(this,"gateOnlineAct收到消息 主题："+msgBean.getMainTopic()
                 +" 内容："+msgBean.getMqttMessage().toString(),Toast.LENGTH_SHORT).show();
         if(msgBean.getMainTopic().equals(MqttMsgBean.INFO)) {
+            Logger.i("判断中");
             Set<String> keySet = msgBean.getDataMap().keySet();
-            for(String sn : keySet) {
+            for(final String sn : keySet) {
+                Logger.i("sn = "+sn);
                 if(sn.equals(deviceDto.getSn()) &&
                         msgBean.getDataMap().get(sn).equals(MqttMsgBean.DEVICE_ONLINE)) {
                     bounded = true;
-                    showSuccessText();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showWaitText(false);
+                            showSuccessText();
+                            sendDeviceOnlineMsg(sn);
+                        }
+                    });
+
+                    break;
                 }
             }
         }
