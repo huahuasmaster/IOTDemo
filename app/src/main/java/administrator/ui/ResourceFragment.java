@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -109,6 +110,7 @@ public class ResourceFragment extends Fragment {
     private AreaCardAdapter areaCardAdapter;
     private MaterialDialog waitDialog;
     private DeviceCardCallbackListener deviceCardListener;
+    private SwipeRefreshLayout previewSwiper;
 
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
@@ -121,6 +123,7 @@ public class ResourceFragment extends Fragment {
     private SpaceCardAdapter spaceCardAdapter;
     private List<SpaceWithAreas> swaList = new ArrayList<>();
     private SpaceCardCallbackListener spaceOnClickListener;
+    private SwipeRefreshLayout sideSwiper;
 
 
     private OnFragmentInteractionListener mListener;
@@ -233,6 +236,14 @@ public class ResourceFragment extends Fragment {
      */
     private void initPreview(View v) {
         areaCardsRV = (MyRecyclerView) v.findViewById(R.id.area_cards);
+        previewSwiper = (SwipeRefreshLayout)v.findViewById(R.id.swipe_preview);
+
+        previewSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initAreaCardsBySpaceId(-1L);
+            }
+        });
         areaCardAdapter = new AreaCardAdapter();
         areaCardAdapter.setContext(getContext());
 
@@ -306,6 +317,9 @@ public class ResourceFragment extends Fragment {
                                 if (waitDialog.isShowing()) {
                                     waitDialog.dismiss();
                                 }
+                                if(previewSwiper.isRefreshing()) {
+                                    previewSwiper.setRefreshing(false);
+                                }
                             }
                         });
                     }
@@ -342,8 +356,16 @@ public class ResourceFragment extends Fragment {
         spaceCardsRV = (RecyclerView) v.findViewById(R.id.space_card_recycler);
         addSpace = (FloatingActionButton) v.findViewById(R.id.add_space);
         userName = (TextView) v.findViewById(R.id.user_name);
+        sideSwiper = (SwipeRefreshLayout)v.findViewById(R.id.swipe_side_menu);
 
         userName.setText(loginDataSp.getString("name", "神秘用户"));
+
+        sideSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initSpaceCards();
+            }
+        });
 
         spaceOnClickListener = new SpaceCardCallbackListener() {
             @Override
@@ -387,6 +409,13 @@ public class ResourceFragment extends Fragment {
                 HttpUtil.sendRequestWithCallback(url, body, listener);
             }
         };
+        initSpaceCards();
+    }
+
+    /**
+     * 实际进行侧边栏卡片刷新的方法
+     */
+    private void initSpaceCards() {
 
         HttpCallbackListener listener = new HttpCallbackListener() {
             @Override
@@ -403,7 +432,15 @@ public class ResourceFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        initSpaceCards();
+                        spaceCardAdapter = new SpaceCardAdapter();
+                        spaceCardAdapter.setListener(spaceOnClickListener);
+                        spaceCardAdapter.setSwaList(swaList);
+                        spaceCardAdapter.setContext(getContext());
+                        spaceCardsRV.setAdapter(spaceCardAdapter);
+                        spaceCardsRV.setLayoutManager(manager);
+                        if(sideSwiper.isRefreshing()) {
+                            sideSwiper.setRefreshing(false);
+                        }
                     }
                 });
 
@@ -418,18 +455,7 @@ public class ResourceFragment extends Fragment {
         };
 
         HttpUtil.sendRequestWithCallback(UrlHandler.getSpaceWithAreasListUrl(), listener);
-    }
 
-    /**
-     * 实际进行侧边栏卡片赋值的方法
-     */
-    private void initSpaceCards() {
-        spaceCardAdapter = new SpaceCardAdapter();
-        spaceCardAdapter.setListener(spaceOnClickListener);
-        spaceCardAdapter.setSwaList(swaList);
-        spaceCardAdapter.setContext(getContext());
-        spaceCardsRV.setAdapter(spaceCardAdapter);
-        spaceCardsRV.setLayoutManager(manager);
 
     }
 

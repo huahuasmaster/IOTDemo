@@ -140,7 +140,10 @@ public class UrlHandler {
         return getHead()+"device/"+getUserId()+"/SnCodeMap";
     }
 
-
+    //新增/更新阈值设置
+    public static String addAlertConfig(long deviceId,String code) {
+        return getHead()+"device/"+deviceId+"/"+code+"/setThreshold";
+    }
     /**
      * 获取请求的开头ip与端口
      * @return

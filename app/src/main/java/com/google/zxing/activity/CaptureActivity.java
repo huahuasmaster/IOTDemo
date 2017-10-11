@@ -6,7 +6,6 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -57,7 +56,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import administrator.ui.TypeNumActivity;
+import administrator.ui.TypeSnActivity;
 
 
 /**
@@ -114,7 +113,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         gotoType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CaptureActivity.this, TypeNumActivity.class);
+                Intent intent = new Intent(CaptureActivity.this, TypeSnActivity.class);
                 startActivity(intent);
             }
         });

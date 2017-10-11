@@ -327,13 +327,14 @@ public class DeviceOnlineActivity extends AppCompatActivity {
         HttpUtil.sendRequestWithCallback(url,listener);
     }
     @Subscribe(priority = 100)
-    public void onGateOnlineEvent(MqttMsgBean msgBean) {
+    public void onDeviceOnlineEvent(MqttMsgBean msgBean) {
         Looper.prepare();
         Logger.e("DeviceOnlineAct收到消息 主题："+msgBean.getMainTopic()
                 +" 内容："+msgBean.getMqttMessage().toString());
-        Toast.makeText(this,"gateOnlineAct收到消息 主题："+msgBean.getMainTopic()
-                +" 内容："+msgBean.getMqttMessage().toString(),Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"gateOnlineAct收到消息 主题："+msgBean.getMainTopic()
+//                +" 内容："+msgBean.getMqttMessage().toString(),Toast.LENGTH_SHORT).show();
         if(msgBean.getMainTopic().equals(MqttMsgBean.INFO)) {
+
             Logger.i("判断中");
             Set<String> keySet = msgBean.getDataMap().keySet();
             for(final String sn : keySet) {

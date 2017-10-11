@@ -1,5 +1,6 @@
 package administrator.ui;
 
+import android.content.Intent;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -307,5 +308,14 @@ public class DeviceSettingActivity extends AppCompatActivity {
             }
         };
         HttpUtil.sendRequestWithCallback(url,listener);
+    }
+
+    @Override
+    public void finish() {
+        if(fromOnlineAct) {
+            startActivity(new Intent(DeviceSettingActivity.this,MainActivity.class));
+        } else {
+            super.finish();
+        }
     }
 }

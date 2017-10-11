@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.internal.MDButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jaygoo.widget.RangeSeekBar;
+import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
 import administrator.entity.DeviceInArea;
+import administrator.enums.DataTypeEnum;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 public class AreaDetailActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -166,12 +170,22 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
     }
     /**
      * 弹出阈值设置弹窗
-     * @param postion
+     * @param position
      */
-    private void showThresholdSetDialog(final int postion) {
+    private void showThresholdSetDialog(final int position) {
 
+        DataTypeEnum type = DataTypeEnum
+                .indexOf(adapter.getDeviceInAreaList().get(position).getType());
+        String title = "自定义适宜";
+        String temp = "";
+        switch (type) {
+            case HUMIDITY:title += "湿度";temp = "%";break;
+            case TMP_CELSIUS: title += "温度";temp = "℃";break;
+            case TMP_K:title += "温度";temp = "K";break;
+        }
+        final String unit = temp;
         thresholdSetDialog = new MaterialDialog.Builder(this)
-                .title("自定义适宜温度")
+                .title(title)
                 .customView(R.layout.threshold_set_single,false)
                 .positiveText("确定")
                 .negativeText("取消")
@@ -185,12 +199,13 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
         // TODO: 2017/8/8 初始化范围值 后续应该用网络请求代替
         seekBar.setValue(19f,27f);
 
-        range.setText((int)seekBar.getCurrentRange()[0]+ "℃-"+(int)seekBar.getCurrentRange()[1]+"℃");
+        range.setText((int)seekBar
+                .getCurrentRange()[0]+ unit+"-"+(int)seekBar.getCurrentRange()[1]+unit);
         seekBar.setOnRangeChangedListener(new RangeSeekBar.OnRangeChangedListener() {
             @Override
             public void onRangeChanged(RangeSeekBar view, float min, float max, boolean isFromUser) {
                 if (isFromUser) {
-                    range.setText((int)min+ "℃-"+(int)max+"℃");
+                    range.setText((int)min+ unit+"-"+(int)max+unit);
                 }
             }
         });
@@ -199,16 +214,38 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
         positiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetThreshold(postion,(int)seekBar.getCurrentRange()[0],(int)seekBar.getCurrentRange()[1]);
+                resetThreshold(position,(int)seekBar.getCurrentRange()[0],(int)seekBar.getCurrentRange()[1]);
                 thresholdSetDialog.dismiss();
             }
         });
         thresholdSetDialog.show();
 
     }
+    /**
+     * 实际进行网络请求调整阈值的方法
+     */
+    private void resetThreshold(int position,int min,int max) {
+//        Snackbar.make(viewPager,"max："+max+" min:"+min,Snackbar.LENGTH_SHORT).show();
+        DeviceInArea mDia = adapter.getDeviceInAreaList().get(position);
+        String url = UrlHandler.addAlertConfig(mDia.getId(),
+                DataTypeEnum.indexOf(mDia.getType()).getCode());
+        Logger.i("url = "+url);
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                Snackbar.make(viewPager,R.string.edit_successfully,Snackbar.LENGTH_SHORT).show();
+            }
 
-    private void resetThreshold(int position,int max,int min) {
-        Snackbar.make(viewPager,"max："+max+" min:"+min,Snackbar.LENGTH_SHORT).show();
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(viewPager,R.string.failed_work,Snackbar.LENGTH_SHORT).show();
+            }
+        };
+        RequestBody body = new FormBody.Builder()
+                        .add("max", String.valueOf(max))
+                        .add("min",String.valueOf(min))
+                .build();
+        HttpUtil.sendRequestWithCallback(url,body,listener);
     }
     @Override
     public void onClick(View view) {
