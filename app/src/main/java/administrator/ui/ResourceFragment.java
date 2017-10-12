@@ -263,9 +263,10 @@ public class ResourceFragment extends Fragment {
             }
 
             @Override
-            public void onThreshold(int position) {
+            public void onThreshold(DeviceInArea dia) {
 
             }
+
 
             @Override
             public void onCheck(int position) {

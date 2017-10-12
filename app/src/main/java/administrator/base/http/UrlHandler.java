@@ -144,6 +144,19 @@ public class UrlHandler {
     public static String addAlertConfig(long deviceId,String code) {
         return getHead()+"device/"+deviceId+"/"+code+"/setThreshold";
     }
+
+    //获取阈值
+    public static String getAlertConfig(long deviceId,String code) {
+        return getHead()+"device/"+deviceId+"/"+code+"/threshold";
+    }
+
+    public static String getAlert(long spaceId) {
+        return getHead()+"device/"+spaceId+"/alert";
+    }
+
+    public static String getAlertByDefault() {
+        return getHead()+"device/"+getUserId()+"/alertByDefault";
+    }
     /**
      * 获取请求的开头ip与端口
      * @return

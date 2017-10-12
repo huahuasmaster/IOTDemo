@@ -18,6 +18,8 @@ import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.entity.DeviceInArea;
 import administrator.enums.DataTypeEnum;
 
+import static android.view.View.GONE;
+
 /**
  * Created by zhuang_ge on 2017/8/5.
  * 设备卡片适配器
@@ -76,7 +78,7 @@ public class DeviceCardAdapter extends PagerAdapter{
     //在此处进行view的赋值,点击事件等
     @Override public Object instantiateItem(ViewGroup container, final int position) {
         View view = views.get(position);
-        DeviceInArea deviceInArea = deviceInAreaList.get(position);
+        final DeviceInArea deviceInArea = deviceInAreaList.get(position);
         //为3个按钮添加点击事件
         Button checkDetailBtn = (Button)view.findViewById(R.id.check_detail_btn);
         checkDetailBtn.setOnClickListener(new View.OnClickListener() {
@@ -96,12 +98,16 @@ public class DeviceCardAdapter extends PagerAdapter{
 
         Button thresholdSetBtn = (Button)view.findViewById(R.id.go_setting_threshold);
         if(thresholdSetBtn != null) {
-            thresholdSetBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onThreshold(position);
-                }
-            });
+            if(deviceInArea.getType() > 3) {
+                thresholdSetBtn.setVisibility(GONE);
+            } else {
+                thresholdSetBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onThreshold(deviceInArea);
+                    }
+                });
+            }
         }
         //赋值各种名称
         TextView realNameText = (TextView)view.findViewById(R.id.device_real_name);

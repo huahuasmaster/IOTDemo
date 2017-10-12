@@ -70,7 +70,7 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
         statusSwitch = (Switch)findViewById(R.id.detail_status_switch);
         goSettingImg = (ImageView)findViewById(R.id.go_setting_img);
         goBackImg = (ImageView)findViewById(R.id.go_back);
-        title = (TextView)findViewById(R.id.title);
+        title = (TextView)findViewById(R.id.title_msg);
     }
 
     private void initViews() {

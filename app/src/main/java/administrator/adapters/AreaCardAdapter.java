@@ -24,6 +24,8 @@ import administrator.entity.DeviceInArea;
 import administrator.enums.DataTypeEnum;
 import administrator.ui.AreaDetailActivity;
 
+import static android.view.View.GONE;
+
 /**
  * Created by zhuang_ge on 2017/8/18.
  * 资源-预览页面 房间卡片的适配器
@@ -101,16 +103,17 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     //根据sn返回对应的preview适配器
     public DevicePreviewAdapter findPreviewAdapterBySn(String sn) {
-        for(DevicePreviewAdapter adapter : previewAdapterList) {
+        for (DevicePreviewAdapter adapter : previewAdapterList) {
             List<DeviceCurValue> list = adapter.getDcvList();
-            for(DeviceCurValue dcv : list) {
-                if(dcv.getSn().equals(sn)) {
+            for (DeviceCurValue dcv : list) {
+                if (dcv.getSn().equals(sn)) {
                     return adapter;
                 }
             }
         }
         return null;
     }
+
     //房间卡片的viewholder
     class AreaCardViewHolder extends RecyclerView.ViewHolder {
         //房间背景图片
@@ -204,7 +207,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     //用于设备卡片布局赋值的方法
     private void initViewsOfDeviceCard(DIACardViewHolder holder, final int position) {
-        DeviceInArea mDia = diaList.get(position);
+        final DeviceInArea mDia = diaList.get(position);
         DataSimpleAdapter adapter = new DataSimpleAdapter();
         //为按钮添加事件
         holder.checkBtn.setOnClickListener(new View.OnClickListener() {
@@ -214,8 +217,18 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
             }
         });
 
+        //如果不是温度或者湿度，则隐藏
         if (holder.thresholdBtn != null) {
-            listener.onThreshold(position);
+            if (mDia.getType() > 3) {
+                holder.thresholdBtn.setVisibility(GONE);
+            } else {
+                holder.thresholdBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onThreshold(mDia);
+                    }
+                });
+            }
         }
         //赋值名称
         holder.realName.setText(mDia.getDeviceName());

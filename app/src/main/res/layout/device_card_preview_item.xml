@@ -72,7 +72,7 @@
             android:alpha="0.14"
             android:background="@android:color/black"
             android:layout_marginBottom="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/go_setting_threshold"
+            app:layout_constraintBottom_toTopOf="@+id/check_detail_btn"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginRight="8dp"
