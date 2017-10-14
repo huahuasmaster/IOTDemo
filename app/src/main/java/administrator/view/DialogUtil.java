@@ -2,9 +2,11 @@ package administrator.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -14,6 +16,8 @@ import com.jaygoo.widget.RangeSeekBar;
 import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
+import administrator.application.ContextApplication;
+import administrator.base.UnitUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
@@ -36,22 +40,7 @@ public class DialogUtil {
 
 
         String title = "自定义适宜";
-        String temp = "";
-        switch (type) {
-            case HUMIDITY:
-                title += "湿度";
-                temp = "%";
-                break;
-            case TMP_CELSIUS:
-                title += "温度";
-                temp = "℃";
-                break;
-            case TMP_K:
-                title += "温度";
-                temp = "K";
-                break;
-        }
-        final String unit = temp;
+        final String unit = UnitUtil.getUnit(type);
         final MaterialDialog thresholdSetDialog = new MaterialDialog.Builder(context)
                 .title(title)
                 .customView(R.layout.threshold_set_single, false)
@@ -124,12 +113,18 @@ public class DialogUtil {
         HttpCallbackListener listener = new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Snackbar.make(null, R.string.edit_successfully, Snackbar.LENGTH_SHORT).show();
+                Looper.prepare();
+                Toast.makeText(ContextApplication.getContext(),
+                        R.string.edit_successfully, Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
 
             @Override
             public void onError(Exception e) {
-                Snackbar.make(null, R.string.failed_work, Snackbar.LENGTH_SHORT).show();
+                Looper.prepare();
+                Toast.makeText(ContextApplication.getContext(),
+                        R.string.failed_work, Toast.LENGTH_SHORT).show();
+                Looper.loop();
             }
         };
         RequestBody body = new FormBody.Builder()

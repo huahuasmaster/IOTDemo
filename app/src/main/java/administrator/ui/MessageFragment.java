@@ -77,6 +77,7 @@ public class MessageFragment extends Fragment {
         DividerItemDecoration decoration = new DividerItemDecoration(
                 getContext(),DividerItemDecoration.VERTICAL);
         adapter.setAlertDtos(alertDtos);
+        adapter.setContext(getContext());
         adapter.setListener(listener);
         rv.setAdapter(adapter);
         rv.setLayoutManager(manager);

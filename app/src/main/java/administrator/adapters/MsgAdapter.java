@@ -1,5 +1,9 @@
 package administrator.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +18,12 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 import administrator.adapters.listener.SwipeItemCallbackListener;
+import administrator.base.UnitUtil;
 import administrator.entity.AlertDto;
 import administrator.enums.AlertTypeEnum;
+import administrator.enums.DataTypeEnum;
+import administrator.ui.AreaDetailActivity;
+import administrator.ui.DeviceDetailActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -27,6 +35,16 @@ public class MsgAdapter extends RecyclerView.Adapter{
     private List<AlertDto> alertDtos;
 
     private SwipeItemCallbackListener listener;
+
+    private Context context;
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public List<AlertDto> getAlertDtos() {
         return alertDtos;
@@ -54,7 +72,9 @@ public class MsgAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         ViewHolder viewHolder = (ViewHolder)holder;
-        AlertDto alertDto = alertDtos.get(position);
+        final AlertDto alertDto = alertDtos.get(position);
+        final Context mConText = context;
+        String unit = UnitUtil.getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
         viewHolder.deleteTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,14 +87,32 @@ public class MsgAdapter extends RecyclerView.Adapter{
         String content = null;
         AlertTypeEnum alertType = AlertTypeEnum.indexOf(alertDto.getAlertType());
         switch (alertType) {
-            case TMP_HIGH:content = "("+alertDto.getOtherName()+")温度过高，请通风。";break;
-            case TMP_LOW:content = "("+alertDto.getOtherName()+")温度过低，请注意保暖。";break;
-            case HUMIDITY_HIGH:content = "("+alertDto.getOtherName()+")湿度过低";break;
-            case HUMIDITY_LOW:content = "("+alertDto.getOtherName()+")湿度过高";break;
+            case TMP_HIGH:
+                content = "("+alertDto.getOtherName()+")温度过高("
+                        +alertDto.getAlertValue()+unit+")，请通风。";break;
+            case TMP_LOW:
+                content = "("+alertDto.getOtherName()+")温度过低("
+                        +alertDto.getAlertValue()+unit+")，请注意保暖。";break;
+            case HUMIDITY_HIGH:
+                content = "("+alertDto.getOtherName()+")湿度过低("
+                        +alertDto.getAlertValue()+unit+")";break;
+            case HUMIDITY_LOW:
+                content = "("+alertDto.getOtherName()+")湿度过高("
+                    +alertDto.getAlertValue()+unit+")";break;
         }
         viewHolder.title.setText((alertType.getTitle()));
         viewHolder.content.setText(content);
         viewHolder.icon.setImageResource(R.drawable.ic_warnning_circle);
+        viewHolder.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(
+                        mConText, DeviceDetailActivity.class);
+                intent.putExtra("device_id", alertDto.getId());
+                intent.putExtra("data_type", alertDto.getDataType());
+                mConText.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -90,6 +128,7 @@ public class MsgAdapter extends RecyclerView.Adapter{
         private TextView dateTxt;
         private ImageView redPoint;
         private TextView deleteTxt;
+        private ConstraintLayout back;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +138,7 @@ public class MsgAdapter extends RecyclerView.Adapter{
             dateTxt = (TextView)itemView.findViewById(R.id.date);
             redPoint = (ImageView)itemView.findViewById(R.id.unread_point);
             deleteTxt = (TextView)itemView.findViewById(R.id.right_menu);
+            back = (ConstraintLayout) itemView.findViewById(R.id.background);
         }
     }
 

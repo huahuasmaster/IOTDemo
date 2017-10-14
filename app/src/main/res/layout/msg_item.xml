@@ -16,9 +16,15 @@
         android:gravity="center"
         android:text="@string/delete"
         android:textColor="@color/pureWhite"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/pureWhite"
+        >
 <android.support.constraint.ConstraintLayout
     android:orientation="vertical"
-    android:background="@color/pureWhite"
+    android:id="@+id/background"
+    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -27,10 +33,10 @@
         android:layout_width="9dp"
         android:layout_height="9dp"
         app:srcCompat="@drawable/ic_red_point"
-        android:layout_marginRight="2dp"
+        android:layout_marginRight="1dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="1dp" />
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -76,4 +82,5 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp" />
 </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
 </com.aitsuki.swipe.SwipeItemLayout>
