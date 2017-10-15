@@ -1,6 +1,8 @@
 package administrator.ui;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,9 +15,11 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import administrator.adapters.DataSimpleAdapter;
@@ -36,6 +40,8 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
     private ImageView goBackImg;
     private long deviceId;
     private int type;
+    private boolean fromAlert = false;
+    private FloatingActionButton fab;
     private TextView title;
     private MaterialDialog waitDialog;//提示等待弹窗
     private DeviceInArea deviceInArea;
@@ -49,12 +55,46 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
 
         deviceId = getIntent().getLongExtra("device_id",-1L);
         type = getIntent().getIntExtra("data_type",-1);
+        fromAlert = getIntent().getBooleanExtra("from_alert",false);
 
         findViews();
 
         initData();
 
+        if(!fromAlert) {
+            fab.setVisibility(View.GONE);
+        }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = UrlHandler
+                        .processAlertByDeviceIdAndDataType(deviceId,type,new Date().getTime());
+                HttpCallbackListener listener = new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Snackbar.make(fab,"已消除警报",Toast.LENGTH_SHORT).show();
+                                fab.hide();
+                            }
+                        });
+                    }
 
+                    @Override
+                    public void onError(Exception e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Snackbar.make(fab,"提交失败",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                };
+                HttpUtil.sendRequestWithCallback(url,listener);
+
+            }
+        });
         goBackImg.setOnClickListener(this);
         goSettingImg.setOnClickListener(this);
 //        Snackbar.make(rv,position == -1 ? "未知设备" : "这是第"+(position+1)+"个卡片中的设备"
@@ -71,6 +111,7 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
         goSettingImg = (ImageView)findViewById(R.id.go_setting_img);
         goBackImg = (ImageView)findViewById(R.id.go_back);
         title = (TextView)findViewById(R.id.title_msg);
+        fab = (FloatingActionButton)findViewById(R.id.fab);
     }
 
     private void initViews() {

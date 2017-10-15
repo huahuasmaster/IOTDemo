@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import administrator.adapters.listener.SwipeItemCallbackListener;
@@ -51,6 +54,16 @@ public class MsgAdapter extends RecyclerView.Adapter{
     }
 
     public void setAlertDtos(List<AlertDto> alertDtos) {
+        List<AlertDto> alertForRemove = new ArrayList<>();
+
+        for(int i = 0;i < alertDtos.size();i++) {
+            if(alertDtos.get(i).getProcessTime() != null) {
+                alertForRemove.add(alertDtos.get(i));
+            }
+        }
+        Logger.i("alertDtosForRemove.size"+alertForRemove.size());
+        alertDtos.removeAll(alertForRemove);
+        Logger.i("alertDtos.size()"+alertDtos.size());
         this.alertDtos = alertDtos;
     }
 
@@ -71,7 +84,7 @@ public class MsgAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        ViewHolder viewHolder = (ViewHolder)holder;
+        final ViewHolder viewHolder = (ViewHolder)holder;
         final AlertDto alertDto = alertDtos.get(position);
         final Context mConText = context;
         String unit = UnitUtil.getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
@@ -106,11 +119,8 @@ public class MsgAdapter extends RecyclerView.Adapter{
         viewHolder.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(
-                        mConText, DeviceDetailActivity.class);
-                intent.putExtra("device_id", alertDto.getId());
-                intent.putExtra("data_type", alertDto.getDataType());
-                mConText.startActivity(intent);
+                viewHolder.redPoint.setVisibility(View.INVISIBLE);
+                listener.onMain(position);
             }
         });
     }

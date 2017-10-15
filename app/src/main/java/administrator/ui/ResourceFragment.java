@@ -76,6 +76,7 @@ public class ResourceFragment extends Fragment {
 
     private SharedPreferences spaceDataSp;
     private SharedPreferences.Editor spaceDataSpEditor;
+
     private SharedPreferences loginDataSp;
     private SharedPreferences.Editor loginDataSpEditor;
 
@@ -85,8 +86,6 @@ public class ResourceFragment extends Fragment {
     private View previewPage, devicePage;
     private ImageView gotoScan;
     private ImageView spaceSelector;
-    private DrawerLayout drawerLayout;
-    private String result = "蛇皮";
     private LinearLayoutManager manager;
 
 
@@ -115,15 +114,7 @@ public class ResourceFragment extends Fragment {
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
 
-    //以下是对侧滑菜单的初始化定义
-    private ImageView head;//头像
-    private FloatingActionButton addSpace;//新增空间按钮
-    private RecyclerView spaceCardsRV;//空间列表
-    private TextView userName;//用户名称
-    private SpaceCardAdapter spaceCardAdapter;
-    private List<SpaceWithAreas> swaList = new ArrayList<>();
-    private SpaceCardCallbackListener spaceOnClickListener;
-    private SwipeRefreshLayout sideSwiper;
+
 
 
     private OnFragmentInteractionListener mListener;
@@ -183,7 +174,6 @@ public class ResourceFragment extends Fragment {
         //对各个视图的内部进行初始化
         initPreview(previewPage);
         initDevice(devicePage);
-        initSideMenu(v);
         //对其它view执行初始化
         gotoScan = (ImageView) v.findViewById(R.id.gotoScan);
         gotoScan.setOnClickListener(new View.OnClickListener() {
@@ -208,12 +198,11 @@ public class ResourceFragment extends Fragment {
             }
         });
 
-        drawerLayout = (DrawerLayout) v.findViewById(R.id.drawer);
         spaceSelector = (ImageView) v.findViewById(R.id.ex_space_text);
         spaceSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                drawerLayout.openDrawer(GravityCompat.START);
+                ((MainActivity)getActivity()).openDraw();
             }
         });
         spaceSelector.setOnLongClickListener(new View.OnLongClickListener() {
@@ -287,7 +276,7 @@ public class ResourceFragment extends Fragment {
      *
      * @param spaceId
      */
-    private void initAreaCardsBySpaceId(long spaceId) {
+    public void initAreaCardsBySpaceId(long spaceId) {
         //如果spaceid为-1 则请求默认空间
         final String url = spaceId != -1L ?
                 UrlHandler.getAreaWithInnerDevicePreviewUrl(spaceId)
@@ -347,118 +336,6 @@ public class ResourceFragment extends Fragment {
     private void initDevice(View v) {
     }
 
-    /**
-     * 通过网络请求 以及本地已有信息 填充侧边菜单卡片信息
-     *
-     * @param v
-     */
-    private void initSideMenu(View v) {
-        head = (ImageView) v.findViewById(R.id.side_menu_head_img);
-        spaceCardsRV = (RecyclerView) v.findViewById(R.id.space_card_recycler);
-        addSpace = (FloatingActionButton) v.findViewById(R.id.add_space);
-        userName = (TextView) v.findViewById(R.id.user_name);
-        sideSwiper = (SwipeRefreshLayout)v.findViewById(R.id.swipe_side_menu);
-
-        userName.setText(loginDataSp.getString("name", "神秘用户"));
-
-        sideSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initSpaceCards();
-            }
-        });
-
-        spaceOnClickListener = new SpaceCardCallbackListener() {
-            @Override
-            public void onChooseSpace(long spaceId) {
-                //在选择了某个空间后 关闭侧滑菜单 主页显示对应的空间信息
-                drawerLayout.closeDrawer(Gravity.START);
-                initAreaCardsBySpaceId(spaceId);
-            }
-
-            @Override
-            public void onChooseArea(long areaId) {
-
-            }
-
-            @Override
-            public void onClickSwitch(long spaceId, final Switch mSwicth, boolean checked) {
-                //离家->1 归家->0
-                short type = checked ? (short) 1 : (short) 0;
-
-                RequestBody body = new FormBody.Builder()
-                        .add("type", String.valueOf(type))
-                        .build();
-                String url = UrlHandler.postChangeModelTypeBySpaceId(spaceId);
-                HttpCallbackListener listener = new HttpCallbackListener() {
-                    @Override
-                    public void onFinish(String response) {
-                        //修改成功
-                        if (response.equals("1")) {
-                            Snackbar.make(mSwicth, "修改成功", Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            mSwicth.setChecked(!mSwicth.isChecked());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        //如果出错 switch恢复原来的状态
-                        mSwicth.setChecked(!mSwicth.isChecked());
-                    }
-                };
-                HttpUtil.sendRequestWithCallback(url, body, listener);
-            }
-        };
-        initSpaceCards();
-    }
-
-    /**
-     * 实际进行侧边栏卡片刷新的方法
-     */
-    private void initSpaceCards() {
-
-        HttpCallbackListener listener = new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                //将json转换为对象
-                try {
-                    swaList = new Gson().fromJson(response,
-                            new TypeToken<List<SpaceWithAreas>>() {
-                            }.getType());
-                } catch (Exception e) {
-                    Snackbar.make(viewPager, "服务器出错", Snackbar.LENGTH_SHORT).show();
-                }
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        spaceCardAdapter = new SpaceCardAdapter();
-                        spaceCardAdapter.setListener(spaceOnClickListener);
-                        spaceCardAdapter.setSwaList(swaList);
-                        spaceCardAdapter.setContext(getContext());
-                        spaceCardsRV.setAdapter(spaceCardAdapter);
-                        spaceCardsRV.setLayoutManager(manager);
-                        if(sideSwiper.isRefreshing()) {
-                            sideSwiper.setRefreshing(false);
-                        }
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Looper.prepare();
-                Toast.makeText(getContext(), "请求空间数据失败", Toast.LENGTH_SHORT).show();
-                Looper.loop();
-            }
-        };
-
-        HttpUtil.sendRequestWithCallback(UrlHandler.getSpaceWithAreasListUrl(), listener);
-
-
-    }
 
     @Override
     public void onStart() {

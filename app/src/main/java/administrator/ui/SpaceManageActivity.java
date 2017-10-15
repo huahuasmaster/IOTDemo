@@ -116,6 +116,11 @@ public class SpaceManageActivity extends AppCompatActivity {
             public void onEdit(int position) {
                 showEditDialog(position);
             }
+
+            @Override
+            public void onMain(int position) {
+
+            }
         };
 
     }

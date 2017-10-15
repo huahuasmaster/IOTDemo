@@ -3,6 +3,8 @@ package administrator.base.http;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Date;
+
 import administrator.application.ContextApplication;
 
 /**
@@ -156,6 +158,22 @@ public class UrlHandler {
 
     public static String getAlertByDefault() {
         return getHead()+"alert/"+getUserId()+"/alertByDefault";
+    }
+
+    //标注alert为已读
+    public static String readAlert(long alertId,long date) {
+        return getHead()+"alert/"+alertId+"/"+date+"/read";
+    }
+
+    //标注alert为已确认
+    public static String processAlert(long alertId,long date) {
+        return getHead()+"alert/"+alertId+"/"+date+"/process";
+
+    }
+
+    //批量确认alert
+    public static String processAlertByDeviceIdAndDataType(long deviceId,int dataType,long date) {
+        return getHead()+"alert/"+deviceId+"/"+dataType+"/"+date+"/processByDeviceAndDataType";
     }
     /**
      * 获取请求的开头ip与端口

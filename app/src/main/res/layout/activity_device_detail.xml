@@ -69,7 +69,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tool_bar">
+        app:layout_constraintTop_toBottomOf="@+id/tool_bar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -138,6 +140,14 @@
             tools:layout_editor_absoluteY="8dp">
 
         </android.support.v7.widget.RecyclerView>
-
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_check_white_24dp"
+            app:layout_behavior="administrator.view.ScrollAwareFABBehaviorDefault"
+            app:fabSize="normal" />
     </android.support.design.widget.CoordinatorLayout>
 </android.support.constraint.ConstraintLayout>
