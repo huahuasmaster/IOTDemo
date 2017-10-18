@@ -1,10 +1,17 @@
 package administrator.base.mqtt;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.lichfaker.log.Logger;
+import com.qrcodescan.R;
 
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -14,8 +21,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import administrator.application.ContextApplication;
+import administrator.base.AlertToMsgUtil;
 import administrator.base.http.UrlHandler;
+import administrator.entity.AlertDto;
+import administrator.enums.AlertTypeEnum;
+import administrator.enums.DataTypeEnum;
+import administrator.ui.MainActivity;
 
 /**
  * 管理mqtt的连接,发布,订阅,断开连接, 断开重连等操作
@@ -82,6 +99,43 @@ public class MqttManager {
                                         EventBus.getDefault().post(topicMessage);
                                     }
                                 }).start();
+                            Context mContext = ContextApplication.getContext();
+                            if(topicMessage.getMainTopic().equals(MqttMsgBean.ALERT)) {
+                                Logger.i("收到了alert消息，开始处理。");
+                                AlertDto alertDto = new Gson()
+                                        .fromJson(topicMessage.getMqttMessage().toString(),
+                                                AlertDto.class);
+                                String unit = AlertToMsgUtil
+                                        .getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
+                                AlertTypeEnum alertType = AlertTypeEnum
+                                        .indexOf(alertDto.getAlertType());
+                                String content = AlertToMsgUtil.getContent(alertType,alertDto,unit);
+                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                Date date;
+                                try {
+                                     date= format.parse(alertDto.getAlertTime());
+                                } catch (ParseException e) {
+                                    date = new Date();
+                                    e.printStackTrace();
+                                }
+                                NotificationManager manager = (NotificationManager)
+                                        mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                                Intent intent = new Intent(mContext, MainActivity.class);
+                                intent.putExtra("check_alert",true);
+                                PendingIntent pendingIntent = PendingIntent
+                                        .getActivity(mContext,0,intent,0);
+                                Notification notification = new NotificationCompat.Builder(mContext)
+                                        .setContentTitle(alertType.getTitle())
+                                        .setContentText(content)
+                                        .setWhen(date.getTime())
+                                        .setAutoCancel(true)
+                                        .setContentIntent(pendingIntent)
+                                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setPriority(Notification.PRIORITY_MAX)
+                                        .build();
+                                manager.notify(1,notification);
+                            }
                         } catch (InterruptedException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -128,6 +182,13 @@ public class MqttManager {
      */
     public static String getDeviceInfoTopic() {
         return "/lpwa/app/"+appId+"/info/"+sp.getLong("user_id",-1L);
+    }
+
+    /**
+     * 获取特定mqtt主题-告警信息
+     */
+    public static String getDeviceAlertTopic() {
+        return "/lpwa/app/"+appId+"/alert/"+sp.getLong("user_id",-1L);
     }
 
     /**
@@ -243,7 +304,8 @@ public class MqttManager {
     public boolean subscribe() {
         Logger.e(getDeviceDataTopic()+"-------"+getDeviceInfoTopic());
         return subscribe(getDeviceDataTopic(),0)
-                && subscribe(getDeviceInfoTopic(),0);
+                && subscribe(getDeviceInfoTopic(),0)
+                && subscribe(getDeviceAlertTopic(),0);
     }
 
     /**

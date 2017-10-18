@@ -3,7 +3,6 @@ package administrator.view;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +16,7 @@ import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 import administrator.application.ContextApplication;
-import administrator.base.UnitUtil;
+import administrator.base.AlertToMsgUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
@@ -40,7 +39,7 @@ public class DialogUtil {
 
 
         String title = "自定义适宜";
-        final String unit = UnitUtil.getUnit(type);
+        final String unit = AlertToMsgUtil.getUnit(type);
         final MaterialDialog thresholdSetDialog = new MaterialDialog.Builder(context)
                 .title(title)
                 .customView(R.layout.threshold_set_single, false)

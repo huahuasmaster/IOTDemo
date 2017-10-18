@@ -170,6 +170,9 @@ public class MessageFragment extends Fragment {
 
     public void getAlertOnline(long spaceId) {
         Logger.i("尝试请求alert");
+        if(!srl.isRefreshing()) {
+            srl.setRefreshing(true);
+        }
         String url = "";
         if (spaceId != -1L) {
             url = UrlHandler.getAlert(spaceId);
@@ -182,7 +185,6 @@ public class MessageFragment extends Fragment {
                 alertDtos = new Gson().fromJson(response,
                         new TypeToken<List<AlertDto>>() {
                         }.getType());
-                Logger.i("" + alertDtos.size());
                 adapter.setAlertDtos(alertDtos);
                 setUnreadDot(alertDtos);
                 getActivity().runOnUiThread(new Runnable() {
@@ -220,7 +222,7 @@ public class MessageFragment extends Fragment {
                 count++;
             }
         }
-        Logger.i("count = " + count);
+//        Logger.i("count = " + count);
         ((MainActivity) getActivity()).setMsgUnreadDot(count);
     }
 

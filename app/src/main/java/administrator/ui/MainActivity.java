@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -189,6 +190,22 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
         initSpaceCards();
     }
 
+    @Override
+    protected void onStart() {
+        Logger.i("执行onstart");
+        if (getIntent().getBooleanExtra("check_alert",false)){
+            Logger.i("来自点击通知后的跳转");
+            tabLayout.setCurrentTab(1);
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
     /**
      * 实际进行侧边栏卡片刷新的方法
      */
@@ -318,6 +335,29 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
     protected int dp2px(float dp) {
         final float scale = mContext.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //如果用户点击了返回键，则执行返回桌面功能 而不是退出程序
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent i= new Intent(Intent.ACTION_MAIN);
+
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            i.addCategory(Intent.CATEGORY_HOME);
+
+            startActivity(i);
+        }
+        return false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        ((ResourceFragment) mFragments.get(0)).initAreaCardsBySpaceId(-1L);
+        ((MessageFragment) mFragments.get(1)).getAlertOnline(-1L);
     }
 }
 

@@ -1,9 +1,7 @@
 package administrator.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,19 +12,14 @@ import android.widget.TextView;
 import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import administrator.adapters.listener.SwipeItemCallbackListener;
-import administrator.base.UnitUtil;
+import administrator.base.AlertToMsgUtil;
 import administrator.entity.AlertDto;
 import administrator.enums.AlertTypeEnum;
 import administrator.enums.DataTypeEnum;
-import administrator.ui.AreaDetailActivity;
-import administrator.ui.DeviceDetailActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -61,9 +54,9 @@ public class MsgAdapter extends RecyclerView.Adapter{
                 alertForRemove.add(alertDtos.get(i));
             }
         }
-        Logger.i("alertDtosForRemove.size"+alertForRemove.size());
+//        Logger.i("alertDtosForRemove.size"+alertForRemove.size());
         alertDtos.removeAll(alertForRemove);
-        Logger.i("alertDtos.size()"+alertDtos.size());
+//        Logger.i("alertDtos.size()"+alertDtos.size());
         this.alertDtos = alertDtos;
     }
 
@@ -87,7 +80,7 @@ public class MsgAdapter extends RecyclerView.Adapter{
         final ViewHolder viewHolder = (ViewHolder)holder;
         final AlertDto alertDto = alertDtos.get(position);
         final Context mConText = context;
-        String unit = UnitUtil.getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
+        String unit = AlertToMsgUtil.getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
         viewHolder.deleteTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,23 +90,9 @@ public class MsgAdapter extends RecyclerView.Adapter{
         viewHolder.redPoint
                 .setVisibility(alertDto.getReadTime() == null ? View.VISIBLE : View.INVISIBLE);
         viewHolder.dateTxt.setText(alertDto.getAlertTime());
-        String content = null;
         AlertTypeEnum alertType = AlertTypeEnum.indexOf(alertDto.getAlertType());
-        switch (alertType) {
-            case TMP_HIGH:
-                content = "("+alertDto.getOtherName()+")温度过高("
-                        +alertDto.getAlertValue()+unit+")，请通风。";break;
-            case TMP_LOW:
-                content = "("+alertDto.getOtherName()+")温度过低("
-                        +alertDto.getAlertValue()+unit+")，请注意保暖。";break;
-            case HUMIDITY_HIGH:
-                content = "("+alertDto.getOtherName()+")湿度过低("
-                        +alertDto.getAlertValue()+unit+")";break;
-            case HUMIDITY_LOW:
-                content = "("+alertDto.getOtherName()+")湿度过高("
-                    +alertDto.getAlertValue()+unit+")";break;
-        }
-        viewHolder.title.setText((alertType.getTitle()));
+        String content = AlertToMsgUtil.getContent(alertType,alertDto,unit);
+        viewHolder.title.setText(alertType.getTitle());
         viewHolder.content.setText(content);
         viewHolder.icon.setImageResource(R.drawable.ic_warnning_circle);
         viewHolder.back.setOnClickListener(new View.OnClickListener() {

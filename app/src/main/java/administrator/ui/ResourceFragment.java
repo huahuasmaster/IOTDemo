@@ -277,10 +277,14 @@ public class ResourceFragment extends Fragment {
      * @param spaceId
      */
     public void initAreaCardsBySpaceId(long spaceId) {
+//        if (!previewSwiper.isRefreshing()) {
+//            previewSwiper.setRefreshing(true);
+//        }
         //如果spaceid为-1 则请求默认空间
         final String url = spaceId != -1L ?
                 UrlHandler.getAreaWithInnerDevicePreviewUrl(spaceId)
                 : UrlHandler.getAreaWithDeviceOfDefaultSpace(loginDataSp.getLong("user_id", -1L));
+        Logger.i("url = "+url);
         HttpCallbackListener listener = new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
@@ -378,6 +382,7 @@ public class ResourceFragment extends Fragment {
             Set<String> keySet = dataMap.keySet();
             for(String key : keySet) {
                 String code = DeviceCodeUtil.getCode(key);
+                Logger.i("开始更新key为"+key+"的数据");
                 updatePreviewByMqtt(key,code,dataMap.get(key));
             }
         }
