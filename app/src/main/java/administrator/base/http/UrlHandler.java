@@ -175,6 +175,11 @@ public class UrlHandler {
     public static String processAlertByDeviceIdAndDataType(long deviceId,int dataType,long date) {
         return getHead()+"alert/"+deviceId+"/"+dataType+"/"+date+"/processByDeviceAndDataType";
     }
+
+    //获取某个设备的alert列表
+    public static String getAlertByDeviceId(long deviceId,int dataType,int offset) {
+        return getHead()+"alert/"+deviceId+"/"+dataType+"/"+offset+"/getList";
+    }
     /**
      * 获取请求的开头ip与端口
      * @return

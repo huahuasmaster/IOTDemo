@@ -328,7 +328,7 @@ public class ResourceFragment extends Fragment {
                 Snackbar.make(viewPager, "请求房间列表出错", Snackbar.LENGTH_SHORT).show();
             }
         };
-        waitDialog.show();
+//        waitDialog.show();
         HttpUtil.sendRequestWithCallback(url, listener, true);
     }
 

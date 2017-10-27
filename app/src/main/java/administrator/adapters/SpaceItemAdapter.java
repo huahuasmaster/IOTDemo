@@ -39,7 +39,7 @@ public class SpaceItemAdapter extends RecyclerView.Adapter{
         this.spaceList = spaceList;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    private class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView spaceName;
         private ImageView editName;

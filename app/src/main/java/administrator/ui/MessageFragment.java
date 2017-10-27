@@ -101,7 +101,8 @@ public class MessageFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.notifyItemRangeRemoved(position, 1);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(0, adapter.getAlertDtos().size());
                     }
                 });
                 //刷新未读计数

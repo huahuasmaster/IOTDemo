@@ -24,6 +24,12 @@ public class AlertDto {
 
     private short status;
 
+    private String areaName;
+
+    private String spaceName;
+
+    private String deviceName;
+
     public AlertDto() {
     }
 
@@ -115,6 +121,30 @@ public class AlertDto {
         this.otherName = otherName;
     }
 
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    public String getSpaceName() {
+        return spaceName;
+    }
+
+    public void setSpaceName(String spaceName) {
+        this.spaceName = spaceName;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
     @Override
     public String toString() {
         return "AlertDto{" +
@@ -129,6 +159,9 @@ public class AlertDto {
                 ", processTime='" + processTime + '\'' +
                 ", alertType=" + alertType +
                 ", status=" + status +
+                ", areaName='" + areaName + '\'' +
+                ", spaceName='" + spaceName + '\'' +
+                ", deviceName='" + deviceName + '\'' +
                 '}';
     }
 }
