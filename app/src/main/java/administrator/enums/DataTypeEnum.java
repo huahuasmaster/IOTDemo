@@ -9,7 +9,8 @@ public enum DataTypeEnum {
     HUMIDITY(3,"湿度","HUM"),
     POS_GPS(4,"GPS位置","POS1"),
     POS_BEIDOU(5,"北斗位置","POS2"),
-    DOOR_OPEN_CLOSE(6,"门开关","DOOR");
+    DOOR_OPEN_CLOSE(6,"门开关","DOOR"),
+    SEC(7,"秒","SEC");
 
     private int index;
 
