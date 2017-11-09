@@ -43,6 +43,7 @@ public class UrlHandler {
         return getHead()+"device/"+deviceId+"/"+type+"/"+offset;
     }
 
+
     //获取设备的详细信息
     public static String getDeviceDetailDesc(long deviceId) {
         return getHead()+"device/"+deviceId;

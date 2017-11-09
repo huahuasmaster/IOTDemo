@@ -4,12 +4,20 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.TextureMapView;
+import com.baidu.mapapi.model.LatLng;
 import com.qrcodescan.R;
 
 import java.util.List;
@@ -44,7 +52,7 @@ public class DeviceCardAdapter extends PagerAdapter{
     //// TODO: 2017/8/5 此为测试方法，后续应删除
     public DeviceCardAdapter(Context context) {
         this.context = context;
-
+        SDKInitializer.initialize(context.getApplicationContext());
     }
 
     public List<DeviceInArea> getDeviceInAreaList() {
@@ -79,6 +87,7 @@ public class DeviceCardAdapter extends PagerAdapter{
     @Override public Object instantiateItem(ViewGroup container, final int position) {
         View view = views.get(position);
         final DeviceInArea deviceInArea = deviceInAreaList.get(position);
+        boolean isAT = deviceInArea.getDeviceName().equals("防盗传感器");
         //为3个按钮添加点击事件
         Button checkDetailBtn = (Button)view.findViewById(R.id.check_detail_btn);
         checkDetailBtn.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +106,9 @@ public class DeviceCardAdapter extends PagerAdapter{
         });
 
         Button thresholdSetBtn = (Button)view.findViewById(R.id.go_setting_threshold);
+        //如果不是支持阈值设置的数据，则隐藏按钮
         if(thresholdSetBtn != null) {
-            if(deviceInArea.getType() > 3) {
+            if(deviceInArea.getType() > 4) {
                 thresholdSetBtn.setVisibility(GONE);
             } else {
                 thresholdSetBtn.setOnClickListener(new View.OnClickListener() {
@@ -122,17 +132,47 @@ public class DeviceCardAdapter extends PagerAdapter{
         Switch status = (Switch)view.findViewById(R.id.status_switch);
         status.setChecked(deviceInArea.getStatus() == 1);
 
-        RecyclerView rv = (RecyclerView)view.findViewById(R.id.device_data_rv);
-        DataSimpleAdapter adapter = new DataSimpleAdapter();
-        //告知数据类型
-        adapter.setDataType(DataTypeEnum.indexOf(deviceInArea.getType()));
-        adapter.setDataList(deviceInArea.getDeviceDataList());
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(context));
+        if(!isAT) {
+            RecyclerView rv = (RecyclerView) view.findViewById(R.id.device_data_rv);
+            DataSimpleAdapter adapter = new DataSimpleAdapter();
+            //告知数据类型
+            adapter.setDataType(DataTypeEnum.indexOf(deviceInArea.getType()));
+            adapter.setDataList(deviceInArea.getDeviceDataList());
+            rv.setAdapter(adapter);
+            rv.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            //解析坐标
+            String[] coor = deviceInArea.getDeviceDataList()
+                    .get(1).getValue().split(",");
 
-        container.addView(views.get(position));
+            double longitude = Double.parseDouble(coor[0]);
+            double latitude = Double.parseDouble(coor[1]);
+            Log.i(this.getClass().getName(),"longitude = "+longitude+", latitude = "+latitude);
+            TextureMapView mapView = (TextureMapView)view.findViewById(R.id.mapview);
+            BaiduMap baiduMap = mapView.getMap();
+            //屏蔽掉各种手势，防止造成滑动冲突
+            baiduMap.getUiSettings().setZoomGesturesEnabled(false);
+            baiduMap.getUiSettings().setRotateGesturesEnabled(false);
+            baiduMap.getUiSettings().setOverlookingGesturesEnabled(false);
+            baiduMap.setMyLocationEnabled(true);
+            LatLng point = new LatLng(latitude,longitude);
+            //动画
+            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(point);
+            baiduMap.animateMapStatus(update);
+            update = MapStatusUpdateFactory.zoomTo(22f);
+            baiduMap.animateMapStatus(update);
+            //显示坐标点
+            MyLocationData.Builder locationBuilder = new MyLocationData.
+                    Builder();
+            locationBuilder.latitude(latitude);
+            locationBuilder.longitude(longitude);
+            MyLocationData locationData = locationBuilder.build();
+            baiduMap.setMyLocationData(locationData);
+        }
 
-        return views.get(position);
+        container.addView(view);
+
+        return view;
     }
 
     @Override public void destroyItem(ViewGroup container, int position, Object object) {

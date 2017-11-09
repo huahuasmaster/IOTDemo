@@ -3,6 +3,7 @@ package administrator.view;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,9 +43,9 @@ public class DialogUtil {
         final String unit = AlertToMsgUtil.getUnit(type);
         final MaterialDialog thresholdSetDialog = new MaterialDialog.Builder(context)
                 .title(title)
-                .customView(R.layout.threshold_set_single, false)
-                .positiveText("确定")
-                .negativeText("取消")
+                .customView(R.layout.threshold_set_range, false)
+                .positiveText(context.getResources().getString(R.string.confirm))
+                .negativeText(context.getResources().getString(R.string.cancle))
                 .build();
 
         final RangeSeekBar seekBar = (RangeSeekBar) thresholdSetDialog
@@ -101,13 +102,78 @@ public class DialogUtil {
 
     }
 
+    public static void showSingleThreshold(final DeviceInArea dia, final Context context) {
+        DataTypeEnum type = DataTypeEnum
+                .indexOf(dia.getType());
+        String title = "触发警报的最短移动时间:";
+        final String unit = AlertToMsgUtil.getUnit(DataTypeEnum.SEC);
+        final MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .title(title)
+                .customView(R.layout.threshold_set_single,false)
+                .positiveText(context.getResources().getString(R.string.confirm))
+                .negativeText(context.getResources().getString(R.string.cancle))
+                .build();
+        final RangeSeekBar seekBar = (RangeSeekBar)dialog.findViewById(R.id.seekbar);
+        final TextView range = (TextView) dialog.getCustomView()
+                .findViewById(R.id.range);
+        seekBar.setValue(0,30f);
+        String url = UrlHandler.getAlertConfig(dia.getId(),DataTypeEnum.SEC.getCode());
+        HttpCallbackListener listener = new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                final AlertConfigDto acd = new Gson().fromJson(response,AlertConfigDto.class);
+                if (acd != null) {
+                    ((Activity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            seekBar.setValue((float) acd.getMaxValue());
+                            range.setText(""+(int) seekBar.getCurrentRange()[0] + unit);
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
+        HttpUtil.sendRequestWithCallback(url, listener);
+        range.setText(""+(int) seekBar.getCurrentRange()[0] + unit);
+        seekBar.setOnRangeChangedListener(new RangeSeekBar.OnRangeChangedListener() {
+            @Override
+            public void onRangeChanged(RangeSeekBar view, float min, float max, boolean isFromUser) {
+                if (isFromUser) {
+                    Log.i("",min+","+max);
+                    range.setText(""+(int) min + unit);
+                }
+            }
+        });
+        MDButton positiveBtn = dialog.getActionButton(DialogAction.POSITIVE);
+        positiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetThreshold(dia, 0, (int) seekBar.getCurrentRange()[0]);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     /**
      * 实际进行网络请求调整阈值的方法
      */
     public static void resetThreshold(DeviceInArea mDia, int min, int max) {
 //        Snackbar.make(viewPager,"max："+max+" min:"+min,Snackbar.LENGTH_SHORT).show();
-        String url = UrlHandler.addAlertConfig(mDia.getId(),
-                DataTypeEnum.indexOf(mDia.getType()).getCode());
+        String code;
+        if(mDia.getType() == DataTypeEnum.POS_GPS.getIndex()
+                || mDia.getType() == DataTypeEnum.POS_BEIDOU.getIndex())  {
+            code = DataTypeEnum.SEC.getCode();
+        } else {
+            code = DataTypeEnum.indexOf(mDia.getType()).getCode();
+        }
+        String url = UrlHandler.addAlertConfig(mDia.getId(),code);
         Logger.i("url = " + url);
         HttpCallbackListener listener = new HttpCallbackListener() {
             @Override

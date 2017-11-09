@@ -7,10 +7,10 @@ public enum DataTypeEnum {
     TMP_CELSIUS(1,"摄氏温度","TMP1"),
     TMP_K(2,"开氏温度","TMP2"),
     HUMIDITY(3,"湿度","HUM"),
-    POS_GPS(4,"GPS位置","POS1"),
+    POS_GPS(4,"GPS位置","GPS1"),
     POS_BEIDOU(5,"北斗位置","POS2"),
     DOOR_OPEN_CLOSE(6,"门开关","DOOR"),
-    SEC(7,"秒","SEC");
+    SEC(7,"秒","SEC1");
 
     private int index;
 

@@ -22,6 +22,9 @@ public class AlertToMsgUtil {
             case TMP_K:
                 temp = "K";
                 break;
+            case SEC:
+                temp = "S";
+                break;
         }
         return temp;
     }
@@ -41,6 +44,11 @@ public class AlertToMsgUtil {
             case HUMIDITY_LOW:
                 content = "("+alertDto.getOtherName()+")湿度过高("
                         +alertDto.getAlertValue()+unit+")";break;
+            case MOVE_OVER_DISTANCE:
+            case MOVE_OVER_TIME:
+                content = "("+alertDto.getOtherName()+")被连续移动了"
+                        +alertDto.getAlertValue()+unit;break;
+            default:break;
         }
         return content;
     }

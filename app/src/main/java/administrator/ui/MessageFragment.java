@@ -36,6 +36,7 @@ import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.AlertDto;
+import administrator.enums.AlertTypeEnum;
 
 
 /**
@@ -120,12 +121,18 @@ public class MessageFragment extends Fragment {
             @Override
             public void onMain(final int position) {
                 final AlertDto alertDto = adapter.getAlertDtos().get(position);
-                Intent intent = new Intent(
-                        getContext(), DeviceDetailActivity.class);
-                intent.putExtra("device_id", alertDto.getDeviceId());
-                intent.putExtra("data_type", alertDto.getDataType());
-                intent.putExtra("from_alert", true);
-
+                Intent intent;
+                if(alertDto.getAlertType() == AlertTypeEnum.MOVE_OVER_DISTANCE.getIndex()
+                        || alertDto.getAlertType() == AlertTypeEnum.MOVE_OVER_TIME.getIndex()) {
+                    intent = new Intent(getContext(),DeviceDetailMapActivity.class);
+                    intent.putExtra("device_id", alertDto.getDeviceId());
+                } else {
+                    intent =new Intent(
+                            getContext(), DeviceDetailActivity.class);
+                    intent.putExtra("device_id", alertDto.getDeviceId());
+                    intent.putExtra("data_type", alertDto.getDataType());
+                    intent.putExtra("from_alert", true);
+                }
                 Logger.i(alertDto.getAlertTime());
                 if (alertDto.getReadTime() == null) {
                     //点击之后为刷新未读计数

@@ -6,8 +6,8 @@ public enum  AlertTypeEnum {
     HUMIDITY_HIGH(3,"湿度过高",""),
     HUMIDITY_LOW(4,"湿度过低",""),
     GAS_LEAKS(5,"气体泄漏",""),
-    MOVE_OVER_TIME(6,"移动时间过长",""),
-    MOVE_OVER_DISTANCE(7,"移动距离过长","");
+    MOVE_OVER_TIME(6,"异常移动",""),
+    MOVE_OVER_DISTANCE(7,"异常移动","");
 
     private int index;
     //警告的标题

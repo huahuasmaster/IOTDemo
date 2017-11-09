@@ -55,7 +55,6 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
     private DataSimpleAdapter dataSimpleAdapter;
     private AlertSimpleAdapter alertSimpleAdapter;
     private List<AlertDto> alertDtos;
-    private List<UniversalData<Boolean>> dataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

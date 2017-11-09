@@ -105,6 +105,10 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
                             mDcv.getCurValue().equals("1") ? "开":"关");
                     viewHolder.icon.setImageResource(R.drawable.ic_door_preview);
                     break;
+                //防盗装置,显示移动秒数
+                case SEC:
+                    viewHolder.value.setText("移动"+mDcv.getCurValue()+"S");
+                    viewHolder.icon.setImageResource(R.drawable.ic_anti_thief);
                 default:break;
             }
         }

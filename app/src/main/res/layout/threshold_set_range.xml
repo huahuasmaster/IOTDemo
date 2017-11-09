@@ -16,9 +16,9 @@
         android:id="@+id/seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:seekBarMode="single"
+        app:seekBarMode="range"
         app:cellMode="number"
-        app:markTextArray="@array/second_range"
+        app:markTextArray="@array/temperature_range"
         app:lineColorEdge="@color/colorSeekBarDefault"
         app:lineColorSelected="@color/colorPrimary"
         app:thumbPrimaryColor="@color/colorSeekBarDefault"
@@ -26,7 +26,7 @@
         app:seekBarHeight="4dp"
         app:thumbSize="18dp"
         app:min="0"
-        app:max="120"
+        app:max="60"
         app:textPadding="17dp"
         />
 </LinearLayout>
