@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import administrator.base.mqtt.MqttManager;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.DeviceDto;
 
@@ -147,6 +149,9 @@ public class GateOnlineActivity extends AppCompatActivity {
         timer = new Timer();
         timer.schedule(task,1000,1000);
         checkRegist();
+        Logger.i("开始监听新频道。");
+        MqttManager.getInstance().subscribe("/lpwa/lora/info/"
+                + sn, 0);
     }
 
 

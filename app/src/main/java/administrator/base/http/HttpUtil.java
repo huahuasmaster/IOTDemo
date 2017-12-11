@@ -44,7 +44,10 @@ public class HttpUtil {
             @Override
             public void run() {
                 Request request = new Request.Builder()
-                        .url(address).build();
+                        .url(address)
+
+                        /*.header("token",token)*/
+                        .build();
                 try {
                     String result = getResponse(request);
                     if(listener != null) {
@@ -167,6 +170,9 @@ public class HttpUtil {
     private static String getResponse(Request request) throws IOException {
         OkHttpClient client = new OkHttpClient();
         response = client.newCall(request).execute();
+        /*token=  response.header("token");*/
         return response.body().string();
     }
+
+    private static String token;
 }
