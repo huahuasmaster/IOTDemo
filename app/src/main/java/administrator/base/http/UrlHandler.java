@@ -16,10 +16,10 @@ import administrator.application.ContextApplication;
 public class UrlHandler {
 
 
-    public static String port = "8088";
+    private static String port = "8088";
 
 
-    public static SharedPreferences loginSp = ContextApplication
+    private static SharedPreferences loginSp = ContextApplication
             .getContext()
             .getSharedPreferences("login_data", Context.MODE_PRIVATE);
 
@@ -182,10 +182,10 @@ public class UrlHandler {
         return getHead()+"alert/"+deviceId+"/"+dataType+"/"+offset+"/getList";
     }
     /**
-     * 获取请求的开头ip与端口
-     * @return
+     * 获取
+     * @return 请求的开头ip与端口
      */
-    public static String getHead() {
+    private static String getHead() {
         return "http://"+getIp()+":"+port+"/app/";
     }
     //获取服务器ip
@@ -203,6 +203,14 @@ public class UrlHandler {
 
     public static void setPort(String port) {
         UrlHandler.port = port;
+    }
+
+    public static String getToken(){
+        return loginSp.getString("token","");
+    }
+
+    public static void setToken(String token){
+        loginSp.edit().putString("token",token).apply();
     }
 
     public static long getUserId() {

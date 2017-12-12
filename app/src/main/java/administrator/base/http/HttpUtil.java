@@ -1,8 +1,11 @@
 package administrator.base.http;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Looper;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,8 +29,10 @@ import okhttp3.Response;
  */
 
 public class HttpUtil {
+    private static OkHttpClient client = new OkHttpClient();
+
     static RequestBody requestBody;
-    static Response response;
+    private static Response response;
 
     /**
      * 本方法可传入回调函数
@@ -45,9 +50,10 @@ public class HttpUtil {
             public void run() {
                 Request request = new Request.Builder()
                         .url(address)
-
-                        /*.header("token",token)*/
+                        .header("token",UrlHandler.getToken())
+                        .header("userId", String.valueOf(UrlHandler.getUserId()))
                         .build();
+                Logger.i("待发送的token:"+UrlHandler.getToken()+"\n待发送的userId"+UrlHandler.getUserId());
                 try {
                     String result = getResponse(request);
                     if(listener != null) {
@@ -96,8 +102,12 @@ public class HttpUtil {
             public void run() {
                 Request request = new Request.Builder()
                         .url(address)
+                        .header("token",UrlHandler.getToken())
+                        .header("userId", String.valueOf(UrlHandler.getUserId()))
                         .post(requestBody)
                         .build();
+                Logger.i("待发送的token:"+UrlHandler.getToken()+"\n待发送的userId"+UrlHandler.getUserId());
+
                 try {
                     String result = getResponse(request);
                     if(listener != null) {
@@ -111,15 +121,23 @@ public class HttpUtil {
                                 listener.onFinish(jsonObject.getString("data"));
                             } else {
                                 //如果是服务器处理好的错误 则直接显示
+                                Looper.prepare();
                                 Toast.makeText(ContextApplication.getContext(),
                                         jsonObject.getString("error"),
                                         Toast.LENGTH_SHORT).show();
+                                listener.onError(new Exception(jsonObject.getString("error")));
+                                Looper.loop();
                             }
                         }
                     }
                 } catch (IOException | JSONException e ) {
                     if(listener != null) {
-                        listener.onError(e);
+                        //此处为网络请求错误，而不是服务器处理后的错误
+                        Looper.prepare();
+                        Toast.makeText(ContextApplication.getContext(),
+                                "网络访问出错",
+                                Toast.LENGTH_SHORT).show();
+                        Looper.loop();
                     }
                 }
             }
@@ -168,11 +186,17 @@ public class HttpUtil {
      * @throws IOException
      */
     private static String getResponse(Request request) throws IOException {
-        OkHttpClient client = new OkHttpClient();
         response = client.newCall(request).execute();
-        /*token=  response.header("token");*/
+        String token = response.header("token");
+        if(token == null) {
+            Log.i("http","没有token");
+        } else {
+            Log.i("http","token = "+token);
+            UrlHandler.setToken(token);
+        }
         return response.body().string();
     }
 
-    private static String token;
+
+
 }

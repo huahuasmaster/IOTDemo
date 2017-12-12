@@ -105,4 +105,5 @@
     <string name="cant_online">无法上线</string>
     <string name="msg">消息</string>
     <string name="processed">已处理</string>
+    <string name="threshold_set">阈值设置</string>
 </resources>

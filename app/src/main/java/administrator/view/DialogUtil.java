@@ -39,7 +39,7 @@ public class DialogUtil {
                 .indexOf(dia.getType());
 
 
-        String title = "自定义适宜";
+        String title = "自定义适宜"+type.getCode();
         final String unit = AlertToMsgUtil.getUnit(type);
         final MaterialDialog thresholdSetDialog = new MaterialDialog.Builder(context)
                 .title(title)
@@ -186,10 +186,10 @@ public class DialogUtil {
 
             @Override
             public void onError(Exception e) {
-                Looper.prepare();
-                Toast.makeText(ContextApplication.getContext(),
-                        R.string.failed_work, Toast.LENGTH_SHORT).show();
-                Looper.loop();
+//                Looper.prepare();
+//                Toast.makeText(ContextApplication.getContext(),
+//                        R.string.failed_work, Toast.LENGTH_SHORT).show();
+//                Looper.loop();
             }
         };
         RequestBody body = new FormBody.Builder()

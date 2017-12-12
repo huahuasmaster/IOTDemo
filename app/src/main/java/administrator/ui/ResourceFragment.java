@@ -292,11 +292,12 @@ public class ResourceFragment extends Fragment {
                 try {
                     JSONObject json = new JSONObject(response);
                     if (json.getBoolean("success")) {
-                        acvList = new Gson().fromJson(json.getString("mainData"),
+                        JSONObject data = new JSONObject(json.get("data").toString());
+                        acvList = new Gson().fromJson(data.getString("mainData"),
                                 new TypeToken<List<AreaCurValue>>() {
                                 }.getType());
 
-                        diaList = new Gson().fromJson(json.getString("minorData"),
+                        diaList = new Gson().fromJson(data.getString("minorData"),
                                 new TypeToken<List<DeviceInArea>>() {
                                 }.getType());
 
@@ -345,11 +346,7 @@ public class ResourceFragment extends Fragment {
     public void onStart() {
         super.onStart();
         //动态注册广播接收器
-//
-//        IntentFilter intentFilter =
-//                new IntentFilter("administrator.service.WsnDataService");//过滤器,保证只收到想要的信息
-//        WsnDataBroadcastRecevier recevier = new WsnDataBroadcastRecevier();
-//        getActivity().registerReceiver(recevier, intentFilter);
+
     }
 
     @Override

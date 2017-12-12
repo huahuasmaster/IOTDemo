@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yl12heSMIvVm1nUvdwu3TtGqG5g1M4qg"></meta-data>
+            android:value="yl12heSMIvVm1nUvdwu3TtGqG5g1M4qg" />
 
         <activity
             android:name="administrator.ui.MainActivity"
@@ -57,14 +57,10 @@
         </activity>
         <activity android:name="administrator.ui.IpConfigActivity" />
 
-        <service
-            android:name="administrator.service.WsnDataService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity android:name="administrator.ui.GateOnlineActivity" />
         <activity android:name="administrator.ui.DeviceOnlineActivity" />
-        <activity android:name="administrator.ui.DeviceDetailMapActivity"></activity>
+        <activity android:name="administrator.ui.DeviceDetailMapActivity" />
     </application>
 
 </manifest>

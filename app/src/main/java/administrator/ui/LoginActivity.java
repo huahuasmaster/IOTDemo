@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,IpConfigActivity.class);
+                Intent intent = new Intent(LoginActivity.this, IpConfigActivity.class);
                 startActivity(intent);
                 return false;
             }
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         accountEdit.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,GateOnlineActivity.class);
+                Intent intent = new Intent(LoginActivity.this, GateOnlineActivity.class);
                 startActivity(intent);
                 return false;
             }
@@ -94,10 +94,11 @@ public class LoginActivity extends AppCompatActivity {
             permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (!permissionList.isEmpty()) {
-            String [] permissions = permissionList.toArray(new String[permissionList.size()]);
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(LoginActivity.this, permissions, 1);
         }
     }
+
     private void initViews() {
         accountEdit = (EditText) findViewById(R.id.account_edit);
         passwordEdit = (EditText) findViewById(R.id.password_edit);
@@ -105,8 +106,8 @@ public class LoginActivity extends AppCompatActivity {
         accountEdit.requestFocus();
 
         //填充上次登录的账号密码
-        String preAccount = sp.getString("account","");
-        String prePassword = sp.getString("password","");
+        String preAccount = sp.getString("account", "");
+        String prePassword = sp.getString("password", "");
         accountEdit.setText(preAccount);
         passwordEdit.setText(prePassword);
 
@@ -116,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                         .getString(R.string.be_logging_in))
                 .content(getResources()
                         .getString(R.string.plz_wait))
-                .progress(true,0)
+                .progress(true, 0)
                 .progressIndeterminateStyle(false)
                 .build();
     }
@@ -128,28 +129,28 @@ public class LoginActivity extends AppCompatActivity {
         waitForLoginDialog.show();
 
         RequestBody body = new FormBody.Builder()
-                            .add("account",account)
-                            .add("password",password)
-                            .build();
+                .add("account", account)
+                .add("password", password)
+                .build();
         String url = UrlHandler.getLoginUrl();
         HttpUtil.sendRequestWithCallback(url, body, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
 
                 UserDto userDto = new UserDto();
-                if(response.equals("") || response == null) {
-                    Snackbar.make(loginBtn,"登录失败，请检查账号密码",Snackbar.LENGTH_SHORT).show();
+                if (response.equals("") || response == null) {
+                    Snackbar.make(loginBtn, "登录失败，请检查账号密码", Snackbar.LENGTH_SHORT).show();
                 } else {
-                    userDto = new Gson().fromJson(response,UserDto.class);
+                    userDto = new Gson().fromJson(response, UserDto.class);
                     //记住账号密码
-                    editor.putString("account",userDto.getLoginName())
-                            .putString("name",userDto.getName())
-                            .putLong("user_id",userDto.getId())
-                            .putString("password",password);
+                    editor.putString("account", userDto.getLoginName())
+                            .putString("name", userDto.getName())
+                            .putLong("user_id", userDto.getId())
+                            .putString("password", password);
                     editor.apply();
                     DeviceCodeUtil.getMapOnline();//获取code-sn映射
                     UrlHandler.setUserId(userDto.getId());
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
 
@@ -157,7 +158,9 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-                Snackbar.make(loginBtn,"网络请求失败！",Snackbar.LENGTH_SHORT).show();
+                if (waitForLoginDialog.isShowing()) {
+                    waitForLoginDialog.dismiss();
+                }
             }
         });
     }
