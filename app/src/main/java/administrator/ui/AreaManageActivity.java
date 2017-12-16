@@ -94,6 +94,11 @@ public class AreaManageActivity extends AppCompatActivity {
             public void onMain(int position) {
 
             }
+
+            @Override
+            public void onCamera(int position) {
+
+            }
         };
     }
 

@@ -56,11 +56,10 @@
             </intent-filter>
         </activity>
         <activity android:name="administrator.ui.IpConfigActivity" />
-
-
         <activity android:name="administrator.ui.GateOnlineActivity" />
         <activity android:name="administrator.ui.DeviceOnlineActivity" />
         <activity android:name="administrator.ui.DeviceDetailMapActivity" />
+        <activity android:name="administrator.ui.VideoActivity"></activity>
     </application>
 
 </manifest>

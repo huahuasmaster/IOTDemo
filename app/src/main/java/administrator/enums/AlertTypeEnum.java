@@ -1,13 +1,14 @@
 package administrator.enums;
 
-public enum  AlertTypeEnum {
-    TMP_LOW(1,"温度过低",""),
-    TMP_HIGH(2,"温度过高",""),
-    HUMIDITY_HIGH(3,"湿度过高",""),
-    HUMIDITY_LOW(4,"湿度过低",""),
-    GAS_LEAKS(5,"气体泄漏",""),
-    MOVE_OVER_TIME(6,"异常移动",""),
-    MOVE_OVER_DISTANCE(7,"异常移动","");
+public enum AlertTypeEnum {
+    TMP_LOW(1, "温度过低", ""),
+    TMP_HIGH(2, "温度过高", ""),
+    HUMIDITY_HIGH(3, "湿度过高", ""),
+    HUMIDITY_LOW(4, "湿度过低", ""),
+    GAS_LEAKS(5, "气体泄漏", ""),
+    MOVE_OVER_TIME(6, "移动时间过长", ""),
+    MOVE_OVER_DISTANCE(7, "移动距离过长", ""),
+    DOOR_OPEN(8,"房门异常开合","");
 
     private int index;
     //警告的标题
@@ -17,12 +18,13 @@ public enum  AlertTypeEnum {
 
     /**
      * 根据序号查找对应的值
+     *
      * @param index
      * @return
      */
     public static AlertTypeEnum indexOf(int index) {
-        for(AlertTypeEnum e :values()) {
-            if(e.index == index) {
+        for (AlertTypeEnum e : values()) {
+            if (e.index == index) {
                 return e;
             }
         }

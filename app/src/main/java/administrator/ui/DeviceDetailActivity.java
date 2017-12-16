@@ -1,5 +1,6 @@
 package administrator.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -135,6 +136,7 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void initViews() {
         if (deviceInArea != null) {
             title.setText(deviceInArea.getDeviceName()
@@ -201,6 +203,11 @@ public class DeviceDetailActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onMain(int position) {
+
+                }
+
+                @Override
+                public void onCamera(int position) {
 
                 }
             };

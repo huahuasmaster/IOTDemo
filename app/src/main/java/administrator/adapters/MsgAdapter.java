@@ -1,5 +1,6 @@
 package administrator.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -21,10 +22,6 @@ import administrator.entity.AlertDto;
 import administrator.enums.AlertTypeEnum;
 import administrator.enums.DataTypeEnum;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-/**
- * Created by zhuang_ge on 2017/10/12.
- */
 
 public class MsgAdapter extends RecyclerView.Adapter{
 
@@ -76,7 +73,7 @@ public class MsgAdapter extends RecyclerView.Adapter{
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final ViewHolder viewHolder = (ViewHolder)holder;
         final AlertDto alertDto = alertDtos.get(position);
         final Context mConText = context;
@@ -92,9 +89,12 @@ public class MsgAdapter extends RecyclerView.Adapter{
         viewHolder.dateTxt.setText(alertDto.getAlertTime());
         AlertTypeEnum alertType = AlertTypeEnum.indexOf(alertDto.getAlertType());
         String content = AlertToMsgUtil.getContent(alertType,alertDto,unit);
+        assert alertType != null;
         viewHolder.title.setText(alertType.getTitle());
         viewHolder.content.setText(content);
-        viewHolder.icon.setImageResource(R.drawable.ic_warnning_circle);
+        viewHolder.icon.setImageResource(mConText.getResources().getIdentifier(
+                AlertToMsgUtil.getIconName(alertType),"drawable",mConText.getPackageName()
+        ));
         viewHolder.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +102,17 @@ public class MsgAdapter extends RecyclerView.Adapter{
                 listener.onMain(position);
             }
         });
+
+        if(alertType == AlertTypeEnum.DOOR_OPEN) {
+            viewHolder.cameraIcon.setVisibility(View.VISIBLE);
+            viewHolder.cameraClick.setVisibility(View.VISIBLE);
+            viewHolder.cameraClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onCamera(position);
+                }
+            });
+        }
     }
 
     @Override
@@ -118,6 +129,8 @@ public class MsgAdapter extends RecyclerView.Adapter{
         private ImageView redPoint;
         private TextView deleteTxt;
         private ConstraintLayout back;
+        private ImageView cameraIcon;
+        private View cameraClick;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -128,6 +141,8 @@ public class MsgAdapter extends RecyclerView.Adapter{
             redPoint = (ImageView)itemView.findViewById(R.id.unread_point);
             deleteTxt = (TextView)itemView.findViewById(R.id.right_menu);
             back = (ConstraintLayout) itemView.findViewById(R.id.background);
+            cameraIcon = (ImageView) itemView.findViewById(R.id.camera_msg);
+            cameraClick =  itemView.findViewById(R.id.camera_click_msg);
         }
     }
 

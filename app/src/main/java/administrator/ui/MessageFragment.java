@@ -1,5 +1,6 @@
 package administrator.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -73,7 +74,7 @@ public class MessageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_message, null);
+        @SuppressLint("InflateParams") View v = inflater.inflate(R.layout.fragment_message, null);
         rv = (RecyclerView) v.findViewById(R.id.smr);
         srl = (SwipeRefreshLayout) v.findViewById(R.id.srl);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -134,6 +135,19 @@ public class MessageFragment extends Fragment {
                     intent.putExtra("from_alert", true);
                 }
                 Logger.i(alertDto.getAlertTime());
+                uploadReadTime(alertDto,position);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCamera(int position) {
+                final AlertDto alertDto = adapter.getAlertDtos().get(position);
+                Intent intent = new Intent(getContext(),VideoActivity.class);
+                uploadReadTime(alertDto,position);
+                startActivity(intent);
+            }
+
+            private void uploadReadTime(AlertDto alertDto,int position) {
                 if (alertDto.getReadTime() == null) {
                     //点击之后为刷新未读计数
                     final Date date = new Date();
@@ -155,7 +169,6 @@ public class MessageFragment extends Fragment {
                     };
                     HttpUtil.sendRequestWithCallback(url, listener);
                 }
-                startActivity(intent);
             }
         };
         adapter.setAlertDtos(alertDtos);

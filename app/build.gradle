@@ -4,7 +4,7 @@ apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.qrcodescan"
         minSdkVersion 21
@@ -12,11 +12,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
@@ -27,7 +35,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //ZXing
-
     //butterknife注解框架
     compile files('libs/BaiduLBS_Android.jar')
     compile 'com.android.support:appcompat-v7:24.2.1'
@@ -50,10 +57,14 @@ dependencies {
     compile 'com.github.Jay-Goo:RangeSeekBar:v1.0.7'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.nex3z:flow-layout:0.1.4'
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.github.LichFaker:Logger:v1.0.0'
+    compile 'com.android.support:transition:24.2.1'
+
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
+    compile files('libs/EZOpenSDK_V4.7.1.20171109.jar')
+    compile files('libs/EZUIKit_1.4.jar')
 }

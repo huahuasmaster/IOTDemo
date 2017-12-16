@@ -9,4 +9,5 @@ public interface SwipeItemCallbackListener {
     void onDelete(int position);
     void onEdit(int position);
     void onMain(int position);
+    void onCamera(int position);
 }

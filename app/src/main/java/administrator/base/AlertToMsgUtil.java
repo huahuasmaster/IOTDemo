@@ -1,5 +1,6 @@
 package administrator.base;
 
+import administrator.application.ContextApplication;
 import administrator.entity.AlertDto;
 import administrator.enums.AlertTypeEnum;
 import administrator.enums.DataTypeEnum;
@@ -14,7 +15,7 @@ public class AlertToMsgUtil {
         String temp = "";
         switch (dataTypeEnum) {
             case HUMIDITY:
-                temp = "%";
+                temp = "";
                 break;
             case TMP_CELSIUS:
                 temp = "℃";
@@ -39,17 +40,29 @@ public class AlertToMsgUtil {
                 content = "("+alertDto.getOtherName()+")温度过低("
                         +alertDto.getAlertValue()+unit+")，请注意保暖。";break;
             case HUMIDITY_HIGH:
-                content = "("+alertDto.getOtherName()+")湿度过低("
+                content = "("+alertDto.getOtherName()+")湿度过高("
                         +alertDto.getAlertValue()+unit+")";break;
             case HUMIDITY_LOW:
-                content = "("+alertDto.getOtherName()+")湿度过高("
+                content = "("+alertDto.getOtherName()+")湿度过低("
                         +alertDto.getAlertValue()+unit+")";break;
             case MOVE_OVER_DISTANCE:
             case MOVE_OVER_TIME:
                 content = "("+alertDto.getOtherName()+")被连续移动了"
                         +alertDto.getAlertValue()+unit;break;
+            case DOOR_OPEN:
+                content = " "+alertDto.getOtherName()+" 在离家期间被打开!";
             default:break;
         }
         return content;
+    }
+
+    public static String getIconName(AlertTypeEnum alertTypeEnum) {
+        String iconName;
+        switch (alertTypeEnum) {
+            case TMP_HIGH:iconName = "ic_hot";break;
+            case DOOR_OPEN:iconName = "ic_thief";break;
+            default:iconName = "ic_warnning_circle";break;
+        }
+        return iconName;
     }
 }

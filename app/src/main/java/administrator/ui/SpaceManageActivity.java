@@ -121,6 +121,11 @@ public class SpaceManageActivity extends AppCompatActivity {
             public void onMain(int position) {
 
             }
+
+            @Override
+            public void onCamera(int position) {
+
+            }
         };
 
     }
@@ -177,9 +182,6 @@ public class SpaceManageActivity extends AppCompatActivity {
 
     /**
      * 用以修改空间的方法
-     *
-     * @param position
-     * @param newName
      */
     private void editSpace(int position, String newName) {
         long spaceId = adapter.getSpaceList().get(position).getId();
@@ -239,8 +241,6 @@ public class SpaceManageActivity extends AppCompatActivity {
 
     /**
      * 用以删除空间的方法
-     *
-     * @param position
      */
     private void deleteSpace(int position) {
         long spaceId = adapter.getSpaceList().get(position).getId();
