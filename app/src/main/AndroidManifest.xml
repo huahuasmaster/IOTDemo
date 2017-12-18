@@ -59,7 +59,10 @@
         <activity android:name="administrator.ui.GateOnlineActivity" />
         <activity android:name="administrator.ui.DeviceOnlineActivity" />
         <activity android:name="administrator.ui.DeviceDetailMapActivity" />
-        <activity android:name="administrator.ui.VideoActivity"></activity>
+        <activity
+            android:name="administrator.ui.VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name="administrator.ui.SetLinearActivity"></activity>
     </application>
 
 </manifest>

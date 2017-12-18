@@ -161,10 +161,13 @@ public class DeviceCardAdapter extends PagerAdapter{
                         dataEntity.setFloat(Float.valueOf(deviceData.getValue().split("%")[0]));
                         dataEntities.add(dataEntity);
                         Log.i("deviceData2entity",deviceData.toString()+"|"+dataEntity.toString());
-
                     } catch (ParseException e) {
                         break;
                     }
+                }
+                if (deviceInArea.getMaxValue() != 9999 || deviceInArea.getMinValue() != -9999) {
+                    Float[] risk = {(float) deviceInArea.getMinValue(), (float) deviceInArea.getMaxValue()};
+                    curersView.setRisk(risk);
                 }
                 curersView.init();
                 curersView.setEntityList(dataEntities);

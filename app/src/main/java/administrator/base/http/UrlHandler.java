@@ -181,6 +181,11 @@ public class UrlHandler {
     public static String getAlertByDeviceId(long deviceId,int dataType,int offset) {
         return getHead()+"alert/"+deviceId+"/"+dataType+"/"+offset+"/getList";
     }
+
+    //获取萤石云accessToken接口
+    public static String getVideoAccessToken() {
+        return "https://open.ys7.com/api/lapp/token/get";
+    }
     /**
      * 获取
      * @return 请求的开头ip与端口

@@ -1,9 +1,13 @@
 package administrator.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +18,20 @@ import android.widget.TextView;
 
 import com.qrcodescan.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.entity.AreaCurValue;
+import administrator.entity.DataEntity;
 import administrator.entity.DeviceCurValue;
+import administrator.entity.DeviceData;
 import administrator.entity.DeviceInArea;
 import administrator.enums.DataTypeEnum;
 import administrator.ui.AreaDetailActivity;
+import administrator.view.CurersView;
 
 import static android.view.View.GONE;
 
@@ -47,6 +56,9 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     //设备卡片监听回调函数
     private DeviceCardCallbackListener listener;
+
+    @SuppressLint("SimpleDateFormat")
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private Context context;
 
@@ -151,6 +163,9 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
         Button thresholdBtn;
         //查看详情按钮
         Button checkBtn;
+        //折线图
+        CurersView curersView;
+        ConstraintLayout constraintLayout;
 
         public DIACardViewHolder(View itemView) {
             super(itemView);
@@ -163,6 +178,8 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
             dataRV = (RecyclerView) itemView.findViewById(R.id.device_data_rv);
             thresholdBtn = (Button) itemView.findViewById(R.id.go_setting_threshold);
             checkBtn = (Button) itemView.findViewById(R.id.check_detail_btn);
+            curersView = (CurersView) itemView.findViewById(R.id.curersview);
+            constraintLayout = (ConstraintLayout) itemView.findViewById(R.id.device_card_preview_conslayout);
         }
     }
 
@@ -209,6 +226,8 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
     private void initViewsOfDeviceCard(DIACardViewHolder holder, final int position) {
         final DeviceInArea mDia = diaList.get(position);
         DataSimpleAdapter adapter = new DataSimpleAdapter();
+        DataTypeEnum mEnum = DataTypeEnum.indexOf(mDia.getType());
+        List<DeviceData> mDeviceDataList = mDia.getDeviceDataList();
         //为按钮添加事件
         holder.checkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,16 +252,45 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
         //赋值名称
         holder.realName.setText(mDia.getDeviceName());
         holder.subhead.setText(mDia.getOtherName()
-                + "-" + DataTypeEnum.indexOf(mDia.getType()).getType());
+                + "-" + mEnum.getType());
 
         //赋值开关
         holder.statusSwitch.setChecked(mDia.getStatus() == 1);
+        if (mEnum == DataTypeEnum.HUMIDITY || mEnum == DataTypeEnum.TMP_CELSIUS) {
+            holder.curersView.setMode(mEnum);
+            holder.curersView.setVisibility(View.VISIBLE);
+            //对现有的数据进行处理
+            List<DataEntity> dataEntities = new ArrayList<>();
+            Log.i("deviceData2entity", "" + mDeviceDataList.size());
+            for (DeviceData deviceData : mDeviceDataList) {
+                DataEntity dataEntity = new DataEntity();
+                try {
+                    dataEntity.setTime(format.parse(deviceData.getReceiveTime()).getTime());
+                    dataEntity.setFloat(Float.valueOf(deviceData.getValue().split("%")[0]));
+                    dataEntities.add(dataEntity);
+                    Log.i("deviceData2entity", deviceData.toString() + "|" + dataEntity.toString());
+                } catch (ParseException e) {
+                    break;
+                }
+            }
+            if (mDia.getMaxValue() != 9999 || mDia.getMinValue() != -9999) {
+                Float[] risk = {(float) mDia.getMinValue(), (float) mDia.getMaxValue()};
+                holder.curersView.setRisk(risk);
+            }
+            holder.curersView.init();
+            holder.curersView.setEntityList(dataEntities);
 
-        //数据列表
-        adapter.setDataType(DataTypeEnum.indexOf(mDia.getType()));
-        adapter.setDataList(mDia.getDeviceDataList());
-        holder.dataRV.setLayoutManager(new LinearLayoutManager(context));
-        holder.dataRV.setAdapter(adapter);
+            //描述文字的位置需要更改
+            holder.dsc.setVisibility(GONE);
+        } else {
+            //不支持图表的，使用基本数据列表
+            //数据列表
+            adapter.setDataType(mEnum);
+            adapter.setDataList(mDeviceDataList);
+            holder.dataRV.setLayoutManager(new LinearLayoutManager(context));
+            holder.dataRV.setAdapter(adapter);
+        }
+
 
     }
 

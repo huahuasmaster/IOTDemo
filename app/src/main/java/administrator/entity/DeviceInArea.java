@@ -9,13 +9,14 @@ import java.util.List;
  * 一个DeviceInArea类对应一张卡片
  * 一个设备可能对应多张卡片，以数据的类型数量为准
  * 2.点击卡片的“查看详情后进入的页面”，用于展示大量数据，同样只展示一种类型
- * 3.预览页面 直接显示未绑定安装位置的设备的少量数据
  */
-public class DeviceInArea implements Serializable{
+public class DeviceInArea implements Serializable {
 
     private long id;
     //设备名称
     private String deviceName;
+    //设备sn
+    private String Sn;
     //用户自定义名称
     private String otherName;
     //安装位置名称
@@ -24,10 +25,15 @@ public class DeviceInArea implements Serializable{
     private short status;
     //数据类型
     private int type;
+    //阈值 max
+    private double maxValue;
+    //阈值 min
+    private double minValue;
 
     private List<DeviceData> deviceDataList;
 
-    public DeviceInArea(){}
+    public DeviceInArea() {
+    }
 
     public String getDeviceName() {
         return deviceName;
@@ -85,11 +91,36 @@ public class DeviceInArea implements Serializable{
         this.id = id;
     }
 
+    public String getSn() {
+        return Sn;
+    }
+
+    public void setSn(String sn) {
+        Sn = sn;
+    }
+
+    public double getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(double maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public double getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(double minValue) {
+        this.minValue = minValue;
+    }
+
     @Override
     public String toString() {
         return "DeviceInArea{" +
                 "id=" + id +
                 ", deviceName='" + deviceName + '\'' +
+                ", Sn='" + Sn + '\'' +
                 ", otherName='" + otherName + '\'' +
                 ", areaName='" + areaName + '\'' +
                 ", status=" + status +

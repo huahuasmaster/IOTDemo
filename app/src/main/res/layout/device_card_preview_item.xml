@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="272dp"
+    android:layout_height="300dp"
     android:layout_marginBottom="4dp"
     android:layout_marginTop="4dp"
     >
@@ -10,6 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/device_card_preview_conslayout"
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -157,6 +158,19 @@
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name_and_type_of_device"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <administrator.view.CurersView
+            android:id="@+id/curersview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            android:layout_marginTop="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/device_head_ic"
             app:layout_constraintVertical_bias="0.0" />
 
         <Button

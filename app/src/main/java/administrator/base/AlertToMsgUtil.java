@@ -61,6 +61,15 @@ public class AlertToMsgUtil {
         switch (alertTypeEnum) {
             case TMP_HIGH:iconName = "ic_hot";break;
             case DOOR_OPEN:iconName = "ic_thief";break;
+            case TMP_LOW:
+                iconName = "ic_cold";
+                break;
+            case HUMIDITY_LOW:
+                iconName = "ic_dry";
+                break;
+            case HUMIDITY_HIGH:
+                iconName = "ic_wet";
+                break;
             default:iconName = "ic_warnning_circle";break;
         }
         return iconName;

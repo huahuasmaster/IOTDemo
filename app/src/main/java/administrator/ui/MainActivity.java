@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,6 +35,10 @@ import com.qrcodescan.R;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
@@ -121,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
             }
         }).start();
         initSideMenu();
+
+        //对百度地图so文件进行操作
+
     }
 
     /**
@@ -188,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
             }
         };
         initSpaceCards();
+        initAssetsFile();
     }
 
     @Override
@@ -358,6 +367,85 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
 
         ((ResourceFragment) mFragments.get(0)).initAreaCardsBySpaceId(-1L);
         ((MessageFragment) mFragments.get(1)).getAlertOnline(-1L);
+    }
+
+    private void initAssetsFile() {
+
+        boolean needCopy = false;
+
+        // 创建data/data目录
+        File file = getApplicationContext().getFilesDir();
+        String path = file.toString() + "/armeabi/";
+
+        // 遍历assets目录下所有的文件，是否在data/data目录下都已经存在
+        try {
+            String[] fileNames = getApplicationContext().getAssets().list("armeabi");
+            for (int i = 0; fileNames != null && i < fileNames.length; i++) {
+                if (!isFileExit(path + fileNames[i])) {
+                    needCopy = true;
+                    break;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (needCopy) {
+            copyFilesFassets(getApplicationContext(), "armeabi", path);
+        }
+    }
+
+    //将旧目录中的文件全部复制到新目录
+    public static void copyFilesFassets(Context context, String oldPath, String newPath) {
+        try {
+
+            // 获取assets目录下的所有文件及目录名
+            String fileNames[] = context.getAssets().list(oldPath);
+
+            // 如果是目录名，则将重复调用方法递归地将所有文件
+            if (fileNames.length > 0) {
+                File file = new File(newPath);
+                file.mkdirs();
+                for (String fileName : fileNames) {
+                    copyFilesFassets(context, oldPath + "/" + fileName, newPath + "/" + fileName);
+                }
+            }
+            // 如果是文件，则循环从输入流读取字节写入
+            else {
+                InputStream is = context.getAssets().open(oldPath);
+                FileOutputStream fos = new FileOutputStream(new File(newPath));
+                byte[] buffer = new byte[1024];
+                int byteCount = 0;
+                while ((byteCount = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, byteCount);
+                }
+                fos.flush();
+                is.close();
+                fos.close();
+            }
+            Log.i("copy_file", "复制完成.");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isFileExit(String path) {
+        if (path == null) {
+            return false;
+        } else {
+            try {
+                File f = new File(path);
+                if (f.exists()) {
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
     }
 }
 

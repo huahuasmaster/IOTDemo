@@ -144,6 +144,7 @@ public class MessageFragment extends Fragment {
                 final AlertDto alertDto = adapter.getAlertDtos().get(position);
                 Intent intent = new Intent(getContext(),VideoActivity.class);
                 uploadReadTime(alertDto,position);
+                intent.putExtra("room_name", alertDto.getOtherName());
                 startActivity(intent);
             }
 
