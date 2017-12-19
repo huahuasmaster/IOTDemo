@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.kyleduo.switchbutton.SwitchButton;
 import com.nex3z.flowlayout.FlowLayout;
 import com.qrcodescan.R;
 
@@ -64,7 +65,7 @@ public class SpaceCardAdapter extends Adapter {
         //填装房间标签的布局
         private FlowLayout roomLabels;
         //离家、归家的选择开关
-        private Switch typeSwitch;
+        private SwitchButton typeSwitch;
         //开关的文字说明
         private TextView type;
         //是否为默认空间
@@ -76,7 +77,7 @@ public class SpaceCardAdapter extends Adapter {
 
             spaceName = (TextView) itemView.findViewById(R.id.space_name);
             roomLabels = (FlowLayout) itemView.findViewById(R.id.room_label_flowLayout);
-            typeSwitch = (Switch) itemView.findViewById(R.id.type_switch);
+            typeSwitch = (SwitchButton) itemView.findViewById(R.id.type_switch);
 //            defaultSwitch = (Switch) itemView.findViewById(R.id.default_switch);
             type = (TextView) itemView.findViewById(R.id.space_type);
             back = (CardView)itemView.findViewById(R.id.space_card_back);

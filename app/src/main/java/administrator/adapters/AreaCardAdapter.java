@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import administrator.adapters.listener.AreaCardCallbackListener;
 import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.entity.AreaCurValue;
 import administrator.entity.DataEntity;
@@ -55,7 +55,10 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
     private List<DeviceInArea> diaList;
 
     //设备卡片监听回调函数
-    private DeviceCardCallbackListener listener;
+    private DeviceCardCallbackListener deviceCardCallbackListener;
+
+    //房间卡片监听回调函数
+    private AreaCardCallbackListener areaCardCallbackListener;
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -73,12 +76,12 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
         previewAdapterList = new ArrayList<>();
     }
 
-    public DeviceCardCallbackListener getListener() {
-        return listener;
+    public DeviceCardCallbackListener getDeviceCardCallbackListener() {
+        return deviceCardCallbackListener;
     }
 
-    public void setListener(DeviceCardCallbackListener listener) {
-        this.listener = listener;
+    public void setDeviceCardCallbackListener(DeviceCardCallbackListener deviceCardCallbackListener) {
+        this.deviceCardCallbackListener = deviceCardCallbackListener;
     }
 
     public Context getContext() {
@@ -111,6 +114,14 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     public void setPreviewAdapterList(List<DevicePreviewAdapter> previewAdapterList) {
         this.previewAdapterList = previewAdapterList;
+    }
+
+    public AreaCardCallbackListener getAreaCardCallbackListener() {
+        return areaCardCallbackListener;
+    }
+
+    public void setAreaCardCallbackListener(AreaCardCallbackListener areaCardCallbackListener) {
+        this.areaCardCallbackListener = areaCardCallbackListener;
     }
 
     //根据sn返回对应的preview适配器
@@ -223,6 +234,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
     }
 
     //用于设备卡片布局赋值的方法
+    @SuppressLint("SetTextI18n")
     private void initViewsOfDeviceCard(DIACardViewHolder holder, final int position) {
         final DeviceInArea mDia = diaList.get(position);
         DataSimpleAdapter adapter = new DataSimpleAdapter();
@@ -232,7 +244,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
         holder.checkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onCheck(position);
+                deviceCardCallbackListener.onCheck(position);
             }
         });
 
@@ -244,13 +256,14 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
                 holder.thresholdBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.onThreshold(mDia);
+                        deviceCardCallbackListener.onThreshold(mDia);
                     }
                 });
             }
         }
         //赋值名称
         holder.realName.setText(mDia.getDeviceName());
+        assert mEnum != null;
         holder.subhead.setText(mDia.getOtherName()
                 + "-" + mEnum.getType());
 
@@ -309,13 +322,19 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
         holder.areaName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goNextActivity(mAcv.getAreaId());
+                areaCardCallbackListener.onAreaName(mAcv);
             }
         });
         holder.areaBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goNextActivity(mAcv.getAreaId());
+                areaCardCallbackListener.onAreaBack(mAcv);
+            }
+        });
+        holder.areaBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                areaCardCallbackListener.onLongAreaBack(mAcv);
             }
         });
         //展示设备预览数据
@@ -325,10 +344,9 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
     }
 
     private void goNextActivity(long areaId) {
-        Intent intent = new Intent(context, AreaDetailActivity.class);
-        intent.putExtra("area_id", areaId);
-        context.startActivity(intent);
+
     }
+
 
     @Override
     public int getItemCount() {

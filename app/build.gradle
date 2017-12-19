@@ -62,6 +62,8 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.github.LichFaker:Logger:v1.0.0'
     compile 'com.android.support:transition:24.2.1'
+    compile 'com.kyleduo.switchbutton:library:2.0.0'
+
 
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'

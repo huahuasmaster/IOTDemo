@@ -22,7 +22,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kyleduo.switchbutton.SwitchButton;
 import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
@@ -41,16 +41,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 import administrator.adapters.SpaceCardAdapter;
 import administrator.adapters.listener.SpaceCardCallbackListener;
+import administrator.base.DensityUtil;
 import administrator.base.ViewFindUtils;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
 import administrator.base.mqtt.MqttManager;
-import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.SpaceWithAreas;
 import administrator.entity.TabEntity;
 import okhttp3.FormBody;
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
             }
 
             @Override
-            public void onClickSwitch(long spaceId, final Switch mSwicth, boolean checked) {
+            public void onClickSwitch(long spaceId, final SwitchButton mSwicth, boolean checked) {
                 //离家->1 归家->0
                 short type = checked ? (short) 1 : (short) 0;
 
@@ -273,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
                 } else if(count < 1) {
                     tabLayout.hideMsg(1);
                 }
-                tabLayout.setMsgMargin(1,0,dp2px(1.85f));
+                tabLayout.setMsgMargin(1, 0, DensityUtil.dip2px(MainActivity.this, 1.85f));
             }
         });
 
@@ -341,10 +340,6 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
         }
     }
 
-    protected int dp2px(float dp) {
-        final float scale = mContext.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -19,6 +19,9 @@
     <color name="result_point_color">#C0FFFF00</color>
     <color name="laser_color">#FFEB3B</color>
     <color name="corner_color">#00FF00</color>
-
+    <color name="line_shadow">#14000000</color>
+    <color name="main_color">#26db927d</color>
+    <color name="main_color_line">#db927d</color>
+    <color name="device_card_back">#eee7da</color>
     <!-- QRCode scanner color end -->
 </resources>

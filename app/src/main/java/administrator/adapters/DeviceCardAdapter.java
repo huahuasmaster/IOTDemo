@@ -19,6 +19,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
+import com.kyleduo.switchbutton.SwitchButton;
 import com.qrcodescan.R;
 
 import java.text.ParseException;
@@ -142,13 +143,17 @@ public class DeviceCardAdapter extends PagerAdapter{
                 +"-"+ mEnum.getType());
 
         //赋值swtich
-        Switch status = (Switch)view.findViewById(R.id.status_switch);
+        SwitchButton status = (SwitchButton) view.findViewById(R.id.status_switch);
         status.setChecked(deviceInArea.getStatus() == 1);
 
         if(!isAT) {
             //对支持图表显示的，画在图表上
             if(mEnum == DataTypeEnum.HUMIDITY || mEnum == DataTypeEnum.TMP_CELSIUS) {
                 CurersView curersView = (CurersView) view.findViewById(R.id.curersview);
+                view.findViewById(R.id.s_line).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.view3).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.rect).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.error_q).setVisibility(View.VISIBLE);
                 curersView.setMode(mEnum);
                 curersView.setVisibility(View.VISIBLE);
                 //对现有的数据进行处理

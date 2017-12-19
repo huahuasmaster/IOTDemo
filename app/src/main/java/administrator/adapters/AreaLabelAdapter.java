@@ -13,6 +13,7 @@ import com.qrcodescan.R;
 
 import java.util.List;
 
+import administrator.base.DensityUtil;
 import administrator.entity.AreaDto;
 
 /**
@@ -43,7 +44,8 @@ public class AreaLabelAdapter {
             LinearLayout.LayoutParams lp =
                     new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                   ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(4,4,4,4);
+            int margin = DensityUtil.dip2px(mContext, 4);
+            lp.setMargins(margin, margin, margin, margin);
             labelBack.setLayoutParams(lp);
             TextView roomName = (TextView) (v.findViewById(R.id.room_name));
             roomName.setText(area.getName());

@@ -1,5 +1,6 @@
 package administrator.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -50,20 +51,20 @@ public class CurersView extends View {
     //文字画笔
     private Paint mTextPaint;
     //异常显示颜色
-    private String unusualColor = "#f52e24";
+    private String unusualColor = "#ffffff";
     //正常显示颜色
-    private String normalColor = "#07D6ED";
+    private String normalColor = "#ffffff";
     //横线显示颜色
     private String LineColor = "#66000000";
     //文字大小、单位为dp
     private int textSize = 14;
     //圆点半径
-    private int r = 3;
+    private int r = 4;
     //图的说明
-    private String normalText = "正常";
-    private String unusualText = "异常";
+    private String normalText = "";
+    private String unusualText = "";
     //线的宽度，单位为dp
-    private float lineWidth = 1;
+    private float lineWidth = 3;
     //控件宽
     int width;
     //控件高
@@ -144,6 +145,7 @@ public class CurersView extends View {
      * 初始化
      */
     public void init() {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //将各个单位在此处统一转化过来
         if (firstRun) {
             r = dip2px(getContext(), r);
@@ -156,6 +158,7 @@ public class CurersView extends View {
         mLinePaint.setAntiAlias(true);
         //设定线的宽度
         mLinePaint.setStrokeWidth(lineWidth);
+//        mLinePaint.setShadowLayer(5,0,2,R.color.line_shadow);
 
         mCirclePaint = new Paint();
         mCirclePaint.setColor(Color.parseColor(normalColor));
@@ -221,7 +224,7 @@ public class CurersView extends View {
         if (mDateList != null && mEntityList != null && mEntityList.size() != 0) {
             try {
                 //在最后的时间再加24小时，确保最后的点能被显示出来（在x轴上有它的位置）
-                long endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(mDateList.size() - 1).split(" ")[0] + " 23:59:59").getTime();
+                @SuppressLint("SimpleDateFormat") long endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(mDateList.size() - 1).split(" ")[0] + " 23:59:59").getTime();
                 Log.i("endTiME",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTime));
                 long startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(0).split(" ")[0] + " 00:00:00").getTime();
                 Log.i("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime));

@@ -2,10 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/device_preview_item"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical">
 
     <ImageView

@@ -2,6 +2,8 @@ package administrator.adapters.listener;
 
 import android.widget.Switch;
 
+import com.kyleduo.switchbutton.SwitchButton;
+
 /**
  * Created by zhuang_ge on 2017/8/22.
  */
@@ -22,5 +24,5 @@ public interface SpaceCardCallbackListener {
     /**
      * 当点击了switch后
      */
-    void onClickSwitch(long spaceId, Switch mSwitch,boolean checked);
+    void onClickSwitch(long spaceId, SwitchButton mSwitch, boolean checked);
 }

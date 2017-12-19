@@ -2,6 +2,8 @@
     android:layout_height="28dp"
     android:id="@+id/label_back"
     android:layout_width="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
     app:cardCornerRadius="13dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,5 +18,6 @@
         android:gravity="center"
         android:id="@+id/room_name"
         android:textSize="16sp"
+
         android:text="书房"/>
 </android.support.v7.widget.CardView>

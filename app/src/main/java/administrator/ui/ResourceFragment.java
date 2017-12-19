@@ -7,22 +7,17 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.design.widget.FloatingActionButton;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +30,8 @@ import com.lichfaker.log.Logger;
 import com.qrcodescan.R;
 
 
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,24 +43,20 @@ import java.util.Set;
 
 import administrator.adapters.AreaCardAdapter;
 import administrator.adapters.DevicePreviewAdapter;
-import administrator.adapters.SpaceCardAdapter;
+import administrator.adapters.listener.AreaCardCallbackListener;
 import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.base.CommonUtil;
 import administrator.base.DeviceCodeUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
-import administrator.adapters.listener.SpaceCardCallbackListener;
 import administrator.base.mqtt.MqttManager;
 import administrator.base.mqtt.MqttMsgBean;
 import administrator.entity.AreaCurValue;
 import administrator.entity.DeviceCurValue;
 import administrator.entity.DeviceInArea;
-import administrator.entity.SpaceWithAreas;
 import administrator.enums.DataTypeEnum;
 import administrator.view.MyRecyclerView;
-import okhttp3.FormBody;
-import okhttp3.RequestBody;
 
 /**
  * “资源”页面
@@ -109,12 +98,13 @@ public class ResourceFragment extends Fragment {
     private AreaCardAdapter areaCardAdapter;
     private MaterialDialog waitDialog;
     private DeviceCardCallbackListener deviceCardListener;
+    private AreaCardCallbackListener areaCardCallbackListener;
     private SwipeRefreshLayout previewSwiper;
 
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
 
-
+    private int RESULT_LOAD_IMAGE = 0x99;
 
 
     private OnFragmentInteractionListener mListener;
@@ -266,6 +256,27 @@ public class ResourceFragment extends Fragment {
                 startActivity(intent);
             }
         };
+
+        areaCardCallbackListener = new AreaCardCallbackListener() {
+            @Override
+            public void onAreaBack(AreaCurValue areaCurValue) {
+                Intent intent = new Intent(getContext(), AreaDetailActivity.class);
+                intent.putExtra("area_id", areaCurValue.getAreaId());
+                getActivity().startActivity(intent);
+            }
+
+            @Override
+            public void onAreaName(AreaCurValue areaCurValue) {
+
+            }
+
+            @Override
+            public void onLongAreaBack(AreaCurValue areaCurValue) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.
+                        provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        };
         //获取默认空间信息
         initAreaCardsBySpaceId(-1L);
 
@@ -306,7 +317,8 @@ public class ResourceFragment extends Fragment {
                             public void run() {
                                 areaCardAdapter.setAreaList(acvList);
                                 areaCardAdapter.setDiaList(diaList);
-                                areaCardAdapter.setListener(deviceCardListener);
+                                areaCardAdapter.setDeviceCardCallbackListener(deviceCardListener);
+                                areaCardAdapter.setAreaCardCallbackListener(areaCardCallbackListener);
                                 areaCardsRV.setAdapter(areaCardAdapter);
                                 areaCardsRV.setLayoutManager(new LinearLayoutManager(getContext()));
                                 if (waitDialog.isShowing()) {

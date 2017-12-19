@@ -1,5 +1,6 @@
 package administrator.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -60,10 +61,10 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
         TextView value;
         View wholeView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
-            wholeView = itemView;
+            wholeView = itemView.findViewById(R.id.device_preview_item);
             icon = (ImageView) itemView.findViewById(R.id.device_icon);
             value = (TextView) itemView.findViewById(R.id.device_preview_value);
         }
@@ -76,8 +77,9 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         final DeviceCurValue mDcv = dcvList.get(position);
         //分析数据类型 湿度直接显示、温度加上单位、门开关则以汉字显示
@@ -101,9 +103,9 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
                     break;
                 //门开关 value==1 表示开 0表示关
                 case DOOR_OPEN_CLOSE:
-                    viewHolder.value.setText(
-                            mDcv.getCurValue().equals("1") ? "开":"关");
-                    viewHolder.icon.setImageResource(R.drawable.ic_door_preview);
+                    viewHolder.value.setText(mDcv.getCurValue().equals("1") ? "开" : "关");
+                    viewHolder.icon.setImageResource(mDcv.getCurValue().equals("1") ?
+                            R.drawable.ic_door_open_preview : R.drawable.ic_door_open_preview);
                     break;
                 //防盗装置,显示移动秒数
                 case SEC:
