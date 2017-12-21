@@ -3,13 +3,20 @@ package administrator.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Picture;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -36,6 +43,7 @@ import com.qrcodescan.R;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +53,7 @@ import java.util.List;
 import administrator.adapters.SpaceCardAdapter;
 import administrator.adapters.listener.SpaceCardCallbackListener;
 import administrator.base.DensityUtil;
+import administrator.base.PictureUtil;
 import administrator.base.ViewFindUtils;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
@@ -54,6 +63,8 @@ import administrator.entity.SpaceWithAreas;
 import administrator.entity.TabEntity;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
+
+import static administrator.ui.ResourceFragment.ACTION_CROP;
 
 
 public class MainActivity extends AppCompatActivity implements ResourceFragment.OnFragmentInteractionListener {
@@ -83,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
     private SwipeRefreshLayout sideSwiper;
     private DrawerLayout drawerLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
 
         loginDataSp = getSharedPreferences("login_data", Context.MODE_PRIVATE);
         loginDataSpEditor = loginDataSp.edit();
+        getSharedPreferences("image", 0).edit().putBoolean("change", false).apply();
 
         //装填fragment
         mFragments.add(ResourceFragment.newInstance(mTitles[0]));
@@ -126,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
         }).start();
         initSideMenu();
 
-        //对百度地图so文件进行操作
 
     }
 
@@ -136,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
     private void initSideMenu() {
         head = (ImageView) findViewById(R.id.side_menu_head_img);
         spaceCardsRV = (RecyclerView) findViewById(R.id.space_card_recycler);
-        addSpace = (FloatingActionButton) findViewById(R.id.add_space);
+//        addSpace = (FloatingActionButton) findViewById(R.id.add_space);
         TextView userName = (TextView) findViewById(R.id.user_name);
         sideSwiper = (SwipeRefreshLayout) findViewById(R.id.swipe_side_menu);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
@@ -195,13 +205,12 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
             }
         };
         initSpaceCards();
-        initAssetsFile();
     }
 
     @Override
     protected void onStart() {
         Logger.i("执行onstart");
-        if (getIntent().getBooleanExtra("check_alert",false)){
+        if (getIntent().getBooleanExtra("check_alert", false)) {
             Logger.i("来自点击通知后的跳转");
             tabLayout.setCurrentTab(1);
         }
@@ -269,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
                     tabLayout.showMsg(1, count);
                 } else if (count == 1) {
                     tabLayout.showDot(1);
-                } else if(count < 1) {
+                } else if (count < 1) {
                     tabLayout.hideMsg(1);
                 }
                 tabLayout.setMsgMargin(1, 0, DensityUtil.dip2px(MainActivity.this, 1.85f));
@@ -285,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == ResourceFragment.RESULT_OK) {
             Bundle bundle = data.getExtras();
             String scanResult = bundle.getString("qr_scan_result");
@@ -297,6 +307,43 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
             ResourceFragment fragment = (ResourceFragment) mFragments.get(0);
             fragment.changeText("二维码内容：" + scanResult);
         }
+
+        if (requestCode == ResourceFragment.REQUEST_LOAD_IMAGE) {
+            Log.i("picture", "收到了图片");
+
+            if (data != null) {
+                String path = PictureUtil.getImageAbsolutePath(this, data.getData());
+                File file = new File(path);
+                Uri uri = Uri.fromFile(file);
+                cropImage(uri);
+            }
+        }
+
+        if (requestCode == ACTION_CROP) {
+            try {
+                Bitmap photo = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
+                Bitmap smallBmp = PictureUtil.setScaleBitmap(photo, 2);
+                ((ResourceFragment) mFragments.get(0)).setPic(smallBmp);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    public void cropImage(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 533);
+        intent.putExtra("aspectY", 300);
+        intent.putExtra("outputX", 533);
+        intent.putExtra("outputY", 300);
+        intent.putExtra("return-data", false);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true);
+        startActivityForResult(intent, ACTION_CROP);
     }
 
     @Override
@@ -344,8 +391,8 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //如果用户点击了返回键，则执行返回桌面功能 而不是退出程序
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent i= new Intent(Intent.ACTION_MAIN);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent i = new Intent(Intent.ACTION_MAIN);
 
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -364,84 +411,7 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
         ((MessageFragment) mFragments.get(1)).getAlertOnline(-1L);
     }
 
-    private void initAssetsFile() {
 
-        boolean needCopy = false;
-
-        // 创建data/data目录
-        File file = getApplicationContext().getFilesDir();
-        String path = file.toString() + "/armeabi/";
-
-        // 遍历assets目录下所有的文件，是否在data/data目录下都已经存在
-        try {
-            String[] fileNames = getApplicationContext().getAssets().list("armeabi");
-            for (int i = 0; fileNames != null && i < fileNames.length; i++) {
-                if (!isFileExit(path + fileNames[i])) {
-                    needCopy = true;
-                    break;
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (needCopy) {
-            copyFilesFassets(getApplicationContext(), "armeabi", path);
-        }
-    }
-
-    //将旧目录中的文件全部复制到新目录
-    public static void copyFilesFassets(Context context, String oldPath, String newPath) {
-        try {
-
-            // 获取assets目录下的所有文件及目录名
-            String fileNames[] = context.getAssets().list(oldPath);
-
-            // 如果是目录名，则将重复调用方法递归地将所有文件
-            if (fileNames.length > 0) {
-                File file = new File(newPath);
-                file.mkdirs();
-                for (String fileName : fileNames) {
-                    copyFilesFassets(context, oldPath + "/" + fileName, newPath + "/" + fileName);
-                }
-            }
-            // 如果是文件，则循环从输入流读取字节写入
-            else {
-                InputStream is = context.getAssets().open(oldPath);
-                FileOutputStream fos = new FileOutputStream(new File(newPath));
-                byte[] buffer = new byte[1024];
-                int byteCount = 0;
-                while ((byteCount = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, byteCount);
-                }
-                fos.flush();
-                is.close();
-                fos.close();
-            }
-            Log.i("copy_file", "复制完成.");
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public static boolean isFileExit(String path) {
-        if (path == null) {
-            return false;
-        } else {
-            try {
-                File f = new File(path);
-                if (f.exists()) {
-                    return true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-    }
 }
 
 

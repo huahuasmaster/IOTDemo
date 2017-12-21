@@ -2,6 +2,8 @@ package administrator.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
 
 import org.litepal.LitePalApplication;
 
@@ -18,6 +20,10 @@ public class ContextApplication extends Application{
         super.onCreate();
         context = getApplicationContext();
         LitePalApplication.initialize(context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
     }
 
     public static Context getContext(){

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -50,11 +51,21 @@ public class CurersView extends View {
     private Paint mCirclePaint;
     //文字画笔
     private Paint mTextPaint;
+    //异常区域画笔
+    private Paint mAbnormalPaint;
+    //警戒线画笔
+    private Paint mCordonPaint;
     //异常显示颜色
     private String unusualColor = "#ffffff";
     //正常显示颜色
     private String normalColor = "#ffffff";
+    //异常区域颜色
+    private String abnormalColor = "#26db927d";
+    //警戒线颜色
+    private String cordonColor = "#db927d";
+
     //横线显示颜色
+//    private String LineColor = "#eeffffff";
     private String LineColor = "#66000000";
     //文字大小、单位为dp
     private int textSize = 14;
@@ -65,6 +76,8 @@ public class CurersView extends View {
     private String unusualText = "";
     //线的宽度，单位为dp
     private float lineWidth = 3;
+    //横线宽度,单位为dp
+    private float horLineWidth = 1;
     //控件宽
     int width;
     //控件高
@@ -87,6 +100,9 @@ public class CurersView extends View {
     private boolean firstRun = true;
     //风险值
     private Float[] mRisk = {50f, 150f};
+
+    //记录两条警戒线的高度 以及
+    private Float[] riskHeight = new Float[4];
 
 
     public CurersView(Context context) {
@@ -151,6 +167,7 @@ public class CurersView extends View {
             r = dip2px(getContext(), r);
             textSize = dip2px(getContext(), textSize);
             lineWidth = dip2px(getContext(), lineWidth);
+            horLineWidth = dip2px(getContext(), horLineWidth);
             firstRun = false;
         }
         mLinePaint = new Paint();
@@ -169,6 +186,14 @@ public class CurersView extends View {
         mTextPaint.setAntiAlias(true);
         mTextPaint.setTextSize(textSize);
 
+        mAbnormalPaint = new Paint();
+        mAbnormalPaint.setColor(Color.parseColor(abnormalColor));
+        mAbnormalPaint.setAntiAlias(true);
+
+        mCordonPaint = new Paint();
+        mCordonPaint.setColor(Color.parseColor(cordonColor));
+        mCordonPaint.setAntiAlias(true);
+        mCordonPaint.setStrokeWidth(horLineWidth);
         mList = new ArrayList<>();
         mDateList = new ArrayList<>();
         DateTime dateTime = new DateTime(new Date());
@@ -220,14 +245,15 @@ public class CurersView extends View {
      * @param canvas
      */
     private void drawData(Canvas canvas) {
+        mLinePaint.setStrokeWidth(lineWidth);
         //将数据转换成坐标点
         if (mDateList != null && mEntityList != null && mEntityList.size() != 0) {
             try {
                 //在最后的时间再加24小时，确保最后的点能被显示出来（在x轴上有它的位置）
                 @SuppressLint("SimpleDateFormat") long endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(mDateList.size() - 1).split(" ")[0] + " 23:59:59").getTime();
-                Log.i("endTiME",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTime));
+                Log.i("endTiME", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTime));
                 long startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(0).split(" ")[0] + " 00:00:00").getTime();
-                Log.i("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime));
+                Log.i("startTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime));
 //            long endTime = mEntityList.get(0).getTime();
 //            long startTime = mEntityList.get(mEntityList.size()-1).getTime();
                 float l = (float) ((width - (float) getTextHeight(mList.get(0), mTextPaint) * 2)) / (endTime - startTime);
@@ -257,6 +283,7 @@ public class CurersView extends View {
                     PointEntity pointEntityNext = mPointentities.get(i + 1);
                     canvas.drawLine(pointEntity.getX(), pointEntity.getY(), pointEntityNext.getX(), pointEntityNext.getY(), mLinePaint);
                 }
+
                 for (int i = 0; i < mPointentities.size(); i++) {
                     PointEntity pointEntity = mPointentities.get(i);
                     Log.e(TAG, "drawData: x=" + pointEntity.getX() + "  y=" + pointEntity.getY() + "maxRisk=" + maxRisk + " minRisk=" + minRisk);
@@ -275,6 +302,7 @@ public class CurersView extends View {
 
     }
 
+
     /**
      * 初始化坐标轴
      *
@@ -291,7 +319,7 @@ public class CurersView extends View {
         }
         drawDes(canvas);
         drawAxis(canvas);
-
+        drawRegion(canvas);
 
     }
 
@@ -301,19 +329,22 @@ public class CurersView extends View {
      * @param canvas
      */
     private void drawAxis(Canvas canvas) {
+        mLinePaint.setStrokeWidth(horLineWidth);
         //计算出y轴刻度的间距
         float h = (float) ((height - getTextHeight(normalText, mTextPaint) - getTextHeight(mList.get(0), mTextPaint) * 2.0) / mList.size());
         for (int i = 0; i < mList.size(); i++) {
-            canvas.drawText(mList.get(i), (float) getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) / 2, getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + h * i, mTextPaint);
+            String mData = mList.get(i).length() == 1 ? "0" + mList.get(i) : mList.get(i);
+
+            canvas.drawText(mData, (float) getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) / 2, getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + h * i, mTextPaint);
             canvas.drawLine(getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) * 2,
                     getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + h * i - (float) getTextHeight(mList.get(0), mTextPaint) / 4,
                     getWidth() - getPaddingRight(),
                     getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + h * i - (float) getTextHeight(mList.get(0), mTextPaint) / 4,
-                    mTextPaint);
+                    mLinePaint);
             //Log.e(TAG, "drawXY: xi="+(getPaddingLeft()+getTextWidth(mList.get(0), mTextPaint) * 2));
-            // Log.e(TAG, "drawXY: yj="+(getTextHeight(normalText, mTextPaint)*2 + getPaddingTop() + h * i - (float) getTextHeight(mList.get(0), mTextPaint) / 4));
+            //Log.e(TAG, "drawXY: yj="+(getTextHeight(normalText, mTextPaint)*2 + getPaddingTop() + h * i - (float) getTextHeight(mList.get(0), mTextPaint) / 4));
             if (i == mList.size() - 1) {
-                float v = (width - (float) getTextHeight(mList.get(0), mTextPaint) * 2) / (mDateList.size()+1);
+                float v = (width - (float) getTextHeight(mList.get(0), mTextPaint) * 2) / (mDateList.size() + 1);
                 // Log.e(TAG, "drawData: w2="+v);
 
                 for (int j = 0; j < mDateList.size(); j++) {
@@ -327,6 +358,44 @@ public class CurersView extends View {
                 }
             }
         }
+
+
+    }
+
+    private void drawRegion(Canvas canvas) {
+        float h = (float) ((height - getTextHeight(normalText, mTextPaint) - getTextHeight(mList.get(0), mTextPaint) * 2.0) / mList.size());
+        //算出y轴总高度
+        float v = h * (mList.size() - 1);
+        //算出每个单位值（温度）所对应的像素值
+        float h1 = v / (y_max - y_min);
+        //算出某个值对应的在视图中的高度
+        //绘制禁戒线
+        for (int i = 0; i < mRisk.length; i++) {
+            float y = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * mRisk[i];
+            riskHeight[i] = y;
+
+            canvas.drawLine(getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) * 2,
+                    y,
+                    getWidth() - getPaddingRight(),
+                    y,
+                    mCordonPaint);
+        }
+        //算出最低点和最高点的高度
+        riskHeight[2] = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * y_min;
+        riskHeight[3] = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * y_max;
+
+        //绘制异常区域
+        //上半部分
+        canvas.drawRect(new RectF(getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) * 2,
+                riskHeight[3],
+                getWidth() - getPaddingRight(),
+                riskHeight[1]), mAbnormalPaint);
+
+        canvas.drawRect(new RectF(getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) * 2,
+                riskHeight[2],
+                getWidth() - getPaddingRight(),
+                riskHeight[0]), mAbnormalPaint);
+
     }
 
     /**

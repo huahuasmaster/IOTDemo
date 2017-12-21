@@ -185,4 +185,12 @@ public class LoginActivity extends AppCompatActivity {
             default:
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (waitForLoginDialog.isShowing()) {
+            waitForLoginDialog.dismiss();
+        }
+    }
 }

@@ -186,6 +186,11 @@ public class UrlHandler {
     public static String getVideoAccessToken() {
         return "https://open.ys7.com/api/lapp/token/get";
     }
+
+    //获取头像
+    public static String getIcon() {
+        return getHead() + "user/" + getUserId() + "/icon";
+    }
     /**
      * 获取
      * @return 请求的开头ip与端口

@@ -2,34 +2,65 @@ package administrator.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.qrcodescan.R;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
+import administrator.base.http.HttpCallbackListener;
+import administrator.base.http.HttpUtil;
+import administrator.base.http.UrlHandler;
+import administrator.entity.PictureDto;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * Created by Administrator on 2017/7/14.
  */
-public class MineFragment extends Fragment implements View.OnClickListener{
+public class MineFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
+    @BindView(R.id.space_manage_linear)
+    LinearLayout spaceManageLayout;
 
-    private LinearLayout spaceManageLayout;
-    private LinearLayout deviceManageLayout;
-    private LinearLayout roomManageLayout;
-    private LinearLayout thresholdSetLayout;
-    private LinearLayout msgSetLayout;
-    private LinearLayout deviceLinkSetLayout;
-    private ImageView headIcon;
-    private ImageView edit;
-    private ImageView exit;
+    LinearLayout deviceManageLayout;
+
+    @BindView(R.id.room_manage_linear)
+    LinearLayout roomManageLayout;
+
+    LinearLayout thresholdSetLayout;
+    LinearLayout msgSetLayout;
+    LinearLayout deviceLinkSetLayout;
+
+    @BindView(R.id.head_img)
+    ImageView headIcon;
+
+    ImageView edit;
+    ImageView exit;
+
+    @BindView(R.id.user_name)
+    TextView name;
+
+    SharedPreferences sp;
 
     public MineFragment() {
         // Required empty public constructor
@@ -58,7 +89,8 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mine, null);
-
+        ButterKnife.bind(this, v);
+        sp = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
         initViews(v);
 
         spaceManageLayout.setOnClickListener(this);
@@ -67,25 +99,43 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initViews(View view) {
-        spaceManageLayout = (LinearLayout)view.findViewById(R.id.space_manage_linear);
-        roomManageLayout = (LinearLayout)view.findViewById(R.id.room_manage_linear);
+        name.setText(sp.getString("name", "神秘用户"));
+        HttpUtil.sendRequestWithCallback(UrlHandler.getIcon(),
+                new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        final PictureDto pictureDto = new Gson().fromJson(response, PictureDto.class);
+                        if (pictureDto == null) {
+                            Log.i("icon", "没有数据");
+                        } else if (pictureDto.getContent() != null) {
+                            try {
+                                byte[] bytes = pictureDto.getContent().getBytes();
+                                final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                        headIcon.setImageBitmap(bitmap);
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+
     }
 
     @Override
@@ -98,27 +148,16 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.space_manage_linear:
-                Intent intent = new Intent(getActivity(),SpaceManageActivity.class);
+                Intent intent = new Intent(getActivity(), SpaceManageActivity.class);
                 startActivity(intent);
                 break;
             case R.id.room_manage_linear:
-                startActivity(new Intent(getActivity(),AreaManageActivity.class));
+                startActivity(new Intent(getActivity(), AreaManageActivity.class));
                 break;
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

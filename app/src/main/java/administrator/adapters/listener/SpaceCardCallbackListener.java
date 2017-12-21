@@ -4,9 +4,6 @@ import android.widget.Switch;
 
 import com.kyleduo.switchbutton.SwitchButton;
 
-/**
- * Created by zhuang_ge on 2017/8/22.
- */
 
 public interface SpaceCardCallbackListener {
     /**
@@ -20,6 +17,7 @@ public interface SpaceCardCallbackListener {
      * @param areaId
      */
     void onChooseArea(long areaId);
+
 
     /**
      * 当点击了switch后

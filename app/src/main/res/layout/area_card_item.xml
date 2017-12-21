@@ -37,9 +37,9 @@
             <TextView
                 android:id="@+id/area_card_area_name"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="56dp"
                 android:layout_gravity="bottom"
-                android:background="#99000000"
+                android:background="@drawable/area_name_back"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
                 android:text="客厅"

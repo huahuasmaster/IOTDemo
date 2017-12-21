@@ -4,8 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -14,6 +18,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +40,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +56,7 @@ import administrator.adapters.listener.AreaCardCallbackListener;
 import administrator.adapters.listener.DeviceCardCallbackListener;
 import administrator.base.CommonUtil;
 import administrator.base.DeviceCodeUtil;
+import administrator.base.PictureUtil;
 import administrator.base.http.HttpCallbackListener;
 import administrator.base.http.HttpUtil;
 import administrator.base.http.UrlHandler;
@@ -104,7 +114,8 @@ public class ResourceFragment extends Fragment {
     //以下是对设备页面的初始化定义
     private TextView deviceTitle;
 
-    private int RESULT_LOAD_IMAGE = 0x99;
+    public static int REQUEST_LOAD_IMAGE = 0x99;
+    public static final int ACTION_CROP = 0x98;
 
 
     private OnFragmentInteractionListener mListener;
@@ -274,7 +285,7 @@ public class ResourceFragment extends Fragment {
             public void onLongAreaBack(AreaCurValue areaCurValue) {
                 Intent i = new Intent(Intent.ACTION_PICK, android.
                         provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                getActivity().startActivityForResult(i, REQUEST_LOAD_IMAGE);
             }
         };
         //获取默认空间信息
@@ -506,5 +517,50 @@ public class ResourceFragment extends Fragment {
         }
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    public void setPic(Bitmap bitmap) {
+        Log.i("bitmap", "接收到bitmap" + bitmap.toString());
+        File PHOTO_DIR = new File(Environment.getExternalStorageDirectory() + "/image");//设置保存路径
+        if (!PHOTO_DIR.exists()) {
+            Log.i("file", "没有该文件夹");
+        }
+        File avaterFile = new File(PHOTO_DIR, "avater.jpg");//设置文件名称
+
+        if (avaterFile.exists()) {
+            avaterFile.delete();
+        }
+        try {
+            avaterFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(avaterFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            Log.i("", "文件写入成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap1 = null;
+        try {
+            File avaterFile1 = new File(PHOTO_DIR, "avater.jpg");
+            if (avaterFile1.exists()) {
+                bitmap1 = BitmapFactory.decodeFile(PHOTO_DIR + "/avater.jpg");
+            }
+        } catch (Exception e) {
+        }
+        getActivity().getSharedPreferences("image", 0).edit()
+                .putBoolean("change", true).apply();
+        initAreaCardsBySpaceId(-1L);
+    }
+
+
+
+
 
 }

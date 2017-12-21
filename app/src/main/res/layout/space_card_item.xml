@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:clickable="true"
+    android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/cardViewBG"
     app:cardCornerRadius="3dp">
@@ -26,24 +27,27 @@
         <!--app:layout_constraintRight_toRightOf="parent"-->
         <!--app:layout_constraintTop_toTopOf="parent" />-->
         <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/type_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:kswAnimationDuration="300"
+            app:kswBackColor="#eee7da"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswThumbDrawable="@drawable/ios_thumb_selector_1"
+            app:kswThumbHeight="25dp"
+            app:kswThumbMarginBottom="-4dp"
+            app:kswThumbMarginLeft="-1.2dp"
+            app:kswThumbMarginRight="-1.2dp"
+            app:kswThumbMarginTop="-0.6dp"
+            app:kswThumbRangeRatio="1.6"
+            app:kswThumbWidth="25dp"
             app:kswTintColor="#D02E21"
-            android:id="@+id/type_switch"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <!--<Switch-->
-        <!--android:id="@+id/default_switch"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textColor="@color/pureWhite"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/type_switch"-->
-        <!--android:layout_marginTop="0dp"-->
-        <!--android:checked="true"-->
-        <!--android:layout_marginBottom="0dp"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/space_type"-->
-        <!--app:layout_constraintRight_toLeftOf="@+id/type_switch"-->
-        <!--android:layout_marginRight="0dp" />-->
+
 
         <TextView
             android:id="@+id/space_name"

@@ -58,11 +58,8 @@
                     android:id="@+id/room_and_name_of_device"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="0dp"
-                    android:textSize="16sp"
                     android:textColor="@android:color/white"
+                    android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="@+id/device_real_name"
                     app:layout_constraintTop_toBottomOf="@+id/device_real_name"
                     tools:text="客厅-前门" />
@@ -70,56 +67,25 @@
                 <com.kyleduo.switchbutton.SwitchButton
                     android:id="@+id/status_switch"
                     android:layout_width="wrap_content"
-                    app:kswBackColor="#eee7da"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
                     android:text=""
+                    app:kswAnimationDuration="300"
+                    app:kswBackDrawable="@drawable/ios_back_drawable"
+                    app:kswThumbDrawable="@drawable/ios_thumb_selector_1"
+                    app:kswThumbHeight="25dp"
+                    app:kswThumbMarginBottom="-4dp"
+                    app:kswThumbMarginLeft="-1.2dp"
+                    app:kswThumbMarginRight="-1.2dp"
+                    app:kswThumbMarginTop="-0.6dp"
+                    app:kswThumbRangeRatio="1.6"
+                    app:kswThumbWidth="25dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/room_and_name_of_device"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/device_real_name" />
 
-
-                <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/preview"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:layout_marginLeft="8dp"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--app:layout_constraintBottom_toTopOf="@+id/dsc"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toRightOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/circleImageView2" />-->
-                <!--<LinearLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:layout_marginLeft="8dp"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:orientation="vertical"-->
-                <!--app:layout_constraintBottom_toTopOf="@+id/dsc"-->
-                <!--app:layout_constraintHorizontal_bias="0.0"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toRightOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/circleImageView2"-->
-                <!--app:layout_constraintVertical_bias="1.0">-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-
-                <!--<include layout="@layout/device_data_item" />-->
-                <!--</LinearLayout>-->
             </android.support.constraint.ConstraintLayout>
 
 
@@ -206,30 +172,30 @@
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
                 android:text="近期无异常，今日共12次开合"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
-                android:layout_width="120px"
-                android:layout_height="60px"
+                android:layout_width="48dp"
+                android:layout_height="24dp"
                 android:id="@+id/rect"
                 android:visibility="gone"
+                android:layout_marginLeft="16dp"
                 android:background="@color/main_color"
                 app:layout_constraintTop_toBottomOf="@+id/curersview"
-                app:layout_constraintLeft_toLeftOf="@+id/curersview"
-                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="16dp" />
 
             <View
                 android:id="@+id/view3"
-                android:layout_width="160px"
-                android:layout_height="2px"
+                android:layout_width="56dp"
+                android:layout_height="1dp"
                 android:layout_marginRight="16dp"
                 android:visibility="gone"
                 android:background="@color/main_color_line"
@@ -242,8 +208,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:text="安全线"
+                android:textSize="14sp"
                 android:visibility="gone"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/view3"
                 app:layout_constraintRight_toRightOf="@id/curersview"
                 app:layout_constraintTop_toTopOf="@+id/view3" />
@@ -253,12 +219,12 @@
                 android:layout_height="wrap_content"
                 android:text="异常区"
                 android:id="@+id/error_q"
-                android:visibility="gone"
                 app:layout_constraintLeft_toRightOf="@+id/rect"
                 app:layout_constraintTop_toTopOf="@id/rect"
                 app:layout_constraintBottom_toBottomOf="@+id/rect"
                 android:layout_marginLeft="16dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                android:visibility="gone"
                 tools:layout_editor_absoluteX="100dp"
                 tools:layout_editor_absoluteY="346dp" />
 
@@ -266,12 +232,12 @@
                 android:id="@+id/curersview"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:visibility="gone"
-                android:layout_marginBottom="56dp"
-                android:paddingBottom="8dp"
+                android:layout_marginBottom="48dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="0dp"
+                android:paddingTop="4dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"

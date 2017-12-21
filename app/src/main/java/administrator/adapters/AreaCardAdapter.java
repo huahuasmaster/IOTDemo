@@ -3,6 +3,9 @@ package administrator.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 
 import com.qrcodescan.R;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +63,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     //房间卡片监听回调函数
     private AreaCardCallbackListener areaCardCallbackListener;
+
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -236,6 +241,7 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
     //用于设备卡片布局赋值的方法
     @SuppressLint("SetTextI18n")
     private void initViewsOfDeviceCard(DIACardViewHolder holder, final int position) {
+
         final DeviceInArea mDia = diaList.get(position);
         DataSimpleAdapter adapter = new DataSimpleAdapter();
         DataTypeEnum mEnum = DataTypeEnum.indexOf(mDia.getType());
@@ -309,6 +315,19 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     //用于房间卡片布局赋值的方法
     private void initViewsOfAreaCard(AreaCardViewHolder holder, int position) {
+        if (position == 0 && context.getSharedPreferences("image", 0).getBoolean("change", false)) {
+            //需要更改图片
+            File PHOTO_DIR = new File(Environment.getExternalStorageDirectory() + "/image");//设置保存路径
+            Bitmap bitmap1 = null;
+            try {
+                File avaterFile1 = new File(PHOTO_DIR, "avater.jpg");
+                if (avaterFile1.exists()) {
+                    bitmap1 = BitmapFactory.decodeFile(PHOTO_DIR + "/avater.jpg");
+                    holder.areaBack.setImageBitmap(bitmap1);
+                }
+            } catch (Exception e) {
+            }
+        }
         DevicePreviewAdapter adapter = new DevicePreviewAdapter();
         previewAdapterList.add(adapter);
 
