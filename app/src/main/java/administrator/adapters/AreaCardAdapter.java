@@ -331,10 +331,11 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
                 areaCardCallbackListener.onAreaBack(mAcv);
             }
         });
-        holder.areaBack.setOnClickListener(new View.OnClickListener() {
+        holder.areaBack.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 areaCardCallbackListener.onLongAreaBack(mAcv);
+                return false;
             }
         });
         //展示设备预览数据
