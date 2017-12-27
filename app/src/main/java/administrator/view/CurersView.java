@@ -436,6 +436,9 @@ public class CurersView extends View {
         });
         //计算出最新数据与最旧数据间距几天
         mDateList.clear();
+        if (mEntityList.size() == 0) {
+            return;
+        }
         DateTime firstDayTime = new DateTime(mEntityList.get(mEntityList.size() - 1).getTime());
         int firstDay = firstDayTime.getDayOfMonth();
         DateTime lastDayTime = new DateTime(mEntityList.get(0).getTime());

@@ -350,7 +350,6 @@ public class DeviceOnlineActivity extends AppCompatActivity {
                             sendDeviceOnlineMsg(sn);
                         }
                     });
-
                     break;
                 }
             }
