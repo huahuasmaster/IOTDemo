@@ -39,7 +39,8 @@ public class DialogUtil {
                 .indexOf(dia.getType());
 
 
-        String title = "自定义适宜"+type.getCode();
+        assert type != null;
+        String title = "自定义适宜" + type.getType();
         final String unit = AlertToMsgUtil.getUnit(type);
         final MaterialDialog thresholdSetDialog = new MaterialDialog.Builder(context)
                 .title(title)
@@ -197,6 +198,37 @@ public class DialogUtil {
                 .add("min", String.valueOf(min))
                 .build();
         HttpUtil.sendRequestWithCallback(url, body, listener);
+    }
+
+    public static void showCameraListDialog(DeviceInArea deviceInArea, final Context context) {
+        DataTypeEnum dataTypeEnum = DataTypeEnum.indexOf(deviceInArea.getType());
+        assert dataTypeEnum != null;
+        String url = UrlHandler.addAlertConfig(deviceInArea.getId(), dataTypeEnum.getCode());
+        RequestBody body = new FormBody.Builder()
+                .add("max", "0")
+                .add("min", "0")
+                .build();
+        HttpUtil.sendRequestWithCallback(url, body, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "设置成功。", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                ((Activity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "设置失败。", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
 }

@@ -122,7 +122,7 @@ public class DeviceCardAdapter extends PagerAdapter{
         Button thresholdSetBtn = (Button)view.findViewById(R.id.go_setting_threshold);
         //如果不是支持阈值设置的数据，则隐藏按钮
         if(thresholdSetBtn != null) {
-            if(deviceInArea.getType() > 4) {
+            if (deviceInArea.getType() > 4 && deviceInArea.getType() != 6) {
                 thresholdSetBtn.setVisibility(GONE);
             } else {
                 thresholdSetBtn.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +138,7 @@ public class DeviceCardAdapter extends PagerAdapter{
         realNameText.setText(deviceInArea.getDeviceName());
 
         TextView areaAndOtherName = (TextView)view.findViewById(R.id.room_and_name_of_device);
+        assert mEnum != null;
         areaAndOtherName.setText(deviceInArea.getAreaName()
                 +"-"+deviceInArea.getOtherName()
                 +"-"+ mEnum.getType());

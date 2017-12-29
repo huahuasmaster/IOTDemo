@@ -52,7 +52,7 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
     private int targetNth = 0;
     private long areaId;
 
-    public static final int DEAULT_OFFSCEEN_LIMIT = 3;
+    public static final int DEAULT_OFFSCEEN_LIMIT = 6;
     private List<View> viewList = new ArrayList<>();
     private List<DeviceInArea> deviceInAreaList = new ArrayList<>();
     private boolean isFirst = true;
@@ -87,8 +87,8 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
         inflater = LayoutInflater.from(this);
         List<View> views = new ArrayList<>();
         for (DeviceInArea deviceInArea : deviceInAreas) {
-            if(deviceInArea.getDeviceName().equals(atName)) {
-                views.add(inflater.inflate(R.layout.device_card_map_item,null));
+            if (deviceInArea.getDeviceName().equals(atName)) {
+                views.add(inflater.inflate(R.layout.device_card_map_item, null));
             } else {
                 views.add(inflater.inflate(R.layout.device_card_item, null));
             }
@@ -103,7 +103,7 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
             for (int i = 0; i < adapter.getDeviceInAreaList().size(); i++) {
                 DeviceInArea deviceInArea = adapter.getDeviceInAreaList().get(i);
                 //寻找type和设备都对应的卡片
-                if(deviceInArea.getId() == deviceId) {
+                if (deviceInArea.getId() == deviceId) {
                     if (deviceInArea.getType() == type ||
                             (deviceInArea.getType() == DataTypeEnum.POS_GPS.getIndex() && type == DataTypeEnum.SEC.getIndex())) {
                         Logger.i("", "跳转至第" + i + "个卡片");
@@ -126,8 +126,10 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onThreshold(DeviceInArea dia) {
-                if(dia.getType() == DataTypeEnum.POS_GPS.getIndex()) {
-                    DialogUtil.showSingleThreshold(dia,AreaDetailActivity.this);
+                if (dia.getType() == DataTypeEnum.POS_GPS.getIndex()) {
+                    DialogUtil.showSingleThreshold(dia, AreaDetailActivity.this);
+                } else if (dia.getType() == DataTypeEnum.DOOR_OPEN_CLOSE.getIndex()) {
+                    DialogUtil.showCameraListDialog(dia, AreaDetailActivity.this);
                 } else {
                     DialogUtil.showThresholdSetDialog(dia, AreaDetailActivity.this);
                 }
@@ -136,13 +138,12 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onCheck(int position) {
                 //如果是防盗装置，则跳转至地图界面
-                if(deviceInAreaList.get(position).getType() == DataTypeEnum.POS_GPS.getIndex()) {
+                if (deviceInAreaList.get(position).getType() == DataTypeEnum.POS_GPS.getIndex()) {
                     Intent intent =
                             new Intent(AreaDetailActivity.this, DeviceDetailMapActivity.class);
                     intent.putExtra("device_id", deviceInAreaList.get(position).getId());
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Intent intent = new Intent(
                             AreaDetailActivity.this, DeviceDetailActivity.class);
                     intent.putExtra("device_id", deviceInAreaList.get(position).getId());
@@ -176,9 +177,9 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void run() {
                         adapter.setDeviceInAreaList(deviceInAreaList);
-                        Logger.i("deviceInArea的个数为"+deviceInAreaList.size());
+                        Logger.i("deviceInArea的个数为" + deviceInAreaList.size());
                         List<View> views = getPageViews(deviceInAreaList);
-                        Logger.i("views的个数为"+views.size());
+                        Logger.i("views的个数为" + views.size());
                         adapter.setList(views);
 
                         adapter.notifyDataSetChanged();
@@ -208,7 +209,6 @@ public class AreaDetailActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * 弹出阈值设置弹窗
-     *
      */
 
     @Override

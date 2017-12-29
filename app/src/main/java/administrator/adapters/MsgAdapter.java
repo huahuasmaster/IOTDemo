@@ -23,7 +23,7 @@ import administrator.enums.AlertTypeEnum;
 import administrator.enums.DataTypeEnum;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MsgAdapter extends RecyclerView.Adapter{
+public class MsgAdapter extends RecyclerView.Adapter {
 
     private List<AlertDto> alertDtos;
 
@@ -46,8 +46,8 @@ public class MsgAdapter extends RecyclerView.Adapter{
     public void setAlertDtos(List<AlertDto> alertDtos) {
         List<AlertDto> alertForRemove = new ArrayList<>();
 
-        for(int i = 0;i < alertDtos.size();i++) {
-            if(alertDtos.get(i).getProcessTime() != null) {
+        for (int i = 0; i < alertDtos.size(); i++) {
+            if (alertDtos.get(i).getProcessTime() != null) {
                 alertForRemove.add(alertDtos.get(i));
             }
         }
@@ -68,13 +68,13 @@ public class MsgAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.msg_item,parent,false);
+                .inflate(R.layout.msg_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        final ViewHolder viewHolder = (ViewHolder)holder;
+        final ViewHolder viewHolder = (ViewHolder) holder;
         final AlertDto alertDto = alertDtos.get(position);
         final Context mConText = context;
         String unit = AlertToMsgUtil.getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
@@ -87,32 +87,26 @@ public class MsgAdapter extends RecyclerView.Adapter{
         viewHolder.redPoint
                 .setVisibility(alertDto.getReadTime() == null ? View.VISIBLE : View.INVISIBLE);
         viewHolder.dateTxt.setText(alertDto.getAlertTime());
-        AlertTypeEnum alertType = AlertTypeEnum.indexOf(alertDto.getAlertType());
-        String content = AlertToMsgUtil.getContent(alertType,alertDto,unit);
+        final AlertTypeEnum alertType = AlertTypeEnum.indexOf(alertDto.getAlertType());
+        String content = AlertToMsgUtil.getContent(alertType, alertDto, unit);
         assert alertType != null;
         viewHolder.title.setText(alertType.getTitle());
         viewHolder.content.setText(content);
         viewHolder.icon.setImageResource(mConText.getResources().getIdentifier(
-                AlertToMsgUtil.getIconName(alertType),"drawable",mConText.getPackageName()
+                AlertToMsgUtil.getIconName(alertType), "drawable", mConText.getPackageName()
         ));
         viewHolder.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewHolder.redPoint.setVisibility(View.INVISIBLE);
-                listener.onMain(position);
+                if (alertType == AlertTypeEnum.DOOR_OPEN) {
+                    listener.onCamera(position);
+                } else {
+                    listener.onMain(position);
+                }
             }
         });
 
-        if(alertType == AlertTypeEnum.DOOR_OPEN) {
-            viewHolder.cameraIcon.setVisibility(View.VISIBLE);
-            viewHolder.cameraClick.setVisibility(View.VISIBLE);
-            viewHolder.cameraClick.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onCamera(position);
-                }
-            });
-        }
     }
 
     @Override
@@ -134,15 +128,15 @@ public class MsgAdapter extends RecyclerView.Adapter{
 
         public ViewHolder(View itemView) {
             super(itemView);
-            icon = (CircleImageView)itemView.findViewById(R.id.icon_msg);
-            title = (TextView)itemView.findViewById(R.id.title_msg);
-            content = (TextView)itemView.findViewById(R.id.content_msg);
-            dateTxt = (TextView)itemView.findViewById(R.id.date);
-            redPoint = (ImageView)itemView.findViewById(R.id.unread_point);
-            deleteTxt = (TextView)itemView.findViewById(R.id.right_menu);
+            icon = (CircleImageView) itemView.findViewById(R.id.icon_msg);
+            title = (TextView) itemView.findViewById(R.id.title_msg);
+            content = (TextView) itemView.findViewById(R.id.content_msg);
+            dateTxt = (TextView) itemView.findViewById(R.id.date);
+            redPoint = (ImageView) itemView.findViewById(R.id.unread_point);
+            deleteTxt = (TextView) itemView.findViewById(R.id.right_menu);
             back = (ConstraintLayout) itemView.findViewById(R.id.background);
             cameraIcon = (ImageView) itemView.findViewById(R.id.camera_msg);
-            cameraClick =  itemView.findViewById(R.id.camera_click_msg);
+            cameraClick = itemView.findViewById(R.id.camera_click_msg);
         }
     }
 

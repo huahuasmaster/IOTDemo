@@ -127,6 +127,9 @@ public class ZoomHeaderView extends LinearLayout {
   private void doPagerDown(float moveY, float currentY) {
     int pos = mViewPager.getCurrentItem();
     View v = mViewPager.getChildAt(pos);
+      if (v == null) {
+          return;
+      }
     v.setTranslationY((currentY + moveY) / 4);
     mCloseTxt.setAlpha(v.getY() / 76);
 

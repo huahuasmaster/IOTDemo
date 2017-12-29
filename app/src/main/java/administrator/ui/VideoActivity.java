@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,9 @@ public class VideoActivity extends AppCompatActivity {
 
     @BindView(R.id.tool_bar)
     CardView cardView;
+
+    @BindView(R.id.more)
+    ImageView moreImg;
 
     String appkey = "6297f134ef1c4ff082a3f48eeef75759";
 
@@ -171,6 +175,8 @@ public class VideoActivity extends AppCompatActivity {
 
             }
         });
+
+//        moreImg.setOnClickListener();
     }
 
     @Override

@@ -371,7 +371,7 @@ public class CurersView extends View {
         //算出某个值对应的在视图中的高度
         //绘制禁戒线
         for (int i = 0; i < mRisk.length; i++) {
-            float y = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * mRisk[i];
+            float y = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * (mRisk[i] - y_min);
             riskHeight[i] = y;
 
             canvas.drawLine(getPaddingLeft() + getTextWidth(mList.get(0), mTextPaint) * 2,
@@ -381,8 +381,8 @@ public class CurersView extends View {
                     mCordonPaint);
         }
         //算出最低点和最高点的高度
-        riskHeight[2] = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * y_min;
-        riskHeight[3] = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * y_max;
+        riskHeight[2] = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4;
+        riskHeight[3] = getTextHeight(normalText, mTextPaint) * 2 + getPaddingTop() + v - (float) getTextHeight(mList.get(0), mTextPaint) / 4 - h1 * (y_max - y_min);
 
         //绘制异常区域
         //上半部分
