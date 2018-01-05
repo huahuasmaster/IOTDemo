@@ -106,6 +106,8 @@ public class MsgAdapter extends RecyclerView.Adapter {
                 }
             }
         });
+        viewHolder.cameraIcon.setVisibility(alertType == AlertTypeEnum.DOOR_OPEN ? View.VISIBLE : View.GONE);
+        viewHolder.cameraClick.setVisibility(alertType == AlertTypeEnum.DOOR_OPEN ? View.VISIBLE : View.GONE);
 
     }
 

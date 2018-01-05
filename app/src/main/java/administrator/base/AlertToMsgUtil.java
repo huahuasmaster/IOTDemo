@@ -40,10 +40,10 @@ public class AlertToMsgUtil {
                 content = "("+alertDto.getOtherName()+")温度过低("
                         +alertDto.getAlertValue()+unit+")，请注意保暖。";break;
             case HUMIDITY_HIGH:
-                content = "("+alertDto.getOtherName()+")湿度过高("
+                content = "(" + alertDto.getOtherName() + ")过于潮湿("
                         +alertDto.getAlertValue()+unit+")";break;
             case HUMIDITY_LOW:
-                content = "("+alertDto.getOtherName()+")湿度过低("
+                content = "(" + alertDto.getOtherName() + ")过于干燥("
                         +alertDto.getAlertValue()+unit+")";break;
             case MOVE_OVER_DISTANCE:
             case MOVE_OVER_TIME:
