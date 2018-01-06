@@ -7,7 +7,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
         android:layout_height="48dp"
-        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardBackgroundColor="@color/main_color"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -22,9 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mine"
-            android:textColor="@android:color/white"
             android:textSize="17sp"
-            android:textStyle="bold"
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="8dp"
@@ -40,10 +38,12 @@
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             android:src="@drawable/ic_exit_to_app_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded" />
     </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
@@ -96,7 +96,7 @@
                 android:id="@+id/user_aaount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="账号：647296973"
+                android:text="账号：123"
                 android:textSize="16sp"
                 app:layout_constraintLeft_toLeftOf="@+id/user_name"
                 android:layout_marginTop="8dp"
@@ -140,7 +140,9 @@
                 android:orientation="horizontal"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackground"
-                android:clickable="true">
+                android:clickable="true"
+                android:focusable="true"
+                >
 
                 <ImageView
                     android:layout_width="24dp"

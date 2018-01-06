@@ -35,6 +35,7 @@
             android:value="yl12heSMIvVm1nUvdwu3TtGqG5g1M4qg" />
 
         <activity
+            android:theme="@style/translucent1"
             android:name="administrator.ui.MainActivity"
             android:launchMode="singleTask" />
         <activity android:name="com.google.zxing.activity.CaptureActivity" />

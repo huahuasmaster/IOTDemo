@@ -4,6 +4,8 @@
     xmlns:tl="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <android.support.constraint.ConstraintLayout
@@ -24,13 +26,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.flyco.tablayout.CommonTabLayout
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+
         android:id="@+id/bottom"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginBottom="1dp"
-        android:background="#ffffff"
+        android:background="@color/device_card_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -43,12 +44,12 @@
         tl:tl_indicator_color="#eeeeee"
         tl:tl_indicator_height="0dp"
         tl:tl_indicator_gravity="TOP"
-        tl:tl_textSelectColor="#2C97DE"
+        tl:tl_textSelectColor="@color/main_color_line"
         tl:tl_textUnselectColor="#66000000"
         tl:tl_textsize="15sp"
-        tl:tl_underline_color="#FFF"
+        tl:tl_underline_color="@color/main_color_line"
         tl:tl_underline_gravity="TOP"
-        tl:tl_underline_height="1dp" />
+        tl:tl_underline_height="0dp" />
 </android.support.constraint.ConstraintLayout>
 
     <include

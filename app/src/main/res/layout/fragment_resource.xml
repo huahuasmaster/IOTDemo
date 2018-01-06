@@ -36,21 +36,20 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
+                android:background="@color/main_color"
                 android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/ex_space_text"
-                    style="@style/Widget.AppCompat.Button.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="#FFF"
-                    android:src="@drawable/ic_exchange_space"
+                    android:src="@drawable/ic_location_city_black_24dp"
                     android:text="杭州的家"
-                    android:padding="8dp"
                     android:textColor="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
 
@@ -64,19 +63,19 @@
                     android:id="@+id/tabs"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="72dp"
+                    android:layout_marginEnd="56dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp" 
-                    android:layout_marginStart="72dp"
+                    android:layout_marginStart="56dp"
                     android:layout_marginTop="0dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tl_indicator_color="@color/colorPrimary"
+                    app:tl_indicator_color="@color/main_color_line"
                     app:tl_tab_padding="10dp"
                     app:tl_tab_space_equal="true"
-                    android:background="#FFFFFF"
-                    app:tl_textSelectColor="@color/colorPrimary"
+                    android:background="@android:color/transparent"
+                    app:tl_textSelectColor="@color/main_color_line"
                     app:tl_textUnselectColor="@color/unclickableText"
                     app:tl_textsize="16dp">
 
@@ -84,17 +83,18 @@
 
                 <ImageView
                     android:id="@+id/gotoScan"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:scaleType="centerInside"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/tabs"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_qc_code_2"
+                    app:srcCompat="@drawable/ic_qr_code"
                     tools:ignore="VectorDrawableCompat"
-                    app:layout_constraintHorizontal_bias="0.82" />
+                    app:layout_constraintHorizontal_bias="0.5" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
     </android.support.constraint.ConstraintLayout>

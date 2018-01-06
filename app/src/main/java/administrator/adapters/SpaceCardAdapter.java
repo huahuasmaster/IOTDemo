@@ -118,8 +118,9 @@ public class SpaceCardAdapter extends Adapter {
         //高亮（浮起）默认空间卡片
         if(mSpace.getIsDefault() == (short)1) {
             viewHolder.back.setCardElevation((float)30.0);
-            viewHolder.back.setCardBackgroundColor(
-                    mContext.getResources().getColor(R.color.colorPrimaryLight));
+//            viewHolder.back.setCardBackgroundColor(
+//                    mContext.getResources().getColor(R.color.main_color_line));
+            viewHolder.back.setBackground(getContext().getDrawable(R.color.rice));
             lp.setMargins(
                     DensityUtil.dip2px(mContext,(float) 4.0),
                     DensityUtil.dip2px(mContext,(float) 6.0),
@@ -128,8 +129,9 @@ public class SpaceCardAdapter extends Adapter {
             viewHolder.back.setLayoutParams(lp);
         } else {
             viewHolder.back.setCardElevation((float)6.0);
-            viewHolder.back.setCardBackgroundColor(
-                    mContext.getResources().getColor(R.color.colorPrimary));
+//            viewHolder.back.setCardBackgroundColor(
+//                    mContext.getResources().getColor(R.color.device_card_back));
+            viewHolder.back.setBackground(getContext().getDrawable(R.color.rice));
             lp.setMargins(
                     DensityUtil.dip2px(mContext,(float) 4.0),
                     DensityUtil.dip2px(mContext,(float) 4.0),

@@ -10,7 +10,7 @@
         <shape>
             <solid android:color="#FEFEFE" />
             <corners android:radius="99dp" />
-            <stroke android:width="1.5dp" android:color="#F0F0F0" />
+            <stroke android:width="1.5dp" android:color="#fff" />
         </shape>
     </item>
     <item android:state_checked="true">
@@ -23,7 +23,7 @@
         <shape>
             <solid android:color="#FEFEFE" />
             <corners android:radius="99dp" />
-            <stroke android:width="1.5dp" android:color="#FEFEFE" />
+            <stroke android:width="1.5dp" android:color="#fff" />
         </shape>
     </item>
 </selector>

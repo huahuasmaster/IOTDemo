@@ -23,5 +23,10 @@
     <color name="main_color">#26db927d</color>
     <color name="main_color_line">#db927d</color>
     <color name="device_card_back">#eee7da</color>
+    <color name="coffee">#7c5957</color>
+    <color name="gra_coffee">#7a6755</color>
+    <color name="gra_yellow">#cf9265</color>
+    <color name="icon_back">#9a675e</color>
+    <color name="rice">#e7ae78</color>
     <!-- QRCode scanner color end -->
 </resources>

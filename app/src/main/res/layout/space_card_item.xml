@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/cardViewBG"
+    app:cardBackgroundColor="@color/main_color_line"
     app:cardCornerRadius="3dp">
 
     <android.support.constraint.ConstraintLayout
@@ -60,7 +60,8 @@
             android:textColor="@color/pureWhite"
             android:textSize="22sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/space_type"

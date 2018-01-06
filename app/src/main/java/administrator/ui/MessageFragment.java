@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,6 +143,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onCamera(int position) {
                 final AlertDto alertDto = adapter.getAlertDtos().get(position);
+                Log.d("onCamera", "onCamera: 开始跳转。"+alertDto.getOtherName());
                 Intent intent = new Intent(getContext(),VideoActivity.class);
                 uploadReadTime(alertDto,position);
                 intent.putExtra("room_name", alertDto.getOtherName());
