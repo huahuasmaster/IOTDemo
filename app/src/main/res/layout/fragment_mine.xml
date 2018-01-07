@@ -7,7 +7,10 @@
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
         android:layout_height="48dp"
-        app:cardBackgroundColor="@color/main_color"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
+        app:cardCornerRadius="0dp"
+        app:cardBackgroundColor="@color/device_card_back"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -50,7 +53,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="96dp"
+        android:layout_height="80dp"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -64,42 +67,44 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/head_img"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:src="@mipmap/doge"
+                android:src="@mipmap/icon_1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="16dp" />
+                android:layout_marginStart="16dp"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:alpha="0.87"
-                android:text="Mr.doge"
+                android:alpha="0.78"
+                tools:text="Mr.doge"
                 android:textColor="@android:color/black"
-                android:textSize="24sp"
+                android:textSize="21sp"
                 app:layout_constraintLeft_toRightOf="@+id/head_img"
                 app:layout_constraintTop_toTopOf="@+id/head_img"
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/head_img"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintVertical_bias="0.0"
-                android:layout_marginStart="16dp" />
+                android:layout_marginStart="16dp"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/user_aaount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="账号：123"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="@+id/user_name"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="0dp"
                 app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -107,6 +112,7 @@
                 android:layout_height="32dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/ic_edit_black_24dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

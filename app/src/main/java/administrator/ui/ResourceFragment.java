@@ -278,7 +278,7 @@ public class ResourceFragment extends Fragment {
 
             @Override
             public void onAreaName(AreaCurValue areaCurValue) {
-
+                onAreaBack(areaCurValue);
             }
 
             @Override
@@ -424,6 +424,9 @@ public class ResourceFragment extends Fragment {
         final DevicePreviewAdapter adapter = areaCardAdapter.findPreviewAdapterBySn(sn);
         String[] codes = code.split("#");
         String[] values = value.split("#");
+        if(adapter == null) {
+            return;
+        }
         for (int i = 0; i < codes.length && i < values.length; i++) {
             for(DeviceCurValue dcv : adapter.getDcvList()) {
                 //匹配数据，匹配成功则修改

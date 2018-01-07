@@ -22,7 +22,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="#9a675e"
+        android:src="@color/icon_back"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/side_menu_head_img_back"
@@ -31,7 +31,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@mipmap/doge"
+        android:src="@mipmap/icon_1"
         app:layout_constraintTop_toTopOf="@+id/side_menu_head_img_back"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"

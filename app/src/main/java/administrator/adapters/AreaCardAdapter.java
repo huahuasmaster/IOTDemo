@@ -315,6 +315,9 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
 
     //用于房间卡片布局赋值的方法
     private void initViewsOfAreaCard(AreaCardViewHolder holder, int position) {
+        int height = holder.areaBack.getHeight();
+        Log.i("height",""+height);
+        holder.areaName.setHeight(height);
         if (position == 0 && context.getSharedPreferences("image", 0).getBoolean("change", false)) {
             //需要更改图片
             File PHOTO_DIR = new File(Environment.getExternalStorageDirectory() + "/image");//设置保存路径
@@ -327,6 +330,9 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
                 }
             } catch (Exception e) {
             }
+        }
+        if(position == 1){
+            holder.areaBack.setImageResource(R.mipmap.room_1);
         }
         DevicePreviewAdapter adapter = new DevicePreviewAdapter();
         previewAdapterList.add(adapter);

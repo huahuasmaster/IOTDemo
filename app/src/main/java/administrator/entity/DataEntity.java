@@ -1,12 +1,14 @@
 package administrator.entity;
 
+import android.support.annotation.NonNull;
+
 /**
  * dec:
  * createBy yjzhao
  * createTime 16/5/14 11:08
  * 折线图适配entity
  */
-public class DataEntity {
+public class DataEntity implements Comparable<DataEntity>{
     private Long time;
     private Float mFloat;
 
@@ -32,5 +34,14 @@ public class DataEntity {
                 "time=" + time +
                 ", mFloat=" + mFloat +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull DataEntity dataEntity) {
+        if(time > dataEntity.getTime()) {
+            return 1;
+        }else {
+            return -1;
+        }
     }
 }

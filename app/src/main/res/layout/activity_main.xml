@@ -11,7 +11,6 @@
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee"
     >
 
     <FrameLayout
@@ -45,7 +44,7 @@
         tl:tl_indicator_height="0dp"
         tl:tl_indicator_gravity="TOP"
         tl:tl_textSelectColor="@color/main_color_line"
-        tl:tl_textUnselectColor="#66000000"
+        tl:tl_textUnselectColor="@color/unclickableText"
         tl:tl_textsize="15sp"
         tl:tl_underline_color="@color/main_color_line"
         tl:tl_underline_gravity="TOP"

@@ -120,7 +120,7 @@ public class SpaceCardAdapter extends Adapter {
             viewHolder.back.setCardElevation((float)30.0);
 //            viewHolder.back.setCardBackgroundColor(
 //                    mContext.getResources().getColor(R.color.main_color_line));
-            viewHolder.back.setBackground(getContext().getDrawable(R.color.rice));
+//            viewHolder.back.setBackground(getContext().getDrawable(R.color.rice));
             lp.setMargins(
                     DensityUtil.dip2px(mContext,(float) 4.0),
                     DensityUtil.dip2px(mContext,(float) 6.0),
@@ -131,7 +131,7 @@ public class SpaceCardAdapter extends Adapter {
             viewHolder.back.setCardElevation((float)6.0);
 //            viewHolder.back.setCardBackgroundColor(
 //                    mContext.getResources().getColor(R.color.device_card_back));
-            viewHolder.back.setBackground(getContext().getDrawable(R.color.rice));
+//            viewHolder.back.setBackground(getContext().getDrawable(R.color.rice));
             lp.setMargins(
                     DensityUtil.dip2px(mContext,(float) 4.0),
                     DensityUtil.dip2px(mContext,(float) 4.0),

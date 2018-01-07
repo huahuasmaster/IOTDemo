@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.google.gson.Gson;
@@ -130,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements ResourceFragment.
 
         //获取当前最顶层view
         mDecorView = getWindow().getDecorView();
+
+        //加载背景图
+//        Glide.with(this).load(R.mipmap.main_back).asBitmap().into((ConstraintLayout)findViewById(R.id.main_back))
         //初始化tablayout
         tabLayout = ViewFindUtils.find(mDecorView, R.id.bottom);
         tabLayout.setTabData(mTabEntities, this, R.id.fl_change, mFragments);

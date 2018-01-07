@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardElevation="3dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    app:cardBackgroundColor="@color/device_card_back"
+    android:foreground="?attr/selectableItemBackground"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -37,17 +44,19 @@
             <TextView
                 android:id="@+id/area_card_area_name"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="200dp"
                 android:layout_gravity="bottom"
-                android:background="@drawable/area_name_back"
-                android:gravity="center_vertical"
+                android:background="@mipmap/room_name_back"
+                android:gravity="left|bottom"
+                android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
-                android:text="客厅"
+                tools:text="客厅"
                 android:textColor="@color/pureWhite"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@+id/room_bg"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
         </FrameLayout>
 
 
@@ -82,7 +91,6 @@
             android:id="@+id/area_card_inner_device_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
             ></android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </android.support.v7.widget.CardView>

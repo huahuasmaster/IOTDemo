@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="@color/main_color_line"
+    app:cardBackgroundColor="@color/rice"
     app:cardCornerRadius="3dp">
 
     <android.support.constraint.ConstraintLayout

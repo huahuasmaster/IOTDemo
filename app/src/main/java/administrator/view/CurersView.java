@@ -2,6 +2,7 @@ package administrator.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Entity;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -201,6 +202,7 @@ public class CurersView extends View {
             DateTime time = dateTime.minusDays(i);
             String day = time.toString("yyyy-MM-dd HH:mm:ss");
             mDateList.add(day);
+            Log.i(TAG, "init: 添加了date" + day);
         }
     }
 
@@ -244,12 +246,14 @@ public class CurersView extends View {
      *
      * @param canvas
      */
+    @SuppressLint("SimpleDateFormat")
     private void drawData(Canvas canvas) {
         mLinePaint.setStrokeWidth(lineWidth);
         //将数据转换成坐标点
         if (mDateList != null && mEntityList != null && mEntityList.size() != 0) {
             try {
                 //在最后的时间再加24小时，确保最后的点能被显示出来（在x轴上有它的位置）
+                Log.i(TAG, "drawData: datelistsize" + mDateList.size());
                 @SuppressLint("SimpleDateFormat") long endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(mDateList.size() - 1).split(" ")[0] + " 23:59:59").getTime();
                 Log.i("endTiME", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTime));
                 long startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mDateList.get(0).split(" ")[0] + " 00:00:00").getTime();
@@ -306,7 +310,6 @@ public class CurersView extends View {
     /**
      * 初始化坐标轴
      *
-     * @param canvas
      */
     private void drawXY(Canvas canvas) {
         width = getWidth() - getPaddingLeft() - getPaddingRight();
@@ -326,7 +329,6 @@ public class CurersView extends View {
     /**
      * 绘制坐标轴
      *
-     * @param canvas
      */
     private void drawAxis(Canvas canvas) {
         mLinePaint.setStrokeWidth(horLineWidth);
@@ -401,7 +403,6 @@ public class CurersView extends View {
     /**
      * 绘制图的说明
      *
-     * @param canvas
      */
     private void drawDes(Canvas canvas) {
         //“正常”
@@ -418,12 +419,13 @@ public class CurersView extends View {
     //在绑定数据的同时进行处理：1）排序，
     // 2）减去y轴的最低值（比如温度是从20开始算的，那么需要减去20，才能在y轴上显示正确的高度）
     public void setEntityList(List<DataEntity> entityList) {
+        Log.i(TAG, "setEntityList: 开始执行");
         mEntityList = new ArrayList<>();
         for (DataEntity dataEntity : entityList) {
             dataEntity.setFloat(dataEntity.getFloat() - y_min);
             mEntityList.add(dataEntity);
         }
-        mEntityList = entityList;
+//        mEntityList = entityList;
         Collections.sort(mEntityList, new Comparator<DataEntity>() {
             @Override
             public int compare(DataEntity lhs, DataEntity rhs) {
@@ -437,13 +439,32 @@ public class CurersView extends View {
         //计算出最新数据与最旧数据间距几天
         mDateList.clear();
         if (mEntityList.size() == 0) {
+            Log.i(TAG, "setEntityList: 归零返回");
             return;
         }
         DateTime firstDayTime = new DateTime(mEntityList.get(mEntityList.size() - 1).getTime());
         int firstDay = firstDayTime.getDayOfMonth();
         DateTime lastDayTime = new DateTime(mEntityList.get(0).getTime());
         int lastDay = lastDayTime.getDayOfMonth();
-        for (int i = lastDay - firstDay; i >= 0; i--) {
+        int lastMonth = lastDayTime.getMonthOfYear();
+        int lastYear = lastDayTime.getYear();
+        List<DataEntity> forDelete = new ArrayList<>();
+        for(DataEntity entity :mEntityList) {
+            DateTime mDate = new DateTime(entity.getTime());
+            if(mDate.getYear() == lastYear && mDate.getMonthOfYear() == lastMonth) {
+                continue;
+            }
+            //不是当前月份的，直接去掉
+            forDelete.add(entity);
+        }
+        mEntityList.removeAll(forDelete);
+        int totalToSub;//最多减去的天数
+        if (lastDay < firstDay) {//出现了上个月的数据
+            totalToSub = lastDay > 7 ? 7 : lastDay-1;
+        }else {
+            totalToSub = lastDay - firstDay;
+        }
+        for (int i = totalToSub;i >= 0; i--) {
             DateTime time = lastDayTime.minusDays(i);
             String day = time.toString("yyyy-MM-dd HH:mm:ss");
             Log.i("thei", day);

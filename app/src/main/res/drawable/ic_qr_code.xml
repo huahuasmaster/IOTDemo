@@ -1,9 +1,9 @@
-<vector android:alpha="0.56" android:height="24dp"
+<vector  android:height="24dp"
     android:viewportHeight="1024.0" android:viewportWidth="1024.0"
     android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#000000" android:pathData="M159.4,766.5 L159.4,615.5 65.3,615.5l0,245.1c0,52 42.1,94.1 94.1,94.1L413.6,954.7l0,-94.1L253.5,860.6C201.6,860.6 159.4,818.5 159.4,766.5z"/>
-    <path android:fillColor="#000000" android:pathData="M162.7,252.2c0,-52 42.1,-94.1 94.1,-94.1l160,0L416.9,64 162.7,64c-52,0 -94.1,42.1 -94.1,94.1l0,247 94.1,0L162.7,252.2z"/>
-    <path android:fillColor="#000000" android:pathData="M863.9,769.8c0,52 -42.1,94.1 -94.1,94.1l-153.9,0 0,94.1 248,0c52,0 94.1,-42.1 94.1,-94.1l0,-245.1 -94.1,0L863.9,769.8z"/>
-    <path android:fillColor="#000000" android:pathData="M866.2,66.3 L618.2,66.3l0,94.1 153.9,0c52,0 94.1,42.1 94.1,94.1l0,152.9 94.1,0L960.3,160.5C960.3,108.5 918.2,66.3 866.2,66.3z"/>
-    <path android:fillColor="#000000" android:pathData="M913.7,464 L110.5,464c-25.7,0 -46.6,20.9 -46.6,46.6l0,0.9c0,25.7 20.9,46.6 46.6,46.6l803.2,0c25.7,0 46.6,-20.9 46.6,-46.6l0,-0.9C960.3,484.8 939.5,464 913.7,464z"/>
+    <path android:fillColor="@color/device_card_back" android:pathData="M159.4,766.5 L159.4,615.5 65.3,615.5l0,245.1c0,52 42.1,94.1 94.1,94.1L413.6,954.7l0,-94.1L253.5,860.6C201.6,860.6 159.4,818.5 159.4,766.5z"/>
+    <path android:fillColor="@color/device_card_back" android:pathData="M162.7,252.2c0,-52 42.1,-94.1 94.1,-94.1l160,0L416.9,64 162.7,64c-52,0 -94.1,42.1 -94.1,94.1l0,247 94.1,0L162.7,252.2z"/>
+    <path android:fillColor="@color/device_card_back" android:pathData="M863.9,769.8c0,52 -42.1,94.1 -94.1,94.1l-153.9,0 0,94.1 248,0c52,0 94.1,-42.1 94.1,-94.1l0,-245.1 -94.1,0L863.9,769.8z"/>
+    <path android:fillColor="@color/device_card_back" android:pathData="M866.2,66.3 L618.2,66.3l0,94.1 153.9,0c52,0 94.1,42.1 94.1,94.1l0,152.9 94.1,0L960.3,160.5C960.3,108.5 918.2,66.3 866.2,66.3z"/>
+    <path android:fillColor="@color/device_card_back" android:pathData="M913.7,464 L110.5,464c-25.7,0 -46.6,20.9 -46.6,46.6l0,0.9c0,25.7 20.9,46.6 46.6,46.6l803.2,0c25.7,0 46.6,-20.9 46.6,-46.6l0,-0.9C960.3,484.8 939.5,464 913.7,464z"/>
 </vector>

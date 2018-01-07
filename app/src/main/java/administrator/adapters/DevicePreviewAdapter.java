@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qrcodescan.R;
@@ -17,6 +18,7 @@ import java.util.List;
 import administrator.entity.DeviceCurValue;
 import administrator.enums.DataTypeEnum;
 import administrator.ui.AreaDetailActivity;
+import lecho.lib.hellocharts.model.Line;
 
 /**
  * 房间卡片中 设备数据预览的适配器 需要设置context
@@ -115,9 +117,6 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
             }
         }
 
-        viewHolder.icon.setAlpha(0.87F);
-
-        //为整个预览子项（icon+value）添加点击事件
         //跳转至房间详情页面 并传递被点击设备id 及数据类型
         viewHolder.wholeView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +129,7 @@ public class DevicePreviewAdapter extends RecyclerView.Adapter {
                 context.startActivity(intent);
             }
         });
+
     }
 
     @Override

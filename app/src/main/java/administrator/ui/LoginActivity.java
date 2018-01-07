@@ -1,6 +1,7 @@
 package administrator.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn;
     private MaterialDialog waitForLoginDialog;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,8 +139,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFinish(String response) {
 
-                UserDto userDto = new UserDto();
-                if (response.equals("") || response == null) {
+                UserDto userDto;
+                if (response.equals("")) {
                     Snackbar.make(loginBtn, "登录失败，请检查账号密码", Snackbar.LENGTH_SHORT).show();
                 } else {
                     userDto = new Gson().fromJson(response, UserDto.class);
@@ -150,6 +152,9 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
                     DeviceCodeUtil.getMapOnline();//获取code-sn映射
                     UrlHandler.setUserId(userDto.getId());
+                    if (waitForLoginDialog.isShowing()) {
+                        waitForLoginDialog.dismiss();
+                    }
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }

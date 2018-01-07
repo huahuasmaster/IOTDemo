@@ -149,7 +149,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/go_back"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/go_back"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="RtlHardcoded" />
 
             <Button
                 android:id="@+id/go_setting_threshold"
@@ -179,7 +180,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlHardcoded" />
 
             <View
                 android:layout_width="48dp"
@@ -207,7 +209,7 @@
                 android:id="@+id/s_line"
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:text="安全线"
+                android:text="@string/safe_line"
                 android:textSize="14sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/view3"
@@ -217,7 +219,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="异常区"
+                android:text="@string/abnormal_region"
                 android:id="@+id/error_q"
                 app:layout_constraintLeft_toRightOf="@+id/rect"
                 app:layout_constraintTop_toTopOf="@id/rect"
@@ -226,7 +228,8 @@
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:layout_editor_absoluteX="100dp"
-                tools:layout_editor_absoluteY="346dp" />
+                tools:layout_editor_absoluteY="346dp"
+                tools:ignore="RtlHardcoded" />
 
             <administrator.view.CurersView
                 android:id="@+id/curersview"
@@ -236,7 +239,6 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="0dp"
-                android:paddingTop="4dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintHorizontal_bias="0.0"
