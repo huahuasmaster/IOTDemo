@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
-apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion 24
@@ -27,6 +25,10 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -39,7 +41,6 @@ dependencies {
     compile files('libs/BaiduLBS_Android.jar')
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.google.zxing:core:3.3.0'
-    compile 'com.jakewharton:butterknife:8.2.1'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.flyco.roundview:FlycoRoundView_Lib:1.1.2@aar'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
@@ -65,11 +66,12 @@ dependencies {
     compile 'com.android.support:transition:24.2.1'
     compile 'com.kyleduo.switchbutton:library:2.0.0'
     // https://mvnrepository.com/artifact/com.github.bumptech.glide/glide
-    compile group: 'com.github.bumptech.glide', name: 'glide', version: '3.3.1'
+    compile group: 'com.github.bumptech.glide', name: 'glide', version: '3.7.0'
 
 
     testCompile 'junit:junit:4.12'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile files('libs/EZOpenSDK_V4.7.1.20171109.jar')
     compile files('libs/EZUIKit_1.4.jar')
 }

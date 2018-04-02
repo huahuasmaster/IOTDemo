@@ -350,6 +350,13 @@ public class AreaCardAdapter extends RecyclerView.Adapter {
                 areaCardCallbackListener.onAreaName(mAcv);
             }
         });
+        holder.areaName.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                areaCardCallbackListener.onLongAreaBack(mAcv);
+                return false;
+            }
+        });
         holder.areaBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,5 +1,7 @@
 package administrator.base;
 
+import android.util.Log;
+
 import administrator.application.ContextApplication;
 import administrator.entity.AlertDto;
 import administrator.enums.AlertTypeEnum;
@@ -15,7 +17,7 @@ public class AlertToMsgUtil {
         String temp = "";
         switch (dataTypeEnum) {
             case HUMIDITY:
-                temp = "";
+                temp = "%";
                 break;
             case TMP_CELSIUS:
                 temp = "℃";
@@ -34,22 +36,23 @@ public class AlertToMsgUtil {
         String content = "";
         switch (alertType) {
             case TMP_HIGH:
-                content = "("+alertDto.getOtherName()+")温度过高("
+                content = ""+alertDto.getAreaName()+"温度过高("
                         +alertDto.getAlertValue()+unit+")，请通风。";break;
             case TMP_LOW:
-                content = "("+alertDto.getOtherName()+")温度过低("
+                content = ""+alertDto.getAreaName()+"温度过低("
                         +alertDto.getAlertValue()+unit+")，请注意保暖。";break;
             case HUMIDITY_HIGH:
-                content = "(" + alertDto.getOtherName() + ")过于潮湿("
+                content = "" + alertDto.getAreaName() + "过于潮湿("
                         +alertDto.getAlertValue()+unit+")";break;
             case HUMIDITY_LOW:
-                content = "(" + alertDto.getOtherName() + ")过于干燥("
+                content = "" + alertDto.getAreaName() + "过于干燥("
                         +alertDto.getAlertValue()+unit+")";break;
             case MOVE_OVER_DISTANCE:
             case MOVE_OVER_TIME:
                 content = "("+alertDto.getOtherName()+")被连续移动了"
                         +alertDto.getAlertValue()+unit;break;
             case DOOR_OPEN:
+                Log.i("", "getContent: ");
                 content = " "+alertDto.getOtherName()+" 在离家期间被打开!";
             default:break;
         }

@@ -243,8 +243,6 @@ public class CurersView extends View {
 
     /**
      * 数据展示
-     *
-     * @param canvas
      */
     @SuppressLint("SimpleDateFormat")
     private void drawData(Canvas canvas) {
@@ -364,6 +362,9 @@ public class CurersView extends View {
 
     }
 
+    /**
+     * 绘制异常区域背景板
+     */
     private void drawRegion(Canvas canvas) {
         float h = (float) ((height - getTextHeight(normalText, mTextPaint) - getTextHeight(mList.get(0), mTextPaint) * 2.0) / mList.size());
         //算出y轴总高度

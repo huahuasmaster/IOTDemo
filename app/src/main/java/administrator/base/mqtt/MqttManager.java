@@ -86,7 +86,6 @@ public class MqttManager {
         Thread thread = new Thread(){
             @Override
             public void run() {
-
                 while(true){
                     if(!SubPubQueue.getMsgQueue().isEmpty()){
                         try {
@@ -109,7 +108,9 @@ public class MqttManager {
                                         .getUnit(DataTypeEnum.indexOf(alertDto.getDataType()));
                                 AlertTypeEnum alertType = AlertTypeEnum
                                         .indexOf(alertDto.getAlertType());
-                                String content = AlertToMsgUtil.getContent(alertType,alertDto,unit);
+//                                String content = AlertToMsgUtil.getContent(alertType,alertDto,unit);
+                                // TODO: 2018/1/8 替换为动态文本 
+                                String content = " 后门 在离家期间被打开！";
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 Date date;
                                 try {

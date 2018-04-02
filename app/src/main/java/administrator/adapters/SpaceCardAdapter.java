@@ -99,7 +99,6 @@ public class SpaceCardAdapter extends Adapter {
         final ViewHolder viewHolder = (ViewHolder) holder;
         final SpaceWithAreas mSpace = swaList.get(position);
         viewHolder.spaceName.setText(mSpace.getName());
-
         viewHolder.typeSwitch.setChecked(mSpace.getModelType() == 1);
         viewHolder.typeSwitch.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
